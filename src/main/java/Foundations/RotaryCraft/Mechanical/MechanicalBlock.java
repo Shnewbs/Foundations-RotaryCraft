@@ -26,6 +26,7 @@ public final class MechanicalBlock extends BaseEntityBlock {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(REDUCTION, true));
     }
+    @Override public net.minecraft.world.phys.shapes.VoxelShape getShape(BlockState state,net.minecraft.world.level.BlockGetter level,BlockPos pos,net.minecraft.world.phys.shapes.CollisionContext context) {return Foundations.RotaryCraft.Geometry.MachineShapes.shape(state);}
     @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(FACING, REDUCTION); }
     @Override public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }

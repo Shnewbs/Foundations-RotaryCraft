@@ -36,7 +36,7 @@ public class WinderBlock extends BaseEntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
+        return Foundations.RotaryCraft.Geometry.MachineShapes.shape(state);
     }
 
     @Override

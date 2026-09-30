@@ -27,7 +27,7 @@ public final class MechanicalContent {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MechanicalBlockEntity>> ENTITY = ENTITIES.register("mechanical",
             () -> BlockEntityType.Builder.of(MechanicalBlockEntity::new, ALL.stream().map(DeferredBlock::get).toArray(Block[]::new)).build(null));
     private static DeferredBlock<MechanicalBlock> block(String name) {
-        var block = BLOCKS.register(name, () -> new MechanicalBlock(BlockBehaviour.Properties.of().strength(2.5F)));
+        var block = BLOCKS.register(name, () -> new MechanicalBlock(BlockBehaviour.Properties.of().noOcclusion().strength(2.5F)));
         ITEMS.registerSimpleBlockItem(name, block);
         return block;
     }

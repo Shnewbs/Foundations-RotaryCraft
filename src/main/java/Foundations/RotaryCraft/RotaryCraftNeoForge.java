@@ -15,6 +15,7 @@ public final class RotaryCraftNeoForge {
     public RotaryCraftNeoForge(IEventBus modEventBus) {
         Foundations.RotaryCraft.Mechanical.MechanicalContent.register(modEventBus);
         RecipeContent.register(modEventBus);
+        Foundations.RotaryCraft.Gui.MachineMenus.register(modEventBus);
         PowerContent.register(modEventBus);
         FarmingContent.register(modEventBus);
         MachineContent.register(modEventBus);

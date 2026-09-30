@@ -26,7 +26,7 @@ public class MachineContent {
 
     // Grindstone
     public static final DeferredBlock<GrindstoneBlock> GRINDSTONE = BLOCKS.register("grindstone", 
-        () -> new GrindstoneBlock(BlockBehaviour.Properties.of().strength(3.0f, 10.0f).requiresCorrectToolForDrops()));
+        () -> new GrindstoneBlock(BlockBehaviour.Properties.of().noOcclusion().strength(3.0f, 10.0f).requiresCorrectToolForDrops()));
     public static final DeferredItem<BlockItem> GRINDSTONE_ITEM = ITEMS.registerSimpleBlockItem("grindstone", GRINDSTONE);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GrindstoneBlockEntity>> GRINDSTONE_BLOCK_ENTITY =
         BLOCK_ENTITY_TYPES.register("grindstone", () -> 
@@ -34,7 +34,7 @@ public class MachineContent {
 
     // Winder
     public static final DeferredBlock<WinderBlock> WINDER = BLOCKS.register("winder", 
-        () -> new WinderBlock(BlockBehaviour.Properties.of().strength(2.5f, 8.0f).requiresCorrectToolForDrops()));
+        () -> new WinderBlock(BlockBehaviour.Properties.of().noOcclusion().strength(2.5f, 8.0f).requiresCorrectToolForDrops()));
     public static final DeferredItem<BlockItem> WINDER_ITEM = ITEMS.registerSimpleBlockItem("winder", WINDER);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WinderBlockEntity>> WINDER_BLOCK_ENTITY =
         BLOCK_ENTITY_TYPES.register("winder", () -> 
@@ -42,7 +42,7 @@ public class MachineContent {
 
     // Blower
     public static final DeferredBlock<BlowerBlock> BLOWER = BLOCKS.register("blower", 
-        () -> new BlowerBlock(BlockBehaviour.Properties.of().strength(2.0f, 6.0f).requiresCorrectToolForDrops()));
+        () -> new BlowerBlock(BlockBehaviour.Properties.of().noOcclusion().strength(2.0f, 6.0f).requiresCorrectToolForDrops()));
     public static final DeferredItem<BlockItem> BLOWER_ITEM = ITEMS.registerSimpleBlockItem("blower", BLOWER);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlowerBlockEntity>> BLOWER_BLOCK_ENTITY =
         BLOCK_ENTITY_TYPES.register("blower", () -> 
@@ -50,7 +50,7 @@ public class MachineContent {
 
     // DecoTank
     public static final DeferredBlock<DecoTankBlock> DECO_TANK = BLOCKS.register("deco_tank", 
-        () -> new DecoTankBlock(BlockBehaviour.Properties.of().strength(2.0f, 5.0f).noOcclusion()));
+        () -> new DecoTankBlock(BlockBehaviour.Properties.of().noOcclusion().strength(2.0f, 5.0f).noOcclusion()));
     public static final DeferredItem<BlockItem> DECO_TANK_ITEM = ITEMS.registerSimpleBlockItem("deco_tank", DECO_TANK);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DecoTankBlockEntity>> DECO_TANK_BLOCK_ENTITY =
         BLOCK_ENTITY_TYPES.register("deco_tank", () -> 
@@ -58,7 +58,7 @@ public class MachineContent {
 
     // Player Detector
     public static final DeferredBlock<PlayerDetectorBlock> PLAYER_DETECTOR = BLOCKS.register("player_detector",
-        () -> new PlayerDetectorBlock(BlockBehaviour.Properties.of().strength(2.5f, 8.0f).requiresCorrectToolForDrops()));
+        () -> new PlayerDetectorBlock(BlockBehaviour.Properties.of().noOcclusion().strength(2.5f, 8.0f).requiresCorrectToolForDrops()));
     public static final DeferredItem<BlockItem> PLAYER_DETECTOR_ITEM =
         ITEMS.registerSimpleBlockItem("player_detector", PLAYER_DETECTOR);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlayerDetectorBlockEntity>> PLAYER_DETECTOR_BLOCK_ENTITY =
@@ -67,7 +67,7 @@ public class MachineContent {
 
     // Smoke Detector
     public static final DeferredBlock<SmokeDetectorBlock> SMOKE_DETECTOR = BLOCKS.register("smoke_detector",
-        () -> new SmokeDetectorBlock(BlockBehaviour.Properties.of().strength(1.5f, 4.0f).requiresCorrectToolForDrops()));
+        () -> new SmokeDetectorBlock(BlockBehaviour.Properties.of().noOcclusion().strength(1.5f, 4.0f).requiresCorrectToolForDrops()));
     public static final DeferredItem<BlockItem> SMOKE_DETECTOR_ITEM =
         ITEMS.registerSimpleBlockItem("smoke_detector", SMOKE_DETECTOR);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SmokeDetectorBlockEntity>> SMOKE_DETECTOR_BLOCK_ENTITY =
@@ -76,7 +76,7 @@ public class MachineContent {
 
     // Item Cannon
     public static final DeferredBlock<ItemCannonBlock> ITEM_CANNON = BLOCKS.register("item_cannon",
-        () -> new ItemCannonBlock(BlockBehaviour.Properties.of().strength(3.0f, 10.0f).requiresCorrectToolForDrops()));
+        () -> new ItemCannonBlock(BlockBehaviour.Properties.of().noOcclusion().strength(3.0f, 10.0f).requiresCorrectToolForDrops()));
     public static final DeferredItem<BlockItem> ITEM_CANNON_ITEM =
         ITEMS.registerSimpleBlockItem("item_cannon", ITEM_CANNON);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ItemCannonBlockEntity>> ITEM_CANNON_BLOCK_ENTITY =
@@ -85,7 +85,7 @@ public class MachineContent {
 
     // Sorting
     public static final DeferredBlock<SortingBlock> SORTING = BLOCKS.register("sorting",
-        () -> new SortingBlock(BlockBehaviour.Properties.of().strength(3.0f, 10.0f).requiresCorrectToolForDrops()));
+        () -> new SortingBlock(BlockBehaviour.Properties.of().noOcclusion().strength(3.0f, 10.0f).requiresCorrectToolForDrops()));
     public static final DeferredItem<BlockItem> SORTING_ITEM =
         ITEMS.registerSimpleBlockItem("sorting", SORTING);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SortingBlockEntity>> SORTING_BLOCK_ENTITY =
@@ -94,7 +94,7 @@ public class MachineContent {
 
     // Fan
     public static final DeferredBlock<FanBlock> FAN = BLOCKS.register("fan",
-        () -> new FanBlock(BlockBehaviour.Properties.of().strength(2.5f, 8.0f).requiresCorrectToolForDrops()));
+        () -> new FanBlock(BlockBehaviour.Properties.of().noOcclusion().strength(2.5f, 8.0f).requiresCorrectToolForDrops()));
     public static final DeferredItem<BlockItem> FAN_ITEM = ITEMS.registerSimpleBlockItem("fan", FAN);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FanBlockEntity>> FAN_BLOCK_ENTITY =
         BLOCK_ENTITY_TYPES.register("fan", () ->
@@ -102,7 +102,7 @@ public class MachineContent {
 
     // Mob Harvester
     public static final DeferredBlock<MobHarvesterBlock> MOB_HARVESTER = BLOCKS.register("mob_harvester",
-        () -> new MobHarvesterBlock(BlockBehaviour.Properties.of().strength(3.0f, 10.0f).requiresCorrectToolForDrops()));
+        () -> new MobHarvesterBlock(BlockBehaviour.Properties.of().noOcclusion().strength(3.0f, 10.0f).requiresCorrectToolForDrops()));
     public static final DeferredItem<BlockItem> MOB_HARVESTER_ITEM =
         ITEMS.registerSimpleBlockItem("mob_harvester", MOB_HARVESTER);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MobHarvesterBlockEntity>> MOB_HARVESTER_BLOCK_ENTITY =
@@ -111,7 +111,7 @@ public class MachineContent {
 
     // Defoliator
     public static final DeferredBlock<DefoliatorBlock> DEFOLIATOR = BLOCKS.register("defoliator",
-        () -> new DefoliatorBlock(BlockBehaviour.Properties.of().strength(3.0f, 10.0f).requiresCorrectToolForDrops()));
+        () -> new DefoliatorBlock(BlockBehaviour.Properties.of().noOcclusion().strength(3.0f, 10.0f).requiresCorrectToolForDrops()));
     public static final DeferredItem<BlockItem> DEFOLIATOR_ITEM =
         ITEMS.registerSimpleBlockItem("defoliator", DEFOLIATOR);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DefoliatorBlockEntity>> DEFOLIATOR_BLOCK_ENTITY =
@@ -120,7 +120,7 @@ public class MachineContent {
 
     // Item Refresher
     public static final DeferredBlock<ItemRefresherBlock> ITEM_REFRESHER = BLOCKS.register("item_refresher",
-        () -> new ItemRefresherBlock(BlockBehaviour.Properties.of().strength(2.5f, 8.0f).requiresCorrectToolForDrops()));
+        () -> new ItemRefresherBlock(BlockBehaviour.Properties.of().noOcclusion().strength(2.5f, 8.0f).requiresCorrectToolForDrops()));
     public static final DeferredItem<BlockItem> ITEM_REFRESHER_ITEM =
         ITEMS.registerSimpleBlockItem("item_refresher", ITEM_REFRESHER);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ItemRefresherBlockEntity>> ITEM_REFRESHER_BLOCK_ENTITY =

@@ -57,7 +57,7 @@ public final class PowerNodeBlock extends BaseEntityBlock {
         for (Direction direction : Direction.values()) {
             state = state.setValue(propertyFor(direction), isPowerNetworkBlock(
                     context.getLevel().getBlockState(context.getClickedPos().relative(direction))
-            ));
+            ) || hasEnergyPort(context.getLevel(),context.getClickedPos().relative(direction),direction.getOpposite()));
         }
         return state;
     }
@@ -71,7 +71,7 @@ public final class PowerNodeBlock extends BaseEntityBlock {
             BlockPos pos,
             BlockPos neighborPos
     ) {
-        return state.setValue(propertyFor(direction), isPowerNetworkBlock(neighborState));
+        return state.setValue(propertyFor(direction), isPowerNetworkBlock(neighborState) || level instanceof Level world && hasEnergyPort(world,neighborPos,direction.getOpposite()));
     }
 
     @Override
@@ -85,6 +85,10 @@ public final class PowerNodeBlock extends BaseEntityBlock {
             return 0;
         }
         return signalStrength(node.getEnergyStorage().getEnergyStored(), node.getEnergyStorage().getMaxEnergyStored());
+    }
+
+    private static boolean hasEnergyPort(Level level,BlockPos pos,Direction side) {
+        return level.hasChunkAt(pos) && level.getCapability(net.neoforged.neoforge.capabilities.Capabilities.EnergyStorage.BLOCK,pos,side)!=null;
     }
 
     static int signalStrength(int stored, int capacity) {

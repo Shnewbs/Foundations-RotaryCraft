@@ -72,7 +72,14 @@ public final class AnimatedMachineRenderer implements BlockEntityRenderer<BlockE
         if(spin.speed!=speed){spin.speed=speed;spin.rate=Math.pow(Math.log(speed+1)/Math.log(2),name.equals("shaft")?1.25:1.05)*(name.equals("fan")?3:name.equals("grindstone")?.85:1);}
         if(spin.time!=0&&now>=spin.time)spin.angle=(spin.angle+Math.min(2,now-spin.time)*spin.rate)%360;
         spin.time=now;float angle=(float)spin.angle;
-        renderPreview(entity.getBlockState(),angle,pose,buffers,light,overlay);
+        // Chunk models sample neighboring light; moving parts need the same treatment.
+        int block=(light>>4)&15,sky=(light>>20)&15;
+        for(var direction:net.minecraft.core.Direction.values()) {
+            var neighbor=entity.getBlockPos().relative(direction);if(!entity.getLevel().hasChunkAt(neighbor))continue;
+            int sample=net.minecraft.client.renderer.LevelRenderer.getLightColor(entity.getLevel(),neighbor);
+            block=Math.max(block,(sample>>4)&15);sky=Math.max(sky,(sample>>20)&15);
+        }
+        renderPreview(entity.getBlockState(),angle,pose,buffers,(block<<4)|(sky<<20),overlay);
     }
     private void renderEffects(BlockEntity entity,float partialTick,PoseStack pose,MultiBufferSource buffers) {
         String name=BuiltInRegistries.BLOCK.getKey(entity.getBlockState().getBlock()).getPath();

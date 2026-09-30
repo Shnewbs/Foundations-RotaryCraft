@@ -21,7 +21,14 @@ public final class WindGeneratorBlock extends BaseEntityBlock {
 
     public WindGeneratorBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        registerDefaultState(stateDefinition.any().setValue(LIT, false));
+        registerDefaultState(stateDefinition.any().setValue(LIT, false).setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING, net.minecraft.core.Direction.NORTH));
+    }
+
+    @Override public BlockState getStateForPlacement(net.minecraft.world.item.context.BlockPlaceContext context) {
+        return defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING,context.getHorizontalDirection().getOpposite());
+    }
+    @Override public net.minecraft.world.phys.shapes.VoxelShape getShape(BlockState state,net.minecraft.world.level.BlockGetter level,BlockPos pos,net.minecraft.world.phys.shapes.CollisionContext context) {
+        return Foundations.RotaryCraft.Geometry.MachineShapes.shape(state);
     }
 
     @Override
@@ -31,7 +38,7 @@ public final class WindGeneratorBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LIT);
+        builder.add(LIT, net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING);
     }
 
     @Override

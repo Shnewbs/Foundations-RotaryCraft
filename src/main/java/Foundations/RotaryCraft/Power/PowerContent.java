@@ -24,39 +24,39 @@ public final class PowerContent {
 
     public static final DeferredBlock<PowerNodeBlock> POWER_CABLE = BLOCKS.register(
             "power_cable",
-            () -> new PowerNodeBlock(BlockBehaviour.Properties.of().strength(1.5F).noOcclusion())
+            () -> new PowerNodeBlock(BlockBehaviour.Properties.of().noOcclusion().strength(1.5F).noOcclusion())
     );
     public static final DeferredBlock<PowerNodeBlock> POWER_CELL = BLOCKS.register(
             "power_cell",
-            () -> new PowerNodeBlock(BlockBehaviour.Properties.of().strength(2.5F).noOcclusion())
+            () -> new PowerNodeBlock(BlockBehaviour.Properties.of().noOcclusion().strength(2.5F).noOcclusion())
     );
     public static final DeferredBlock<PowerSwitchBlock> POWER_SWITCH = BLOCKS.register(
             "power_switch",
-            () -> new PowerSwitchBlock(BlockBehaviour.Properties.of().strength(2.5F).requiresCorrectToolForDrops())
+            () -> new PowerSwitchBlock(BlockBehaviour.Properties.of().noOcclusion().strength(2.5F).requiresCorrectToolForDrops())
     );
     public static final DeferredBlock<PowerGeneratorBlock> POWER_GENERATOR = BLOCKS.register(
             "power_generator",
-            () -> new PowerGeneratorBlock(BlockBehaviour.Properties.of().strength(3.5F).requiresCorrectToolForDrops())
+            () -> new PowerGeneratorBlock(BlockBehaviour.Properties.of().noOcclusion().strength(3.5F).requiresCorrectToolForDrops())
     );
     public static final DeferredBlock<SolarGeneratorBlock> SOLAR_GENERATOR = BLOCKS.register(
             "solar_generator",
-            () -> new SolarGeneratorBlock(BlockBehaviour.Properties.of().strength(2.5F).requiresCorrectToolForDrops())
+            () -> new SolarGeneratorBlock(BlockBehaviour.Properties.of().noOcclusion().strength(2.5F).requiresCorrectToolForDrops())
     );
     public static final DeferredBlock<WindGeneratorBlock> WIND_GENERATOR = BLOCKS.register(
             "wind_generator",
-            () -> new WindGeneratorBlock(BlockBehaviour.Properties.of().strength(2.5F).requiresCorrectToolForDrops())
+            () -> new WindGeneratorBlock(BlockBehaviour.Properties.of().noOcclusion().strength(2.5F).requiresCorrectToolForDrops())
     );
     public static final DeferredBlock<HydroGeneratorBlock> HYDRO_GENERATOR = BLOCKS.register(
             "hydro_generator",
-            () -> new HydroGeneratorBlock(BlockBehaviour.Properties.of().strength(2.5F).requiresCorrectToolForDrops())
+            () -> new HydroGeneratorBlock(BlockBehaviour.Properties.of().noOcclusion().strength(2.5F).requiresCorrectToolForDrops())
     );
     public static final DeferredBlock<SteamGeneratorBlock> STEAM_GENERATOR = BLOCKS.register(
             "steam_generator",
-            () -> new SteamGeneratorBlock(BlockBehaviour.Properties.of().strength(3.5F).requiresCorrectToolForDrops())
+            () -> new SteamGeneratorBlock(BlockBehaviour.Properties.of().noOcclusion().strength(3.5F).requiresCorrectToolForDrops())
     );
     public static final DeferredBlock<GeothermalGeneratorBlock> GEOTHERMAL_GENERATOR = BLOCKS.register(
             "geothermal_generator",
-            () -> new GeothermalGeneratorBlock(BlockBehaviour.Properties.of().strength(3.5F).requiresCorrectToolForDrops())
+            () -> new GeothermalGeneratorBlock(BlockBehaviour.Properties.of().noOcclusion().strength(3.5F).requiresCorrectToolForDrops())
     );
     private static final DeferredItem<BlockItem> POWER_CABLE_ITEM = ITEMS.registerSimpleBlockItem("power_cable", POWER_CABLE);
     private static final DeferredItem<BlockItem> POWER_CELL_ITEM = ITEMS.registerSimpleBlockItem("power_cell", POWER_CELL);
