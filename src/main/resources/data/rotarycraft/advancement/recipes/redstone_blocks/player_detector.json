@@ -1,9 +1,9 @@
 {
-  "parent": "minecraft:recipes/redstone/root",
+  "parent": "minecraft:recipes/root",
   "criteria": {
     "has_diamond": {
       "trigger": "minecraft:inventory_changed",
-      "conditions": { "items": [{ "items": ["minecraft:diamond"] }] }
+      "conditions": { "items": [{ "items": "minecraft:diamond" }] }
     }
   },
   "requirements": [["has_diamond"]],
