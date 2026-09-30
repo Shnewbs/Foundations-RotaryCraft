@@ -24,11 +24,11 @@ public final class PowerContent {
 
     public static final DeferredBlock<PowerNodeBlock> POWER_CABLE = BLOCKS.register(
             "power_cable",
-            () -> new PowerNodeBlock(BlockBehaviour.Properties.of().strength(1.5F))
+            () -> new PowerNodeBlock(BlockBehaviour.Properties.of().strength(1.5F).noOcclusion())
     );
     public static final DeferredBlock<PowerNodeBlock> POWER_CELL = BLOCKS.register(
             "power_cell",
-            () -> new PowerNodeBlock(BlockBehaviour.Properties.of().strength(2.5F))
+            () -> new PowerNodeBlock(BlockBehaviour.Properties.of().strength(2.5F).noOcclusion())
     );
     public static final DeferredBlock<PowerGeneratorBlock> POWER_GENERATOR = BLOCKS.register(
             "power_generator",

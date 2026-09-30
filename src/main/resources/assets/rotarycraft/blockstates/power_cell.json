@@ -1,7 +1,62 @@
 {
-  "variants": {
-    "": {
-      "model": "rotarycraft:block/power_cell"
+  "multipart": [
+    {
+      "apply": {
+        "model": "rotarycraft:block/power_cell"
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "rotarycraft:block/power_cable_arm"
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "rotarycraft:block/power_cable_arm",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "rotarycraft:block/power_cable_arm",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "rotarycraft:block/power_cable_arm",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "rotarycraft:block/power_cable_arm",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "rotarycraft:block/power_cable_arm",
+        "x": 270
+      }
     }
-  }
+  ]
 }

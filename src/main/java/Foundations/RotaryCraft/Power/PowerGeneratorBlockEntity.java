@@ -9,6 +9,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
@@ -36,6 +38,7 @@ public final class PowerGeneratorBlockEntity extends BlockEntity {
     };
     private int burnTimeRemaining;
     private int burnTimeTotal;
+    private int firstOutputSide;
 
     public PowerGeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(PowerContent.POWER_GENERATOR_ENTITY.get(), pos, state);
@@ -60,6 +63,8 @@ public final class PowerGeneratorBlockEntity extends BlockEntity {
     }
 
     private void tickGenerator(Level level, BlockPos pos) {
+        distributeEnergy(level, pos);
+
         if (energy.getEnergyStored() < ENERGY_CAPACITY) {
             if (burnTimeRemaining <= 0) {
                 startBurningFuel();
@@ -77,6 +82,27 @@ public final class PowerGeneratorBlockEntity extends BlockEntity {
         if (level.getGameTime() % 20 == 0) {
             setChanged();
         }
+    }
+
+    private void distributeEnergy(Level level, BlockPos pos) {
+        int transferBudget = MAX_OUTPUT_PER_TICK;
+        for (int i = 0; i < Direction.values().length && transferBudget > 0; i++) {
+            Direction direction = Direction.from3DDataValue((firstOutputSide + i) % Direction.values().length);
+            IEnergyStorage neighbor = level.getCapability(
+                    Capabilities.EnergyStorage.BLOCK,
+                    pos.relative(direction),
+                    direction.getOpposite()
+            );
+            if (neighbor == null || !neighbor.canReceive()) {
+                continue;
+            }
+            transferBudget -= EnergyTransfer.transfer(
+                    energy,
+                    neighbor,
+                    Math.min(transferBudget, MAX_OUTPUT_PER_TICK / Direction.values().length)
+            );
+        }
+        firstOutputSide = (firstOutputSide + 1) % Direction.values().length;
     }
 
     private void startBurningFuel() {
