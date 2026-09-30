@@ -80,4 +80,34 @@ public final class MachineMenuGameTests {
         }
         helper.succeed();
     }
+    @GameTest(template="power_network_test",templateNamespace="rotarycraft")
+    public static void generatorPlacementFacesPlayerAndRotationUsesMenu(GameTestHelper helper){
+        var player=helper.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        var pos=helper.absolutePos(new BlockPos(1,1,1));player.setPos(pos.getX()+.5,pos.getY()+.5,pos.getZ()+.5);
+        for(var block:java.util.List.of(Foundations.RotaryCraft.Power.PowerContent.POWER_GENERATOR.get(),Foundations.RotaryCraft.Power.PowerContent.STEAM_GENERATOR.get(),Foundations.RotaryCraft.Power.PowerContent.GEOTHERMAL_GENERATOR.get(),Foundations.RotaryCraft.Power.PowerContent.HYDRO_GENERATOR.get(),Foundations.RotaryCraft.Power.PowerContent.WIND_GENERATOR.get(),Foundations.RotaryCraft.Power.PowerContent.SOLAR_GENERATOR.get()))for(float yaw:new float[]{0,90,180,270}) {
+            player.setYRot(yaw);
+            var hit=new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(pos.below()),net.minecraft.core.Direction.UP,pos.below(),false);
+            var context=new net.minecraft.world.item.context.BlockPlaceContext(player,net.minecraft.world.InteractionHand.MAIN_HAND,new ItemStack(block),hit);
+            var state=block.getStateForPlacement(context);
+            helper.assertTrue(state.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING)==context.getHorizontalDirection().getOpposite(),"Generator ignored player's facing");
+        }
+        helper.setBlock(new BlockPos(1,1,1),Foundations.RotaryCraft.Power.PowerContent.STEAM_GENERATOR.get());
+        var entity=helper.getLevel().getBlockEntity(pos);var menu=new MachineMenu(1,player.getInventory(),entity);
+        var previous=entity.getBlockState().getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING);
+        helper.assertTrue(menu.clickMenuButton(player,0),"In-range rotation was refused");
+        helper.assertTrue(entity.getBlockState().getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING)==previous.getClockWise(),"Rotate button changed to wrong facing");
+        helper.succeed();
+    }
+    @GameTest(template="power_network_test",templateNamespace="rotarycraft")
+    public static void breakingSorterDropsInputButNeverGhostFilters(GameTestHelper helper){
+        var pos=new BlockPos(1,1,1);helper.setBlock(pos,MachineContent.SORTING.get());
+        var entity=(SortingBlockEntity)helper.getLevel().getBlockEntity(helper.absolutePos(pos));
+        entity.getInput().setStackInSlot(0,new ItemStack(Items.COAL,12));entity.getFilters().setStackInSlot(0,new ItemStack(Items.DIAMOND));
+        helper.getLevel().setBlock(entity.getBlockPos(),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
+        var drops=helper.getLevel().getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,new net.minecraft.world.phys.AABB(entity.getBlockPos()).inflate(1));
+        int coal=drops.stream().filter(item->item.getItem().is(Items.COAL)).mapToInt(item->item.getItem().getCount()).sum();
+        helper.assertTrue(coal==12,"Breaking sorter lost or duplicated stored input");
+        helper.assertTrue(drops.stream().noneMatch(item->item.getItem().is(Items.DIAMOND)),"Breaking sorter duplicated a ghost filter");
+        helper.succeed();
+    }
 }

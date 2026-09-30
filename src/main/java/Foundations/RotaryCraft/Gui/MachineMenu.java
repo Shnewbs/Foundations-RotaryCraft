@@ -97,6 +97,7 @@ public final class MachineMenu extends AbstractContainerMenu {
     }
     @Override public boolean stillValid(Player player){return entity==null?player.level().isClientSide:!entity.isRemoved()&&entity.getLevel()==player.level()&&player.level().getBlockEntity(position)==entity&&player.distanceToSqr(position.getX()+.5,position.getY()+.5,position.getZ()+.5)<=64;}
     @Override public ItemStack quickMoveStack(Player player,int index) {
+        if(entity!=null&&!stillValid(player))return ItemStack.EMPTY;
         if(index<0||index>=slots.size())return ItemStack.EMPTY;var slot=slots.get(index);if(!slot.hasItem()||!slot.mayPickup(player))return ItemStack.EMPTY;
         var source=slot.getItem();var copy=source.copy();
         if(index<machineSlots){if(!moveItemStackTo(source,machineSlots,slots.size(),true))return ItemStack.EMPTY;}
@@ -107,7 +108,7 @@ public final class MachineMenu extends AbstractContainerMenu {
         if(entity==null||!stillValid(player)||player.level().isClientSide||!player.level().mayInteract(player,position))return false;
         var state=entity.getBlockState();
         if(button==0){if(state.hasProperty(BlockStateProperties.HORIZONTAL_FACING))state=state.setValue(BlockStateProperties.HORIZONTAL_FACING,state.getValue(BlockStateProperties.HORIZONTAL_FACING).getClockWise());else if(state.hasProperty(BlockStateProperties.FACING))state=state.cycle(BlockStateProperties.FACING);else return false;}
-        else if(button==1&&state.hasProperty(Foundations.RotaryCraft.Mechanical.MechanicalBlock.REDUCTION))state=state.cycle(Foundations.RotaryCraft.Mechanical.MechanicalBlock.REDUCTION);
+        else if(button==1&&Foundations.RotaryCraft.Mechanical.MechanicalContent.ratio(state.getBlock())>1&&state.hasProperty(Foundations.RotaryCraft.Mechanical.MechanicalBlock.REDUCTION))state=state.cycle(Foundations.RotaryCraft.Mechanical.MechanicalBlock.REDUCTION);
         else if(entity instanceof PlayerDetectorBlockEntity detector&&button>=2&&button<=4){if(button==4)detector.setAnalog(!detector.isAnalog());else detector.setSelectedRange(detector.getSelectedRange()+(button==2?-1:1));entity.setChanged();return true;}
         else return false;
         player.level().setBlock(position,state,3);player.level().invalidateCapabilities(position);entity.setChanged();return true;

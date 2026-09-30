@@ -29,7 +29,7 @@ public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
         gui.fill(x,y,x+imageWidth,y+20,0xff34434d);
         gui.fill(x+176,y+20,x+imageWidth,y+imageHeight,0xffb8c0c5);
         for(var slot:menu.slots){int sx=x+slot.x,sy=y+slot.y;gui.fill(sx-1,sy-1,sx+17,sy+17,0xff626d75);gui.fill(sx,sy,sx+16,sy+16,0xffa8adb3);}
-        int capacity=menu.value(1);if(capacity>0){gui.fill(x+8,y+38,x+170,y+43,0xff78858c);gui.fill(x+8,y+38,x+8+(int)(162L*Math.max(0,menu.value(0))/capacity),y+43,0xffddac3a);}
+        int capacity=menu.value(1);if(capacity>0){gui.fill(x+8,y+38,x+170,y+43,0xff78858c);gui.fill(x+8,y+38,x+8+(int)(162L*Math.min(capacity,Math.max(0,menu.value(0)))/capacity),y+43,0xffddac3a);}
         int duration=menu.value(3);if(duration>0){gui.fill(x+8,y+69,x+170,y+74,0xff78858c);gui.fill(x+8,y+69,x+8+(int)(162L*Math.min(duration,Math.max(0,menu.value(2)))/duration),y+74,0xff71a785);}
     }
     @Override protected void renderLabels(GuiGraphics gui,int mouseX,int mouseY) {

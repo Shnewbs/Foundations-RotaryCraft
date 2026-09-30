@@ -73,6 +73,13 @@ Commit a new `mod_version` and matching CHANGELOG.md section to master. CI tests
 
 Current development milestone: 1.21.1-1.6.0. World mechanical transmission and an initial material-processing shaft input are connected. Other machines retain the interim FE baseline; the processing block also retains FE operation when no shaft is connected. Full machine behavior and explicit converters remain pending.
 
+## GUI and placement follow-up
+
+- [x] Server-owned menus for all currently registered machine block entities; inventories and supported settings use vanilla synchronized menu packets.
+- [x] Generator facing, partial-block light occlusion fixes, rotated collision shapes and adjacent block placement.
+- [x] Ghost sorting filters, normal stored inventory drops and functional decorative fluid tanks.
+- [ ] Full original GUI/layout and gameplay parity for remaining legacy machines; current GUI coverage applies to registered Foundations content.
+
 ## Source checkpoints
 
 - RotaryCraft upstream master: b2288638f7f4703bb4555f72a2b86f72407cc2ae.

@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Fixed black moving machine parts in world lighting by removing full-block occlusion from partial models and using surrounding loaded-block light samples.
+- Added horizontal placement facing to all six generator types; aligned partial machine collision/selection shapes and cached their rotated geometry.
+- Added inventory/status GUIs for every currently registered machine block entity, with live FE, mechanical input, processing progress, fluid storage and detector status. Server buttons control supported facing, gearbox mode, detector range and analog mode.
+- GUI transfers use real persisted inventories, preserve full 32-bit status values and close when the machine is removed or the player leaves reach. Breaking processors, sorters, defoliators and item cannons now drops stored inventory.
+- Sorting filters are editable ghost samples and never consume, extract or drop real items. Shift-clicking inserts only into the actual input inventory.
+- Replaced the decorative tank's inert name/amount fields with a 16,000 mB NeoForge fluid handler, bucket interactions, comparator updates, persisted fluid components and synchronized fluid display. Existing valid legacy tank data migrates on load.
+- Holding a block preserves adjacent placement. Buckets directly interact with tanks and sprinklers, while sneaking retains hand interactions. Cables can visibly connect to neighboring third-party FE capability ports.
+- Added server regressions for menu item conservation, ghost filters, 32-bit status, tank storage, generator facing, rotated controls and inventory drops, plus real client GUI screenshot checks.
+- These GUIs expose the current port's implemented behavior. Original unregistered machines, complete upstream gameplay and provider-specific EU/Joule/kinetic converters remain roadmap work.
+
 ## 1.21.1-1.6.0 - Models, Animation and Visual Performance
 
 - Restored twenty original machine/model atlas pairs with original pivots, rotations, mirrored faces and UVs. Inventory and held models include complete parked geometry; placed models draw moving parts only once.
