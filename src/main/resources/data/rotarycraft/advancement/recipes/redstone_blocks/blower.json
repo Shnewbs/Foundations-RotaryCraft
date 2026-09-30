@@ -1,0 +1,25 @@
+{
+  "parent": "advancement/recipes/redstone_blocks/root",
+  "criteria": {
+    "has_piston": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:piston"]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "rotarycraft:blower"
+      }
+    }
+  },
+  "requirements": [["has_piston", "has_the_recipe"]],
+  "rewards": {
+    "recipes": ["rotarycraft:blower"]
+  }
+}

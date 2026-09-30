@@ -9,6 +9,13 @@
   "block.rotarycraft.steam_generator": "Steam Generator",
   "block.rotarycraft.geothermal_generator": "Geothermal Generator",
   "block.rotarycraft.sprinkler": "Sprinkler",
+  "block.rotarycraft.grindstone": "Grindstone",
+  "block.rotarycraft.winder": "Winder",
+  "block.rotarycraft.blower": "Blower",
+  "block.rotarycraft.deco_tank": "Decorative Tank",
+  "block.rotarycraft.player_detector": "Player Detector",
+  "block.rotarycraft.smoke_detector": "Smoke Detector",
+  "block.rotarycraft.item_cannon": "Item Cannon",
   "block.rotarycraft.canola_crop": "Canola",
   "item.rotarycraft.canola_seeds": "Canola Seeds",
   "item.rotarycraft.dense_canola_seeds": "Dense Canola Seeds"

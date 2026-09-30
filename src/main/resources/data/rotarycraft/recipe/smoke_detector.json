@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["IRI", "RGR", "ICI"],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "R": { "item": "minecraft:redstone" },
+    "G": { "item": "minecraft:glass" },
+    "C": { "item": "minecraft:copper_ingot" }
+  },
+  "result": { "id": "rotarycraft:smoke_detector", "count": 1 }
+}
