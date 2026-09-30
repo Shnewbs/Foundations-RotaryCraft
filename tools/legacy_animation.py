@@ -72,6 +72,10 @@ def transform(point,operations,phi=0):
     for op in reversed(operations):
         if 'translate' in op:
             a,b,c=op['translate'];x+=a;y+=b;z+=c
+        elif 'sine' in op:
+            amplitude,offset,frequency,a,b,c=op['sine']
+            distance=amplitude*math.sin(math.radians((phi+offset)*frequency))
+            x+=a*distance;y+=b*distance;z+=c*distance
         elif 'rotate' in op:
             coefficient,offset,a,b,c=op['rotate']; angle=math.radians(coefficient*phi+offset)
             co,si=math.cos(angle),math.sin(angle)
@@ -79,3 +83,20 @@ def transform(point,operations,phi=0):
             elif b:x,y,z=x*co+z*si,y,-x*si+z*co
             else:x,y,z=x*co-y*si,x*si+y*co,z
     return x,y,z
+
+
+def performance_groups(parts):
+    """Performance engine's nine sinusoidal pistons and crank, in source coordinates."""
+    pistons={'Shape4':(0,0),'b':(120,0),'Shape4c':(240,0),
+             'Shape2a':(0,30),'Shape2e':(120,30),'Shape2':(240,30),
+             'Shape2b':(120,-30),'Shape2c':(0,-30),'Shape2d':(240,-30)}
+    result=[]
+    for part in parts:
+        name=part['name'].split('_')[-1];ops=[]
+        if name in ('Shape12','Shape13'):
+            ops=[{'translate':[0,1,0]},{'rotate':[1,0,1,0,0]},{'translate':[0,-1,0]}]
+        elif name in pistons:
+            offset,tilt=pistons[name];tilt=math.radians(tilt)
+            ops=[{'sine':[0.03125,offset,4,0,math.cos(tilt),-math.sin(tilt)]}]
+        result.append({'part':part,'operations':ops})
+    return result

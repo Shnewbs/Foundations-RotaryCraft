@@ -149,8 +149,8 @@
     ],
     "texture": "Textures/TileEntityTex/Engine/perftex.png",
     "parts": 30,
-    "stationary_quads": 180,
-    "moving_groups": 0,
+    "stationary_quads": 114,
+    "moving_groups": 11,
     "status": "source geometry and renderer operations imported; client acceptance pending"
   },
   "fan": {

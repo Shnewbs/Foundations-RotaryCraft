@@ -166,13 +166,15 @@ def export():
     target=ASSETS/'models/legacy';textures=ASSETS/'textures/legacy';motion=ASSETS/'motion'
     for path in [target,textures,motion]:path.mkdir(parents=True,exist_ok=True)
     report={}
-    animated={'dc_engine','shaft','gearbox_2','gearbox_4','gearbox_8','gearbox_16','grindstone','fan','winder','defoliator','power_generator','steam_generator','wind_generator','hydro_generator'}
+    animated={'dc_engine','shaft','gearbox_2','gearbox_4','gearbox_8','gearbox_16','grindstone','fan','winder','defoliator','power_generator','steam_generator','wind_generator','hydro_generator','geothermal_generator'}
     for name,(sources,texture,orientation) in ENTRIES.items():
         original=ROOT/'Textures/TileEntityTex'/texture
         shutil.copyfile(original,textures/(name+'.png'))
         modelparts=[part for source in sources for part in parts(source)]
         if name=='winder':modelparts=[p for p in modelparts if not p['name'].split('_')[-1].startswith('Shape6')]
-        if name in animated:
+        if name=='geothermal_generator':
+            rendered=legacy_animation.performance_groups(modelparts)
+        elif name in animated:
             rendered=legacy_animation.groups(ROOT/sources[-1],modelparts)
         else:rendered=[{'part':p,'operations':[]} for p in modelparts]
         moving=[];stationary=[]

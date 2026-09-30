@@ -43,4 +43,33 @@ class LegacyModels(unittest.TestCase):
                     for point,uv in face:
                         self.assertTrue(all(-1e-9 <= v <= 1+1e-9 for v in uv))
 
+class AnimationGroups(unittest.TestCase):
+    def test_pivot_rotation_and_inverse(self):
+        a=legacy.legacy_animation
+        ops=[{'translate':[0,1,0]},{'rotate':[1,0,1,0,0]},{'translate':[0,-1,0]}]
+        self.assertEqual(a.transform((0,1,0),ops,90),(0,1,0))
+        self.assertAlmostEqual(a.transform((0,2,0),ops,90)[2],1)
+        self.assertEqual(a.simplify([{'translate':[0,1,0]},{'translate':[0,-1,0]}]),[])
+
+    def test_performance_piston_phases(self):
+        a=legacy.legacy_animation
+        groups=a.performance_groups(legacy.parts('Models/Engine/ModelPerformance.java'))
+        self.assertEqual(len([g for g in groups if g['operations']]),11)
+        piston=next(g for g in groups if g['part']['name'].endswith('_Shape4'))
+        self.assertAlmostEqual(a.transform((0,0,0),piston['operations'],22.5)[1],0.03125)
+        self.assertAlmostEqual(a.transform((0,0,0),piston['operations'],67.5)[1],-0.03125)
+
+    def test_every_animation_contains_finite_geometry(self):
+        import json
+        motion=legacy.ASSETS/'motion'
+        self.assertEqual(len(list(motion.glob('*.json'))),15)
+        for path in motion.glob('*.json'):
+            groups=json.loads(path.read_text())['groups']
+            self.assertTrue(groups,path.name)
+            for group in groups:
+                self.assertTrue(group['faces'],path.name)
+                for face in group['faces']:
+                    self.assertEqual(len(face),4)
+                    self.assertTrue(all(math.isfinite(v) for vertex in face for v in vertex))
+
 if __name__=='__main__' :unittest.main()

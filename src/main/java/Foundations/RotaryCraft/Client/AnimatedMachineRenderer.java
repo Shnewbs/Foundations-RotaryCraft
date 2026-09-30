@@ -29,7 +29,7 @@ public final class AnimatedMachineRenderer implements BlockEntityRenderer<BlockE
     public static final ResourceManagerReloadListener RELOAD = AnimatedMachineRenderer::reload;
     private static void reload(ResourceManager resources) {
         Map<String,Mesh> loaded = new HashMap<>();
-        for (String name : List.of("dc_engine","shaft","gearbox_2","gearbox_4","gearbox_8","gearbox_16","grindstone","fan","winder","defoliator","power_generator","steam_generator","wind_generator","hydro_generator")) {
+        for (String name : List.of("dc_engine","shaft","gearbox_2","gearbox_4","gearbox_8","gearbox_16","grindstone","fan","winder","defoliator","power_generator","steam_generator","wind_generator","hydro_generator","geothermal_generator")) {
             var id=ResourceLocation.fromNamespaceAndPath("rotarycraft","motion/"+name+".json");
             var resource=resources.getResource(id);
             if (resource.isEmpty()) throw new IllegalStateException("Missing animation mesh "+id);
@@ -39,8 +39,8 @@ public final class AnimatedMachineRenderer implements BlockEntityRenderer<BlockE
                 for (var item:json.getAsJsonArray("groups")) {
                     var group=item.getAsJsonObject();List<float[]> ops=new ArrayList<>();List<float[]> vertices=new ArrayList<>();
                     for(var operation:group.getAsJsonArray("operations")) {
-                        var op=operation.getAsJsonObject();var data=op.has("translate")?op.getAsJsonArray("translate"):op.getAsJsonArray("rotate");
-                        float[] values=new float[data.size()+1];values[0]=op.has("translate")?0:1;
+                        var op=operation.getAsJsonObject();var data=op.has("translate")?op.getAsJsonArray("translate"):op.has("sine")?op.getAsJsonArray("sine"):op.getAsJsonArray("rotate");
+                        float[] values=new float[data.size()+1];values[0]=op.has("translate")?0:op.has("sine")?2:1;
                         for(int i=0;i<data.size();i++)values[i+1]=data.get(i).getAsFloat();ops.add(values);
                     }
                     for(var face:group.getAsJsonArray("faces")) {
@@ -77,7 +77,7 @@ public final class AnimatedMachineRenderer implements BlockEntityRenderer<BlockE
         }
         pose.mulPose(rotation.rotationY((float)Math.toRadians(mesh.orientation)));pose.translate(0,1,0);pose.scale(1,-1,-1);
         var consumer=buffers.getBuffer(mesh.renderType);
-        for(Group group:mesh.groups){pose.pushPose();for(float[] op:group.operations){if(op[0]==0)pose.translate(op[1],op[2],op[3]);else pose.mulPose(rotation.rotationAxis((float)Math.toRadians(op[1]*angle+op[2]),op[3],op[4],op[5]));}
+        for(Group group:mesh.groups){pose.pushPose();for(float[] op:group.operations){if(op[0]==0)pose.translate(op[1],op[2],op[3]);else if(op[0]==2){double displacement=op[1]*Math.sin(Math.toRadians((angle+op[2])*op[3]));pose.translate(op[4]*displacement,op[5]*displacement,op[6]*displacement);}else pose.mulPose(rotation.rotationAxis((float)Math.toRadians(op[1]*angle+op[2]),op[3],op[4],op[5]));}
             var matrix=pose.last();for(float[] v:group.vertices)consumer.addVertex(matrix,v[0],v[1],v[2]).setColor(255,255,255,255).setUv(v[3],v[4]).setOverlay(overlay).setLight(light).setNormal(matrix,v[5],v[6],v[7]);pose.popPose();}
         pose.popPose();
     }

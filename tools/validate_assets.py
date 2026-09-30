@@ -307,22 +307,15 @@ def validate():
         except AssetError as error:
             errors.append(str(error))
 
-    rotor_path = ASSETS / "textures" / "block" / "fan_rotor.png"
-    if png_sizes.get(rotor_path) != (16, 128):
-        errors.append(f"{relative(rotor_path)}: expected an eight-frame 16x16 vertical sheet (16x128)")
-    rotor_metadata = rotor_path.with_name(rotor_path.name + ".mcmeta")
-    if not rotor_metadata.is_file():
-        errors.append(f"{relative(rotor_metadata)}: missing Fan rotor animation metadata")
-    else:
+    for path in sorted((ASSETS / "motion").glob("*.json")):
         try:
-            metadata = read_json(rotor_metadata)
-            animation = metadata.get("animation", {})
-            if (
-                not isinstance(animation, dict)
-                or animation.get("frametime") != 1
-                or animation.get("frames") != list(range(8))
-            ):
-                errors.append(f"{relative(rotor_path)}: expected frames 0..7 at one tick per frame")
+            data=read_json(path)
+            if not data.get("groups"):
+                errors.append(f"{relative(path)}: empty animation mesh")
+            for group in data.get("groups",[]):
+                for face in group.get("faces",[]):
+                    if len(face)!=4 or any(len(vertex)!=5 for vertex in face):
+                        errors.append(f"{relative(path)}: malformed animated quad")
         except AssetError as error:
             errors.append(str(error))
 
@@ -347,7 +340,7 @@ def validate():
         f"Asset validation passed: {len(json_files)} JSON files, "
         f"{len(blockstate_files)} blockstates, {len(model_files)} models, "
         f"{len(texture_refs)} local texture references, {len(png_files)} PNGs, "
-        f"{animated} animated texture(s); Fan rotor 16x128, 8 frames at 1 tick/frame."
+        f"{animated} animated texture(s), {len(list((ASSETS / 'motion').glob('*.json')))} motion meshes."
     )
     return 0
 

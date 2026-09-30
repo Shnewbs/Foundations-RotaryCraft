@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "minecraft:item/wheat_seeds"
-  }
+  "parent": "rotarycraft:block/canola_crop_stage7"
 }

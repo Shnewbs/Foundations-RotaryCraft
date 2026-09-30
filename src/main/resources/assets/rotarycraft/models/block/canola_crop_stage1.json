@@ -1,6 +1,1 @@
-{
-  "parent": "minecraft:block/crop",
-  "textures": {
-    "crop": "minecraft:block/wheat_stage1"
-  }
-}
+{"parent":"minecraft:block/block","textures":{"metal":"rotarycraft:legacy/shaft","dark":"minecraft:block/black_concrete","glass":"minecraft:block/glass","red":"minecraft:block/red_concrete","green":"minecraft:block/lime_concrete","panel":"minecraft:block/blue_terracotta","leaf":"minecraft:block/green_concrete","flower":"minecraft:block/yellow_concrete","particle":"rotarycraft:legacy/shaft"},"elements":[{"to":[5.25,3.5,5.25],"faces":{"down":{"texture":"#leaf","uv":[0,0,16,16]},"up":{"texture":"#leaf","uv":[0,0,16,16]},"north":{"texture":"#leaf","uv":[0,0,16,16]},"south":{"texture":"#leaf","uv":[0,0,16,16]},"east":{"texture":"#leaf","uv":[0,0,16,16]},"west":{"texture":"#leaf","uv":[0,0,16,16]}},"from":[4.75,0,4.75]},{"to":[11.25,3.5,10.25],"faces":{"down":{"texture":"#leaf","uv":[0,0,16,16]},"up":{"texture":"#leaf","uv":[0,0,16,16]},"north":{"texture":"#leaf","uv":[0,0,16,16]},"south":{"texture":"#leaf","uv":[0,0,16,16]},"east":{"texture":"#leaf","uv":[0,0,16,16]},"west":{"texture":"#leaf","uv":[0,0,16,16]}},"from":[10.75,0,9.75]},{"to":[5.25,3.5,12.25],"faces":{"down":{"texture":"#leaf","uv":[0,0,16,16]},"up":{"texture":"#leaf","uv":[0,0,16,16]},"north":{"texture":"#leaf","uv":[0,0,16,16]},"south":{"texture":"#leaf","uv":[0,0,16,16]},"east":{"texture":"#leaf","uv":[0,0,16,16]},"west":{"texture":"#leaf","uv":[0,0,16,16]}},"from":[4.75,0,11.75]}]}

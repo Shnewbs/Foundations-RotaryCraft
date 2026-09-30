@@ -63,6 +63,8 @@ jobs:
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: |
           set -o pipefail
+          mkdir -p run-visual
+          printf 'accessibilityOnboarded:true\nguiScale:2\n' > run-visual/options.txt
           xvfb-run -a -s "-screen 0 1280x720x24" bash gradlew --no-daemon runVisualSmokeClient -PcompatMods=true | tee visual-smoke.log
           rg ROTARYCRAFT_VISUAL_SMOKE_OK visual-smoke.log
       - uses: actions/upload-artifact@v4
@@ -72,6 +74,7 @@ jobs:
           path: |
             visual-smoke.log
             run-visual/logs/
+            run-visual/screenshots/
   release:
     needs: [build, client-visual]
     if: ${{ github.event_name != 'pull_request' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')) }}
