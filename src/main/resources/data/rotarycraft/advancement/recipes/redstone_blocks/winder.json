@@ -1,0 +1,25 @@
+{
+  "parent": "advancement/recipes/redstone_blocks/root",
+  "criteria": {
+    "has_redstone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:redstone_block"]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "rotarycraft:winder"
+      }
+    }
+  },
+  "requirements": [["has_redstone", "has_the_recipe"]],
+  "rewards": {
+    "recipes": ["rotarycraft:winder"]
+  }
+}
