@@ -1,7 +1,7 @@
 RotaryCraft
 ===========
 
-The source code to my tech mod RotaryCraft.
+This mod has sat way to long in 1.7.10 with no desire from Reika to port it, i for one would like to play it on the newer systems with newer mods. They marked it for 2017 and havent updated the 1.7.10 in years. So Ill port it for my own use case. As it should have been in originally, copy-writing a github minecraft mod is ridiculous, and i say fuck that. 
 
 @author Reika
 
