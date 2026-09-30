@@ -1,9 +1,9 @@
-package Reika.RotaryCraft;
+package Foundations.RotaryCraft;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 
-import Reika.RotaryCraft.Power.PowerContent;
+import Foundations.RotaryCraft.Power.PowerContent;
 
 @Mod(RotaryCraftNeoForge.MOD_ID)
 public final class RotaryCraftNeoForge {

@@ -15,7 +15,7 @@ See [License.txt](License.txt) and the [official licensing page](https://sites.g
 NeoForge 1.21.1 port
 ===================
 
-The Gradle project now targets Minecraft 1.21.1 with NeoForge 21.1.252 and Java 21. The NeoForge entry point, mod metadata, and initial native energy cable/cell live under `src/main`; run `gradle build` to build the migration.
+The Gradle project now targets Minecraft 1.21.1 with NeoForge 21.1.252 and Java 21. The NeoForge entry point, mod metadata, and initial native energy network (fuel generator, cable, and cell) live under `src/main`; run `gradle build` to build the migration. The generator accepts vanilla furnace fuels by hand or automation and outputs energy through the NeoForge energy capability.
 
 The energy cable and cell use NeoForge's standard energy capability and are a clean, native implementation; no ElectriCraft code or assets are copied. The original 1.7-era sources, XML resources, textures, and sounds remain in their original locations as migration references. They are not part of the new Gradle source set yet: their Forge/FML APIs and DragonAPI helper implementations have not been ported. DragonAPI is to be absorbed into this mod rather than retained as a separate mod or project; the DragonAPI sources are not present in this checkout. The current artifact is therefore not a gameplay-complete RotaryCraft release.
 
