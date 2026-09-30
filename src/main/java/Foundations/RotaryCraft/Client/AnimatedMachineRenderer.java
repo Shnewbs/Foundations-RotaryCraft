@@ -61,7 +61,9 @@ public final class AnimatedMachineRenderer implements BlockEntityRenderer<BlockE
     }
     @Override public void render(BlockEntity entity,float partialTick,PoseStack pose,MultiBufferSource buffers,int light,int overlay) {
         if(entity.getLevel()==null)return;
-        String name=BuiltInRegistries.BLOCK.getKey(entity.getBlockState().getBlock()).getPath();Mesh mesh=meshes.get(name);if(mesh==null)return;
+        String name=BuiltInRegistries.BLOCK.getKey(entity.getBlockState().getBlock()).getPath();
+        renderEffects(entity,partialTick,pose,buffers);
+        Mesh mesh=meshes.get(name);if(mesh==null)return;
         int speed=0;
         if(entity instanceof MechanicalBlockEntity mechanical)speed=mechanical.visualSpeed();
         else if(entity instanceof Foundations.RotaryCraft.Machines.GrindstoneBlockEntity grinder)speed=grinder.visualSpeed();
@@ -71,6 +73,26 @@ public final class AnimatedMachineRenderer implements BlockEntityRenderer<BlockE
         if(spin.time!=0&&now>=spin.time)spin.angle=(spin.angle+Math.min(2,now-spin.time)*spin.rate)%360;
         spin.time=now;float angle=(float)spin.angle;
         renderPreview(entity.getBlockState(),angle,pose,buffers,light,overlay);
+    }
+    private void renderEffects(BlockEntity entity,float partialTick,PoseStack pose,MultiBufferSource buffers) {
+        String name=BuiltInRegistries.BLOCK.getKey(entity.getBlockState().getBlock()).getPath();
+        if(!name.equals("fan")&&!name.equals("mob_harvester"))return;
+        var client=Minecraft.getInstance();boolean inspected=client.hitResult instanceof net.minecraft.world.phys.BlockHitResult hit&&hit.getBlockPos().equals(entity.getBlockPos());
+        boolean active=entity.getBlockState().hasProperty(BlockStateProperties.LIT)&&entity.getBlockState().getValue(BlockStateProperties.LIT);
+        if(name.equals("mob_harvester")) {
+            int height=0;
+            for(int i=1;i<=4;i++){var pos=entity.getBlockPos().above(i);if(!entity.getLevel().hasChunkAt(pos)||!entity.getLevel().getBlockState(pos).getCollisionShape(entity.getLevel(),pos).isEmpty())break;height=i;}
+            if(height==0)return;
+            var lines=buffers.getBuffer(RenderType.lines());
+            if(active)net.minecraft.client.renderer.LevelRenderer.renderLineBox(pose,lines,new net.minecraft.world.phys.AABB(.46,1,.46,.54,height+1,.54),1,0,0,1);
+            if(inspected)net.minecraft.client.renderer.LevelRenderer.renderLineBox(pose,lines,new net.minecraft.world.phys.AABB(0,1,0,1,height+1,1),1,.5F,0,.65F);
+        } else if(inspected) {
+            var facing=entity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);int range=0;
+            for(int i=1;i<=8;i++){var pos=entity.getBlockPos().relative(facing,i);if(!entity.getLevel().hasChunkAt(pos)||!entity.getLevel().getBlockState(pos).getCollisionShape(entity.getLevel(),pos).isEmpty())break;range=i;}
+            if(range==0)return;
+            var area=new net.minecraft.world.phys.AABB(facing.getStepX(),0,facing.getStepZ(),facing.getStepX()+1,1,facing.getStepZ()+1).expandTowards(facing.getStepX()*(range-1),0,facing.getStepZ()*(range-1)).inflate(facing.getStepX()==0?1.5:0,1.5,facing.getStepZ()==0?1.5:0);
+            net.minecraft.client.renderer.LevelRenderer.renderLineBox(pose,buffers.getBuffer(RenderType.lines()),area,.35F,.75F,1,.5F);
+        }
     }
     public void renderPreview(net.minecraft.world.level.block.state.BlockState state,float angle,PoseStack pose,MultiBufferSource buffers,int light,int overlay) {
         String name=BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();Mesh mesh=meshes.get(name);if(mesh==null)return;

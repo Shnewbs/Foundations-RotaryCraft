@@ -16,6 +16,7 @@ public final class RotaryClient {
                     net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("rotarycraft", name)), AnimatedMachineRenderer::new);
         }
         event.registerBlockEntityRenderer(MechanicalContent.ENTITY.get(),AnimatedMachineRenderer::new);
+        event.registerBlockEntityRenderer(MachineContent.MOB_HARVESTER_BLOCK_ENTITY.get(),AnimatedMachineRenderer::new);
         event.registerBlockEntityRenderer(MachineContent.GRINDSTONE_BLOCK_ENTITY.get(),AnimatedMachineRenderer::new);
         event.registerBlockEntityRenderer(MachineContent.FAN_BLOCK_ENTITY.get(),AnimatedMachineRenderer::new);
         event.registerBlockEntityRenderer(MachineContent.WINDER_BLOCK_ENTITY.get(),AnimatedMachineRenderer::new);

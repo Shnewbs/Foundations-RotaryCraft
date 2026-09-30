@@ -1,0 +1,492 @@
+{
+  "blower": {
+    "implementation": "legacy block-shaped machine; Foundations face artwork",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/blower.json",
+    "models": [
+      "rotarycraft:block/blower"
+    ],
+    "item_model": "rotarycraft:item/blower",
+    "animation": null
+  },
+  "canola_crop": {
+    "implementation": "Foundations native geometry",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/canola_crop.json",
+    "models": [
+      "rotarycraft:block/canola_crop_stage0",
+      "rotarycraft:block/canola_crop_stage1",
+      "rotarycraft:block/canola_crop_stage2",
+      "rotarycraft:block/canola_crop_stage3",
+      "rotarycraft:block/canola_crop_stage4",
+      "rotarycraft:block/canola_crop_stage5",
+      "rotarycraft:block/canola_crop_stage6",
+      "rotarycraft:block/canola_crop_stage7"
+    ],
+    "item_model": null,
+    "animation": null
+  },
+  "dc_engine": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/dc_engine.json",
+    "models": [
+      "rotarycraft:block/dc_engine"
+    ],
+    "item_model": "rotarycraft:item/dc_engine",
+    "animation": "rotarycraft:motion/dc_engine.json",
+    "reference": {
+      "sources": [
+        "Models/Engine/ModelDC.java"
+      ],
+      "texture": "Textures/TileEntityTex/Engine/dc.png",
+      "parts": 11,
+      "stationary_quads": 54,
+      "moving_groups": 2,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "deco_tank": {
+    "implementation": "Foundations native geometry",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/deco_tank.json",
+    "models": [
+      "rotarycraft:block/deco_tank"
+    ],
+    "item_model": "rotarycraft:item/deco_tank",
+    "animation": null
+  },
+  "defoliator": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/defoliator.json",
+    "models": [
+      "rotarycraft:block/defoliator",
+      "rotarycraft:block/defoliator_active"
+    ],
+    "item_model": "rotarycraft:item/defoliator",
+    "animation": "rotarycraft:motion/defoliator.json",
+    "reference": {
+      "sources": [
+        "Models/Animated/ModelDefoliator.java"
+      ],
+      "texture": "Textures/TileEntityTex/defoliatortex.png",
+      "parts": 35,
+      "stationary_quads": 6,
+      "moving_groups": 34,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "fan": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/fan.json",
+    "models": [
+      "rotarycraft:block/fan",
+      "rotarycraft:block/fan_active"
+    ],
+    "item_model": "rotarycraft:item/fan",
+    "animation": "rotarycraft:motion/fan.json",
+    "reference": {
+      "sources": [
+        "Models/Animated/ModelFan.java"
+      ],
+      "texture": "Textures/TileEntityTex/fantex.png",
+      "parts": 21,
+      "stationary_quads": 54,
+      "moving_groups": 12,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "gearbox_16": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/gearbox_16.json",
+    "models": [
+      "rotarycraft:block/gearbox_16"
+    ],
+    "item_model": "rotarycraft:item/gearbox_16",
+    "animation": "rotarycraft:motion/gearbox_16.json",
+    "reference": {
+      "sources": [
+        "Base/ModelGearboxBase.java",
+        "Models/Animated/ModelGearbox16.java"
+      ],
+      "texture": "Textures/TileEntityTex/Transmission/Gear/geartexs.png",
+      "parts": 51,
+      "stationary_quads": 78,
+      "moving_groups": 38,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "gearbox_2": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/gearbox_2.json",
+    "models": [
+      "rotarycraft:block/gearbox_2"
+    ],
+    "item_model": "rotarycraft:item/gearbox_2",
+    "animation": "rotarycraft:motion/gearbox_2.json",
+    "reference": {
+      "sources": [
+        "Base/ModelGearboxBase.java",
+        "Models/Animated/ModelGearbox.java"
+      ],
+      "texture": "Textures/TileEntityTex/Transmission/Gear/geartexs.png",
+      "parts": 28,
+      "stationary_quads": 72,
+      "moving_groups": 16,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "gearbox_4": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/gearbox_4.json",
+    "models": [
+      "rotarycraft:block/gearbox_4"
+    ],
+    "item_model": "rotarycraft:item/gearbox_4",
+    "animation": "rotarycraft:motion/gearbox_4.json",
+    "reference": {
+      "sources": [
+        "Base/ModelGearboxBase.java",
+        "Models/Animated/ModelGearbox4.java"
+      ],
+      "texture": "Textures/TileEntityTex/Transmission/Gear/geartexs.png",
+      "parts": 35,
+      "stationary_quads": 78,
+      "moving_groups": 22,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "gearbox_8": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/gearbox_8.json",
+    "models": [
+      "rotarycraft:block/gearbox_8"
+    ],
+    "item_model": "rotarycraft:item/gearbox_8",
+    "animation": "rotarycraft:motion/gearbox_8.json",
+    "reference": {
+      "sources": [
+        "Base/ModelGearboxBase.java",
+        "Models/Animated/ModelGearbox8.java"
+      ],
+      "texture": "Textures/TileEntityTex/Transmission/Gear/geartexs.png",
+      "parts": 41,
+      "stationary_quads": 78,
+      "moving_groups": 28,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "geothermal_generator": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/geothermal_generator.json",
+    "models": [
+      "rotarycraft:block/geothermal_generator",
+      "rotarycraft:block/geothermal_generator_lit"
+    ],
+    "item_model": "rotarycraft:item/geothermal_generator",
+    "animation": "rotarycraft:motion/geothermal_generator.json",
+    "reference": {
+      "sources": [
+        "Models/Engine/ModelPerformance.java"
+      ],
+      "texture": "Textures/TileEntityTex/Engine/perftex.png",
+      "parts": 30,
+      "stationary_quads": 114,
+      "moving_groups": 11,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "grindstone": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/grindstone.json",
+    "models": [
+      "rotarycraft:block/grindstone"
+    ],
+    "item_model": "rotarycraft:item/grindstone",
+    "animation": "rotarycraft:motion/grindstone.json",
+    "reference": {
+      "sources": [
+        "Models/Animated/ModelGrinder.java"
+      ],
+      "texture": "Textures/TileEntityTex/grindertex.png",
+      "parts": 69,
+      "stationary_quads": 74,
+      "moving_groups": 58,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "hydro_generator": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/hydro_generator.json",
+    "models": [
+      "rotarycraft:block/hydro_generator",
+      "rotarycraft:block/hydro_generator_lit"
+    ],
+    "item_model": "rotarycraft:item/hydro_generator",
+    "animation": "rotarycraft:motion/hydro_generator.json",
+    "reference": {
+      "sources": [
+        "Models/Engine/ModelHydro.java"
+      ],
+      "texture": "Textures/TileEntityTex/Engine/hydrotex.png",
+      "parts": 8,
+      "stationary_quads": 12,
+      "moving_groups": 6,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "item_cannon": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/item_cannon.json",
+    "models": [
+      "rotarycraft:block/item_cannon"
+    ],
+    "item_model": "rotarycraft:item/item_cannon",
+    "animation": null,
+    "reference": {
+      "sources": [
+        "Models/ModelItemCannon.java"
+      ],
+      "texture": "Textures/TileEntityTex/itemcannontex.png",
+      "parts": 19,
+      "stationary_quads": 114,
+      "moving_groups": 0,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "item_refresher": {
+    "implementation": "legacy block-shaped machine; Foundations face artwork",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/item_refresher.json",
+    "models": [
+      "rotarycraft:block/item_refresher",
+      "rotarycraft:block/item_refresher_active"
+    ],
+    "item_model": "rotarycraft:item/item_refresher",
+    "animation": null
+  },
+  "mob_harvester": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/mob_harvester.json",
+    "models": [
+      "rotarycraft:block/mob_harvester",
+      "rotarycraft:block/mob_harvester_active"
+    ],
+    "item_model": "rotarycraft:item/mob_harvester",
+    "animation": null,
+    "reference": {
+      "sources": [
+        "Models/ModelHarvester.java"
+      ],
+      "texture": "Textures/TileEntityTex/harvestertex.png",
+      "parts": 15,
+      "stationary_quads": 90,
+      "moving_groups": 0,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "player_detector": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/player_detector.json",
+    "models": [
+      "rotarycraft:block/player_detector"
+    ],
+    "item_model": "rotarycraft:item/player_detector",
+    "animation": null,
+    "reference": {
+      "sources": [
+        "Models/ModelDetector.java"
+      ],
+      "texture": "Textures/TileEntityTex/detectortex.png",
+      "parts": 35,
+      "stationary_quads": 210,
+      "moving_groups": 0,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "power_cable": {
+    "implementation": "Foundations native geometry",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/power_cable.json",
+    "models": [
+      "rotarycraft:block/power_cable",
+      "rotarycraft:block/power_cable_arm"
+    ],
+    "item_model": "rotarycraft:item/power_cable",
+    "animation": null
+  },
+  "power_cell": {
+    "implementation": "Foundations native geometry",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/power_cell.json",
+    "models": [
+      "rotarycraft:block/power_cable_arm",
+      "rotarycraft:block/power_cell"
+    ],
+    "item_model": "rotarycraft:item/power_cell",
+    "animation": null
+  },
+  "power_generator": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/power_generator.json",
+    "models": [
+      "rotarycraft:block/power_generator",
+      "rotarycraft:block/power_generator_lit"
+    ],
+    "item_model": "rotarycraft:item/power_generator",
+    "animation": "rotarycraft:motion/power_generator.json",
+    "reference": {
+      "sources": [
+        "Models/Engine/ModelCombustion.java"
+      ],
+      "texture": "Textures/TileEntityTex/Engine/combtex.png",
+      "parts": 9,
+      "stationary_quads": 42,
+      "moving_groups": 2,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "power_switch": {
+    "implementation": "Foundations native geometry",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/power_switch.json",
+    "models": [
+      "rotarycraft:block/power_switch_disabled",
+      "rotarycraft:block/power_switch_enabled"
+    ],
+    "item_model": "rotarycraft:item/power_switch",
+    "animation": null
+  },
+  "shaft": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/shaft.json",
+    "models": [
+      "rotarycraft:block/shaft"
+    ],
+    "item_model": "rotarycraft:item/shaft",
+    "animation": "rotarycraft:motion/shaft.json",
+    "reference": {
+      "sources": [
+        "Models/Animated/ShaftOnly/ModelShaft.java"
+      ],
+      "texture": "Textures/TileEntityTex/Transmission/Shaft/shafttexs.png",
+      "parts": 13,
+      "stationary_quads": 66,
+      "moving_groups": 2,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "smoke_detector": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/smoke_detector.json",
+    "models": [
+      "rotarycraft:block/smoke_detector"
+    ],
+    "item_model": "rotarycraft:item/smoke_detector",
+    "animation": null,
+    "reference": {
+      "sources": [
+        "Models/ModelSmokeDetector.java"
+      ],
+      "texture": "Textures/TileEntityTex/smokedetectortex.png",
+      "parts": 2,
+      "stationary_quads": 12,
+      "moving_groups": 0,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "solar_generator": {
+    "implementation": "Foundations native geometry",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/solar_generator.json",
+    "models": [
+      "rotarycraft:block/solar_generator",
+      "rotarycraft:block/solar_generator_lit"
+    ],
+    "item_model": "rotarycraft:item/solar_generator",
+    "animation": null
+  },
+  "sorting": {
+    "implementation": "legacy block-shaped machine; Foundations face artwork",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/sorting.json",
+    "models": [
+      "rotarycraft:block/sorting"
+    ],
+    "item_model": "rotarycraft:item/sorting",
+    "animation": null
+  },
+  "sprinkler": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/sprinkler.json",
+    "models": [
+      "rotarycraft:block/sprinkler",
+      "rotarycraft:block/sprinkler_active"
+    ],
+    "item_model": "rotarycraft:item/sprinkler",
+    "animation": null,
+    "reference": {
+      "sources": [
+        "Models/ModelSprinkler.java"
+      ],
+      "texture": "Textures/TileEntityTex/sprinklertex.png",
+      "parts": 10,
+      "stationary_quads": 60,
+      "moving_groups": 0,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "steam_generator": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/steam_generator.json",
+    "models": [
+      "rotarycraft:block/steam_generator",
+      "rotarycraft:block/steam_generator_lit"
+    ],
+    "item_model": "rotarycraft:item/steam_generator",
+    "animation": "rotarycraft:motion/steam_generator.json",
+    "reference": {
+      "sources": [
+        "Models/Engine/ModelSteam.java"
+      ],
+      "texture": "Textures/TileEntityTex/Engine/steamtex.png",
+      "parts": 23,
+      "stationary_quads": 54,
+      "moving_groups": 14,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "wind_generator": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/wind_generator.json",
+    "models": [
+      "rotarycraft:block/wind_generator",
+      "rotarycraft:block/wind_generator_lit"
+    ],
+    "item_model": "rotarycraft:item/wind_generator",
+    "animation": "rotarycraft:motion/wind_generator.json",
+    "reference": {
+      "sources": [
+        "Models/Engine/ModelWind.java"
+      ],
+      "texture": "Textures/TileEntityTex/Engine/windtex.png",
+      "parts": 24,
+      "stationary_quads": 72,
+      "moving_groups": 12,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "winder": {
+    "implementation": "original model and atlas",
+    "blockstate": "src/main/resources/assets/rotarycraft/blockstates/winder.json",
+    "models": [
+      "rotarycraft:block/winder"
+    ],
+    "item_model": "rotarycraft:item/winder",
+    "animation": "rotarycraft:motion/winder.json",
+    "reference": {
+      "sources": [
+        "Models/Animated/ModelWinder.java"
+      ],
+      "texture": "Textures/TileEntityTex/windertex.png",
+      "parts": 8,
+      "stationary_quads": 46,
+      "moving_groups": 2,
+      "status": "source geometry and renderer operations imported; client acceptance pending"
+    }
+  },
+  "_item_only": [
+    "canola_seeds",
+    "dense_canola_seeds"
+  ]
+}
