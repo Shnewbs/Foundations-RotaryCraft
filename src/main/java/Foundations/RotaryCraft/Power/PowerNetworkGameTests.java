@@ -2,6 +2,8 @@ package Foundations.RotaryCraft.Power;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.neoforged.neoforge.gametest.GameTestHolder;
@@ -35,7 +37,7 @@ public final class PowerNetworkGameTests {
                         .getValue(PowerNodeBlock.propertyFor(Direction.WEST)),
                 "Cable did not connect to the adjacent generator"
         );
-        generator.getFuelHandler().setStackInSlot(0, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COAL));
+        generator.getFuelHandler().setStackInSlot(0, new net.minecraft.world.item.ItemStack(Items.COAL));
 
         helper.succeedWhen(() -> {
             helper.assertTrue(
@@ -49,6 +51,72 @@ public final class PowerNetworkGameTests {
                     ) > 0,
                     "Charged cable did not produce a comparator signal"
             );
+        });
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void solarGeneratorChargesAdjacentCableInDaylight(GameTestHelper helper) {
+        helper.getLevel().setDayTime(6_000);
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        BlockPos cablePos = generatorPos.east();
+        helper.setBlock(generatorPos, PowerContent.SOLAR_GENERATOR.get());
+        helper.setBlock(
+                cablePos,
+                PowerContent.POWER_CABLE.get().defaultBlockState().setValue(
+                        PowerNodeBlock.propertyFor(Direction.WEST),
+                        true
+                )
+        );
+
+        SolarGeneratorBlockEntity generator = (SolarGeneratorBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(generatorPos));
+        PowerNodeBlockEntity cable = (PowerNodeBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(cablePos));
+        helper.assertTrue(generator != null, "Solar generator block entity was not created");
+        helper.assertTrue(cable != null, "Cable block entity was not created");
+        helper.assertTrue(
+                SolarGeneratorBlockEntity.hasSunlight(helper.getLevel(), helper.absolutePos(generatorPos)),
+                "Test solar generator must have daylight and an unobstructed sky"
+        );
+
+        helper.succeedWhen(() -> {
+            helper.assertTrue(
+                    cable.getEnergyStorage().getEnergyStored() > 0,
+                    "Solar generator did not transfer energy into the adjacent cable"
+            );
+            helper.assertTrue(
+                    helper.getLevel().getBlockState(helper.absolutePos(generatorPos))
+                            .getValue(SolarGeneratorBlock.LIT),
+                    "Solar generator did not enter its generating state"
+            );
+        });
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void solarGeneratorDoesNotGenerateWithoutSkyAccess(GameTestHelper helper) {
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        helper.setBlock(generatorPos.above(), Blocks.STONE);
+        helper.runAfterDelay(5, () -> {
+            BlockPos absolutePos = helper.absolutePos(generatorPos);
+            helper.assertTrue(
+                    !SolarGeneratorBlockEntity.hasSunlight(helper.getLevel(), absolutePos),
+                    "Test solar generator must be sheltered from the sky"
+            );
+            helper.setBlock(generatorPos, PowerContent.SOLAR_GENERATOR.get());
+            SolarGeneratorBlockEntity generator = (SolarGeneratorBlockEntity) helper.getLevel()
+                    .getBlockEntity(absolutePos);
+            helper.assertTrue(generator != null, "Solar generator block entity was not created");
+            helper.runAfterDelay(10, () -> {
+                helper.assertTrue(
+                        generator.getEnergyStorage().getEnergyStored() == 0,
+                        "Solar generator produced energy without sky access"
+                );
+                helper.assertTrue(
+                        !helper.getLevel().getBlockState(absolutePos).getValue(SolarGeneratorBlock.LIT),
+                        "Solar generator showed its generating state without sky access"
+                );
+                helper.succeed();
+            });
         });
     }
 }

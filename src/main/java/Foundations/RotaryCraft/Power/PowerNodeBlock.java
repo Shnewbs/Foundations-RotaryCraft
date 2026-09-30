@@ -99,7 +99,9 @@ public final class PowerNodeBlock extends BaseEntityBlock {
     }
 
     static boolean isPowerNetworkBlock(Block block) {
-        return block instanceof PowerNodeBlock || block instanceof PowerGeneratorBlock;
+        return block instanceof PowerNodeBlock
+                || block instanceof PowerGeneratorBlock
+                || block instanceof SolarGeneratorBlock;
     }
 
     @Override

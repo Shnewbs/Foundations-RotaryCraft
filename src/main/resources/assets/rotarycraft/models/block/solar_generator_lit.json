@@ -1,0 +1,6 @@
+{
+  "parent": "rotarycraft:block/solar_generator",
+  "textures": {
+    "up": "minecraft:block/daylight_detector_inverted_top"
+  }
+}
