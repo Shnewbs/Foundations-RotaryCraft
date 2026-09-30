@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.5.0 - Item Transport
+
+- Added the Item Cannon, a powered nine-slot transport machine.
+  - Sends items to a configured target inventory every eight ticks.
+  - Supports high-power full-stack transfers and persists its target, inventory, and energy buffer.
+  - Added item-handler and energy capabilities, recipe, advancement, blockstate, models, and localization.
+
 ## 0.4.0 - Detection Utilities
 
 - Added the Player Detector, a powered proximity sensor with configurable range and binary or analog redstone output.

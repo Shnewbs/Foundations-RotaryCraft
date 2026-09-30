@@ -72,6 +72,15 @@ public class MachineContent {
         BLOCK_ENTITY_TYPES.register("smoke_detector", () ->
             BlockEntityType.Builder.of(SmokeDetectorBlockEntity::new, SMOKE_DETECTOR.get()).build(null));
 
+    // Item Cannon
+    public static final DeferredBlock<ItemCannonBlock> ITEM_CANNON = BLOCKS.register("item_cannon",
+        () -> new ItemCannonBlock(BlockBehaviour.Properties.of().strength(3.0f, 10.0f).requiresCorrectToolForDrops()));
+    public static final DeferredItem<BlockItem> ITEM_CANNON_ITEM =
+        ITEMS.registerSimpleBlockItem("item_cannon", ITEM_CANNON);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ItemCannonBlockEntity>> ITEM_CANNON_BLOCK_ENTITY =
+        BLOCK_ENTITY_TYPES.register("item_cannon", () ->
+            BlockEntityType.Builder.of(ItemCannonBlockEntity::new, ITEM_CANNON.get()).build(null));
+
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
@@ -89,6 +98,16 @@ public class MachineContent {
             Capabilities.EnergyStorage.BLOCK,
             SMOKE_DETECTOR_BLOCK_ENTITY.get(),
             (detector, side) -> detector.getEnergyStorage()
+        );
+        event.registerBlockEntity(
+            Capabilities.EnergyStorage.BLOCK,
+            ITEM_CANNON_BLOCK_ENTITY.get(),
+            (cannon, side) -> cannon.getEnergyStorage()
+        );
+        event.registerBlockEntity(
+            Capabilities.ItemHandler.BLOCK,
+            ITEM_CANNON_BLOCK_ENTITY.get(),
+            (cannon, side) -> cannon.getItemHandler()
         );
     }
 }
