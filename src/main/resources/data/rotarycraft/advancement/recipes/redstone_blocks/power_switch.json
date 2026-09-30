@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_lever": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:lever"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_lever"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "rotarycraft:power_switch"
+    ]
+  }
+}

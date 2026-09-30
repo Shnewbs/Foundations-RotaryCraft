@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_power_cable": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "rotarycraft:power_cable"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_power_cable"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "rotarycraft:power_cell"
+    ]
+  }
+}
