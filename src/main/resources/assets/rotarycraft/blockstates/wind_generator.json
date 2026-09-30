@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "rotarycraft:block/wind_generator"
+    },
+    "lit=true": {
+      "model": "rotarycraft:block/wind_generator_lit"
+    }
+  }
+}

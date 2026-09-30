@@ -38,10 +38,15 @@ public final class PowerContent {
             "solar_generator",
             () -> new SolarGeneratorBlock(BlockBehaviour.Properties.of().strength(2.5F).requiresCorrectToolForDrops())
     );
+    public static final DeferredBlock<WindGeneratorBlock> WIND_GENERATOR = BLOCKS.register(
+            "wind_generator",
+            () -> new WindGeneratorBlock(BlockBehaviour.Properties.of().strength(2.5F).requiresCorrectToolForDrops())
+    );
     private static final DeferredItem<BlockItem> POWER_CABLE_ITEM = ITEMS.registerSimpleBlockItem("power_cable", POWER_CABLE);
     private static final DeferredItem<BlockItem> POWER_CELL_ITEM = ITEMS.registerSimpleBlockItem("power_cell", POWER_CELL);
     private static final DeferredItem<BlockItem> POWER_GENERATOR_ITEM = ITEMS.registerSimpleBlockItem("power_generator", POWER_GENERATOR);
     private static final DeferredItem<BlockItem> SOLAR_GENERATOR_ITEM = ITEMS.registerSimpleBlockItem("solar_generator", SOLAR_GENERATOR);
+    private static final DeferredItem<BlockItem> WIND_GENERATOR_ITEM = ITEMS.registerSimpleBlockItem("wind_generator", WIND_GENERATOR);
 
     static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PowerNodeBlockEntity>> POWER_NODE =
             BLOCK_ENTITY_TYPES.register(
@@ -61,6 +66,11 @@ public final class PowerContent {
             BLOCK_ENTITY_TYPES.register(
                     "solar_generator",
                     () -> BlockEntityType.Builder.of(SolarGeneratorBlockEntity::new, SOLAR_GENERATOR.get()).build(null)
+            );
+    static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WindGeneratorBlockEntity>> WIND_GENERATOR_ENTITY =
+            BLOCK_ENTITY_TYPES.register(
+                    "wind_generator",
+                    () -> BlockEntityType.Builder.of(WindGeneratorBlockEntity::new, WIND_GENERATOR.get()).build(null)
             );
 
     private PowerContent() {
@@ -91,6 +101,11 @@ public final class PowerContent {
                 (generator, side) -> generator.getEnergyStorage()
         );
         event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK,
+                WIND_GENERATOR_ENTITY.get(),
+                (generator, side) -> generator.getEnergyStorage()
+        );
+        event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 POWER_GENERATOR_ENTITY.get(),
                 (generator, side) -> generator.getFuelHandler()
@@ -103,6 +118,7 @@ public final class PowerContent {
             event.accept(POWER_CELL_ITEM.get());
             event.accept(POWER_GENERATOR_ITEM.get());
             event.accept(SOLAR_GENERATOR_ITEM.get());
+            event.accept(WIND_GENERATOR_ITEM.get());
         }
     }
 }
