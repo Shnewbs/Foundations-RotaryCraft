@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 1.21.1-1.1.0 - Asset Restoration
+
+- Audited blockstate, block-model, item-model, parent-model, and local texture references; restored every missing machine texture and the Smoke Detector block model.
+- Replaced ambiguous item-model parents with explicit references to their block models.
+- Added original pixel-art machine textures and a frame-animated Fan rotor that runs only in the powered blockstate; its eight 16×16 frames advance once per game tick.
+- Added `docs/visual-animation-audit.md` to compare legacy renderer/tick behavior across the ported machines and track remaining visual-fidelity work.
+- Added `tools/validate_assets.py` to check resource JSON, model/blockstate references, local PNG integrity, and animation frame bounds.
+
 ## 1.21.1-1.0.0 - Item Refresher
 
 - Added the powered Item Refresher, based on the legacy machine that keeps dropped items from despawning.
