@@ -49,4 +49,49 @@ public final class FarmingGameTests {
         helper.assertTrue(Items.WHEAT_SEEDS != FarmingContent.CANOLA_SEEDS.get(), "Canola must use its own seed item");
         helper.succeed();
     }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void sprinklerWatersFarmlandAndAcceleratesCanola(GameTestHelper helper) {
+        ResourceLocation recipeId = ResourceLocation.fromNamespaceAndPath("rotarycraft", "sprinkler");
+        var recipe = helper.getLevel().getRecipeManager().byKey(recipeId);
+        helper.assertTrue(recipe.isPresent(), "Missing sprinkler recipe");
+        helper.assertTrue(
+                recipe.get().value().getResultItem(helper.getLevel().registryAccess())
+                        .is(FarmingContent.SPRINKLER.get().asItem()),
+                "Sprinkler recipe has an unexpected result"
+        );
+
+        BlockPos sprinklerPos = new BlockPos(1, 1, 1);
+        BlockPos cropPos = sprinklerPos.east();
+        BlockPos farmlandPos = cropPos.below();
+        helper.setBlock(
+                farmlandPos,
+                Blocks.FARMLAND.defaultBlockState().setValue(FarmBlock.MOISTURE, 0)
+        );
+        helper.setBlock(cropPos, FarmingContent.CANOLA_CROP.get());
+        helper.setBlock(sprinklerPos, FarmingContent.SPRINKLER.get());
+
+        SprinklerBlockEntity sprinkler = (SprinklerBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(sprinklerPos));
+        helper.assertTrue(sprinkler != null, "Sprinkler block entity was not created");
+        helper.assertTrue(sprinkler.addWaterBucket(), "Sprinkler rejected a water bucket while empty");
+        helper.assertTrue(!sprinkler.canAcceptWaterBucket(), "Sprinkler accepted more than one stored water bucket");
+
+        helper.succeedWhen(() -> {
+            helper.assertTrue(
+                    helper.getLevel().getBlockState(helper.absolutePos(farmlandPos)).getValue(FarmBlock.MOISTURE)
+                            == FarmBlock.MAX_MOISTURE,
+                    "Sprinkler did not hydrate nearby farmland"
+            );
+            helper.assertTrue(
+                    helper.getLevel().getBlockState(helper.absolutePos(cropPos)).getValue(CropBlock.AGE) > 0,
+                    "Sprinkler did not accelerate nearby canola growth"
+            );
+            helper.assertTrue(
+                    sprinkler.getStoredWater() == SprinklerBlockEntity.WATER_PER_BUCKET
+                            - SprinklerBlockEntity.WATER_PER_OPERATION,
+                    "Sprinkler did not consume water after operating"
+            );
+        });
+    }
 }
