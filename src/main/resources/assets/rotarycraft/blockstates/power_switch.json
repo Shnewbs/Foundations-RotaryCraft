@@ -1,0 +1,20 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "enabled": "true"
+      },
+      "apply": {
+        "model": "rotarycraft:block/power_switch_enabled"
+      }
+    },
+    {
+      "when": {
+        "enabled": "false"
+      },
+      "apply": {
+        "model": "rotarycraft:block/power_switch_disabled"
+      }
+    }
+  ]
+}

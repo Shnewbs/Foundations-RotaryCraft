@@ -4,6 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.neoforged.neoforge.gametest.GameTestHolder;
@@ -283,6 +285,272 @@ public final class PowerNetworkGameTests {
                     "Hydro generator showed its generating state while dry"
             );
             helper.succeed();
+        });
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void steamGeneratorConsumesWaterAndFuelAndChargesCable(GameTestHelper helper) {
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        BlockPos cablePos = generatorPos.east();
+        helper.setBlock(generatorPos, PowerContent.STEAM_GENERATOR.get());
+        helper.setBlock(
+                cablePos,
+                PowerContent.POWER_CABLE.get().defaultBlockState().setValue(
+                        PowerNodeBlock.propertyFor(Direction.WEST),
+                        true
+                )
+        );
+
+        SteamGeneratorBlockEntity generator = (SteamGeneratorBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(generatorPos));
+        PowerNodeBlockEntity cable = (PowerNodeBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(cablePos));
+        helper.assertTrue(generator != null, "Steam generator block entity was not created");
+        helper.assertTrue(cable != null, "Cable block entity was not created");
+        generator.getItemHandler().setStackInSlot(
+                SteamGeneratorBlockEntity.WATER_SLOT,
+                new net.minecraft.world.item.ItemStack(Items.WATER_BUCKET)
+        );
+        generator.getItemHandler().setStackInSlot(
+                SteamGeneratorBlockEntity.FUEL_SLOT,
+                new net.minecraft.world.item.ItemStack(Items.COAL)
+        );
+
+        helper.succeedWhen(() -> {
+            helper.assertTrue(
+                    cable.getEnergyStorage().getEnergyStored() > 0,
+                    "Steam generator did not transfer energy into the adjacent cable"
+            );
+            helper.assertTrue(
+                    generator.getItemHandler().getStackInSlot(SteamGeneratorBlockEntity.WATER_SLOT).is(Items.BUCKET),
+                    "Steam generator did not return an empty bucket after consuming water"
+            );
+            helper.assertTrue(
+                    helper.getLevel().getBlockState(helper.absolutePos(generatorPos))
+                            .getValue(SteamGeneratorBlock.LIT),
+                    "Steam generator did not enter its generating state"
+            );
+        });
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void steamGeneratorDoesNotGenerateWithoutInputs(GameTestHelper helper) {
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        helper.setBlock(generatorPos, PowerContent.STEAM_GENERATOR.get());
+        SteamGeneratorBlockEntity generator = (SteamGeneratorBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(generatorPos));
+        helper.assertTrue(generator != null, "Steam generator block entity was not created");
+
+        helper.runAfterDelay(10, () -> {
+            helper.assertTrue(
+                    generator.getEnergyStorage().getEnergyStored() == 0,
+                    "Steam generator produced energy without water or fuel"
+            );
+            helper.assertTrue(
+                    !helper.getLevel().getBlockState(helper.absolutePos(generatorPos))
+                            .getValue(SteamGeneratorBlock.LIT),
+                    "Steam generator showed its generating state without inputs"
+            );
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void steamGeneratorBuffersEnergyWhenNetworkIsBlocked(GameTestHelper helper) {
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        BlockPos cellPos = generatorPos.east();
+        helper.setBlock(generatorPos, PowerContent.STEAM_GENERATOR.get());
+        helper.setBlock(
+                cellPos,
+                PowerContent.POWER_CELL.get().defaultBlockState().setValue(
+                        PowerNodeBlock.propertyFor(Direction.WEST),
+                        true
+                )
+        );
+
+        SteamGeneratorBlockEntity generator = (SteamGeneratorBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(generatorPos));
+        PowerNodeBlockEntity cell = (PowerNodeBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(cellPos));
+        helper.assertTrue(generator != null, "Steam generator block entity was not created");
+        helper.assertTrue(cell != null, "Power cell block entity was not created");
+        IEnergyStorage cellEnergy = cell.getEnergyStorage();
+        while (cellEnergy.getEnergyStored() < cellEnergy.getMaxEnergyStored()) {
+            cellEnergy.receiveEnergy(cellEnergy.getMaxEnergyStored(), false);
+        }
+        generator.getItemHandler().setStackInSlot(
+                SteamGeneratorBlockEntity.WATER_SLOT,
+                new net.minecraft.world.item.ItemStack(Items.WATER_BUCKET)
+        );
+        generator.getItemHandler().setStackInSlot(
+                SteamGeneratorBlockEntity.FUEL_SLOT,
+                new net.minecraft.world.item.ItemStack(Items.COAL)
+        );
+
+        helper.succeedWhen(() -> {
+            helper.assertTrue(
+                    cellEnergy.getEnergyStored() == cellEnergy.getMaxEnergyStored(),
+                    "Blocked network test cell unexpectedly accepted energy"
+            );
+            helper.assertTrue(
+                    generator.getEnergyStorage().getEnergyStored() > 0,
+                    "Steam generator did not buffer energy when the adjacent cell was full"
+            );
+            helper.assertTrue(
+                    generator.getEnergyStorage().getEnergyStored() <= SteamGeneratorBlockEntity.ENERGY_CAPACITY,
+                    "Steam generator exceeded its bounded energy capacity"
+            );
+        });
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void enabledPowerSwitchPassesGeneratorEnergyToCable(GameTestHelper helper) {
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        BlockPos switchPos = generatorPos.east();
+        BlockPos cablePos = switchPos.east();
+        helper.setBlock(generatorPos, PowerContent.POWER_GENERATOR.get());
+        helper.setBlock(switchPos, PowerContent.POWER_SWITCH.get());
+        helper.setBlock(cablePos, PowerContent.POWER_CABLE.get());
+
+        PowerGeneratorBlockEntity generator = (PowerGeneratorBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(generatorPos));
+        PowerNodeBlockEntity cable = (PowerNodeBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(cablePos));
+        helper.assertTrue(generator != null, "Generator block entity was not created");
+        helper.assertTrue(cable != null, "Cable block entity was not created");
+        helper.assertTrue(
+                helper.getLevel().getBlockState(helper.absolutePos(switchPos))
+                        .getValue(PowerSwitchBlock.ENABLED),
+                "Unpowered switch should be enabled"
+        );
+        generator.getFuelHandler().setStackInSlot(0, new net.minecraft.world.item.ItemStack(Items.COAL));
+
+        helper.succeedWhen(() -> {
+            helper.assertTrue(
+                    cable.getEnergyStorage().getEnergyStored() > 0,
+                    "Enabled switch did not pass generator energy into the cable"
+            );
+            helper.assertTrue(
+                    helper.getLevel().getBlockState(helper.absolutePos(cablePos))
+                            .getValue(PowerNodeBlock.propertyFor(Direction.WEST)),
+                    "Cable did not show its connection to the enabled switch"
+            );
+        });
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void poweredPowerSwitchBlocksGeneratorEnergy(GameTestHelper helper) {
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        BlockPos switchPos = generatorPos.east();
+        BlockPos cablePos = switchPos.east();
+        BlockPos signalPos = switchPos.north();
+        helper.setBlock(signalPos, Blocks.REDSTONE_BLOCK);
+        helper.setBlock(generatorPos, PowerContent.POWER_GENERATOR.get());
+        helper.setBlock(switchPos, PowerContent.POWER_SWITCH.get());
+        helper.setBlock(cablePos, PowerContent.POWER_CABLE.get());
+
+        PowerGeneratorBlockEntity generator = (PowerGeneratorBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(generatorPos));
+        PowerNodeBlockEntity cable = (PowerNodeBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(cablePos));
+        helper.assertTrue(generator != null, "Generator block entity was not created");
+        helper.assertTrue(cable != null, "Cable block entity was not created");
+
+        helper.runAfterDelay(5, () -> {
+            BlockPos absoluteSwitchPos = helper.absolutePos(switchPos);
+            helper.assertTrue(
+                    !helper.getLevel().getBlockState(absoluteSwitchPos).getValue(PowerSwitchBlock.ENABLED),
+                    "Redstone-powered switch did not disable"
+            );
+            helper.assertTrue(
+                    helper.getLevel().getCapability(
+                            Capabilities.EnergyStorage.BLOCK,
+                            absoluteSwitchPos,
+                            Direction.WEST
+                    ) == null,
+                    "Disabled switch still exposed an energy capability"
+            );
+            generator.getFuelHandler().setStackInSlot(0, new net.minecraft.world.item.ItemStack(Items.COAL));
+
+            helper.runAfterDelay(20, () -> {
+                helper.assertTrue(
+                        cable.getEnergyStorage().getEnergyStored() == 0,
+                        "Powered switch allowed generator energy into the cable"
+                );
+                helper.assertTrue(
+                        !helper.getLevel().getBlockState(helper.absolutePos(cablePos))
+                                .getValue(PowerNodeBlock.propertyFor(Direction.WEST)),
+                        "Cable still showed a connection to the disabled switch"
+                );
+                helper.succeed();
+            });
+        });
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void powerSwitchSignalTransitionRestoresEnergyFlow(GameTestHelper helper) {
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        BlockPos switchPos = generatorPos.east();
+        BlockPos cablePos = switchPos.east();
+        BlockPos signalPos = switchPos.north();
+        helper.setBlock(generatorPos, PowerContent.POWER_GENERATOR.get());
+        helper.setBlock(switchPos, PowerContent.POWER_SWITCH.get());
+        helper.setBlock(cablePos, PowerContent.POWER_CABLE.get());
+
+        PowerGeneratorBlockEntity generator = (PowerGeneratorBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(generatorPos));
+        PowerNodeBlockEntity cable = (PowerNodeBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(cablePos));
+        helper.assertTrue(generator != null, "Generator block entity was not created");
+        helper.assertTrue(cable != null, "Cable block entity was not created");
+        generator.getFuelHandler().setStackInSlot(0, new net.minecraft.world.item.ItemStack(Items.COAL));
+
+        helper.runAfterDelay(10, () -> {
+            helper.assertTrue(
+                    cable.getEnergyStorage().getEnergyStored() > 0,
+                    "Enabled switch did not initially pass generator energy"
+            );
+            helper.setBlock(signalPos, Blocks.REDSTONE_BLOCK);
+            helper.runAfterDelay(5, () -> {
+                BlockPos absoluteSwitchPos = helper.absolutePos(switchPos);
+                helper.assertTrue(
+                        !helper.getLevel().getBlockState(absoluteSwitchPos).getValue(PowerSwitchBlock.ENABLED),
+                        "Redstone signal did not disable the switch"
+                );
+                helper.assertTrue(
+                        helper.getLevel().getCapability(
+                                Capabilities.EnergyStorage.BLOCK,
+                                absoluteSwitchPos,
+                                Direction.WEST
+                        ) == null,
+                        "Disabled switch capability was not invalidated"
+                );
+                int storedBeforeReconnect = cable.getEnergyStorage().getEnergyStored();
+                helper.setBlock(signalPos, Blocks.AIR);
+                helper.runAfterDelay(5, () -> {
+                    helper.assertTrue(
+                            helper.getLevel().getBlockState(absoluteSwitchPos).getValue(PowerSwitchBlock.ENABLED),
+                            "Removing the redstone signal did not re-enable the switch"
+                    );
+                    helper.assertTrue(
+                            helper.getLevel().getCapability(
+                                    Capabilities.EnergyStorage.BLOCK,
+                                    absoluteSwitchPos,
+                                    Direction.WEST
+                            ) != null,
+                            "Enabled switch did not restore its energy capability"
+                    );
+                    helper.assertTrue(
+                            helper.getLevel().getBlockState(helper.absolutePos(cablePos))
+                                    .getValue(PowerNodeBlock.propertyFor(Direction.WEST)),
+                            "Cable did not reconnect visually after the switch was enabled"
+                    );
+                    helper.succeedWhen(() -> helper.assertTrue(
+                            cable.getEnergyStorage().getEnergyStored() > storedBeforeReconnect,
+                            "Generator energy did not resume flowing after switch re-enable"
+                    ));
+                });
+            });
         });
     }
 

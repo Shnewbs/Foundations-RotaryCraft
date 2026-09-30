@@ -56,7 +56,7 @@ public final class PowerNodeBlock extends BaseEntityBlock {
         BlockState state = defaultBlockState();
         for (Direction direction : Direction.values()) {
             state = state.setValue(propertyFor(direction), isPowerNetworkBlock(
-                    context.getLevel().getBlockState(context.getClickedPos().relative(direction)).getBlock()
+                    context.getLevel().getBlockState(context.getClickedPos().relative(direction))
             ));
         }
         return state;
@@ -71,7 +71,7 @@ public final class PowerNodeBlock extends BaseEntityBlock {
             BlockPos pos,
             BlockPos neighborPos
     ) {
-        return state.setValue(propertyFor(direction), isPowerNetworkBlock(neighborState.getBlock()));
+        return state.setValue(propertyFor(direction), isPowerNetworkBlock(neighborState));
     }
 
     @Override
@@ -98,12 +98,16 @@ public final class PowerNodeBlock extends BaseEntityBlock {
         return CONNECTIONS[direction.get3DDataValue()];
     }
 
-    static boolean isPowerNetworkBlock(Block block) {
+    static boolean isPowerNetworkBlock(BlockState state) {
+        Block block = state.getBlock();
         return block instanceof PowerNodeBlock
                 || block instanceof PowerGeneratorBlock
                 || block instanceof SolarGeneratorBlock
                 || block instanceof WindGeneratorBlock
-                || block instanceof HydroGeneratorBlock;
+                || block instanceof HydroGeneratorBlock
+                || block instanceof SteamGeneratorBlock
+                || block instanceof PowerSwitchBlock
+                && state.getValue(PowerSwitchBlock.ENABLED);
     }
 
     @Override
