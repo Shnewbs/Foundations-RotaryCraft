@@ -67,17 +67,7 @@ public final class PowerNodeBlockEntity extends BlockEntity {
                 continue;
             }
 
-            int offered = Math.min(amountPerSide, transferRate);
-            int accepted = neighbor.receiveEnergy(offered, true);
-            if (accepted <= 0) {
-                continue;
-            }
-
-            int extracted = energy.extractEnergy(accepted, false);
-            int received = neighbor.receiveEnergy(extracted, false);
-            if (received < extracted) {
-                energy.receiveEnergy(extracted - received, false);
-            }
+            EnergyTransfer.transfer(energy, neighbor, Math.min(amountPerSide, transferRate));
         }
         firstSide = (firstSide + 1) % Direction.values().length;
     }

@@ -28,6 +28,10 @@ neoForge {
             server()
             programArgument '--nogui'
         }
+
+        gameTestServer {
+            type = 'gameTestServer'
+        }
     }
 
     mods {
