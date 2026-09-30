@@ -2,6 +2,8 @@ package Foundations.RotaryCraft.Power;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -15,6 +17,33 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 @PrefixGameTestTemplate(false)
 public final class PowerNetworkGameTests {
     private PowerNetworkGameTests() {
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void powerNetworkRecipesAreRegistered(GameTestHelper helper) {
+        String[] recipeIds = {
+                "power_cable",
+                "power_cell",
+                "power_switch",
+                "power_generator",
+                "solar_generator",
+                "wind_generator",
+                "hydro_generator",
+                "steam_generator"
+        };
+
+        for (String recipeId : recipeIds) {
+            ResourceLocation id = ResourceLocation.fromNamespaceAndPath("rotarycraft", recipeId);
+            var recipe = helper.getLevel().getRecipeManager().byKey(id);
+            helper.assertTrue(recipe.isPresent(), "Missing power-network recipe " + id);
+            helper.assertTrue(
+                    BuiltInRegistries.ITEM.getKey(
+                            recipe.get().value().getResultItem(helper.getLevel().registryAccess()).getItem()
+                    ).equals(id),
+                    "Power-network recipe " + id + " has an unexpected result"
+            );
+        }
+        helper.succeed();
     }
 
     @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added recipe-book advancements for all native power-network crafting recipes, with a GameTest covering recipe registration and results.
 - Added a NeoForge 1.21.1 / Minecraft 1.21.1 Gradle project targeting Java 21.
 - Added the NeoForge mod entry point and generated mod metadata.
 - Added a native energy cable and energy cell with buffered NeoForge energy capability transfer.

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_hopper": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:hopper"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_hopper"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "rotarycraft:steam_generator"
+    ]
+  }
+}

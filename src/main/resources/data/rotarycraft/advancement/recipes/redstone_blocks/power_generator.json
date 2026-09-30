@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_furnace": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:furnace"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_furnace"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "rotarycraft:power_generator"
+    ]
+  }
+}
