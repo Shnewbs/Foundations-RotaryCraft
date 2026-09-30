@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 /** Machine-specific fields over a shared compact inventory layout. No client-side machine mutation. */
-public final class MachineScreen extends AbstractContainerScreen<MachineMenu> {
+public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
     public MachineScreen(MachineMenu menu,Inventory inventory,Component title) {super(menu,inventory,title);imageWidth=248;imageHeight=238;inventoryLabelY=144;}
     private void action(int id){if(minecraft!=null&&minecraft.gameMode!=null)minecraft.gameMode.handleInventoryButtonClick(menu.containerId,id);}
     @Override protected void init() {

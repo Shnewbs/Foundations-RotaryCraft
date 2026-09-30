@@ -66,7 +66,10 @@ public final class VisualSmokeCheck {
         for(int i=0;i<values.length;i++){menu.setData(i*2,values[i]&65535);menu.setData(i*2+1,(values[i]>>>16)&65535);}
         menu.slots.get(0).set(new ItemStack(net.minecraft.world.item.Items.COBBLESTONE,12));
         menu.slots.get(1).set(new ItemStack(sorter?net.minecraft.world.item.Items.DIAMOND:net.minecraft.world.item.Items.GRAVEL));
-        Minecraft.getInstance().setScreen(new MachineScreen(menu,inventory,Component.literal(sorter?"Sorting Machine":"Grindstone")));
+        Minecraft.getInstance().setScreen(new MachineScreen(menu,inventory,Component.literal(sorter?"Sorting Machine":"Grindstone")){
+            @Override public void tick(){} // Gallery has no world/player; server menus are tested in GameTests.
+            @Override public void removed(){}
+        });
     }
     @SubscribeEvent public static void tick(ClientTickEvent.Post event) {
         if(!Boolean.getBoolean("rotarycraft.visualSmoke")) return;
