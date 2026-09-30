@@ -59,6 +59,11 @@ class AnimationGroups(unittest.TestCase):
         self.assertAlmostEqual(a.transform((0,0,0),piston['operations'],22.5)[1],0.03125)
         self.assertAlmostEqual(a.transform((0,0,0),piston['operations'],67.5)[1],-0.03125)
 
+    def test_legacy_textures_are_stitched_into_block_atlas(self):
+        import json
+        atlas=legacy.ROOT/'src/main/resources/assets/minecraft/atlases/blocks.json'
+        self.assertIn({'type':'minecraft:directory','source':'legacy','prefix':'legacy/'},json.loads(atlas.read_text())['sources'])
+
     def test_every_animation_contains_finite_geometry(self):
         import json
         motion=legacy.ASSETS/'motion'

@@ -35,8 +35,13 @@ public final class VisualSmokeCheck {
                 gui.renderItem(items.get(i),0,0);gui.pose().popPose();
                 if(items.get(i).getItem() instanceof net.minecraft.world.item.BlockItem blockItem) {
                     var state=blockItem.getBlock().defaultBlockState();
+                    if(galleryTicks>=30) {
+                        if(state.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.LIT))state=state.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.LIT,true);
+                        if(state.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING))state=state.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING,galleryTicks<50?net.minecraft.core.Direction.EAST:net.minecraft.core.Direction.UP);
+                        if(state.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.AGE_7))state=state.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.AGE_7,7);
+                    }
                     gui.flush();gui.pose().pushPose();gui.pose().translate(x+42,y+28,100);gui.pose().scale(22,-22,22);
-                    gui.pose().mulPose(new org.joml.Quaternionf().rotationXYZ((float)Math.toRadians(25),(float)Math.toRadians(35),0));
+                    gui.pose().mulPose(new org.joml.Quaternionf().rotationXYZ((float)Math.toRadians(25),(float)Math.toRadians(galleryTicks<30?35:215),0));
                     gui.pose().translate(-.5,-.5,-.5);
                     var buffers=Minecraft.getInstance().renderBuffers().bufferSource();
                     Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state,gui.pose(),buffers,15728880,net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY);
@@ -52,7 +57,7 @@ public final class VisualSmokeCheck {
     @SubscribeEvent public static void tick(ClientTickEvent.Post event) {
         if(!Boolean.getBoolean("rotarycraft.visualSmoke")) return;
         if(checked) {
-            if(++galleryTicks==20)Screenshot.grab(Minecraft.getInstance().gameDirectory,Minecraft.getInstance().getMainRenderTarget(),message->System.out.println(message.getString()));
+            if(++galleryTicks==20||galleryTicks==40||galleryTicks==55)Screenshot.grab(Minecraft.getInstance().gameDirectory,Minecraft.getInstance().getMainRenderTarget(),message->System.out.println(message.getString()));
             if(galleryTicks==60)Minecraft.getInstance().stop();
             return;
         }
@@ -65,7 +70,9 @@ public final class VisualSmokeCheck {
             for(var block:BuiltInRegistries.BLOCK) {
                 if(!BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals("rotarycraft"))continue;
                 for(var state:block.getStateDefinition().getPossibleStates()) {
-                    if(client.getBlockRenderer().getBlockModel(state)==missing)
+                    var model=client.getBlockRenderer().getBlockModel(state);
+                    if(model.getParticleIcon().contents().name().equals(net.minecraft.client.renderer.texture.MissingTextureAtlasSprite.getLocation()))throw new IllegalStateException("Missing block texture: "+state);
+                    if(model==missing)
                         throw new IllegalStateException("Missing baked block model: "+state);
                     states++;
                 }
