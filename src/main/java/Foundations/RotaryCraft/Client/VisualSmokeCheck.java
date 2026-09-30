@@ -20,6 +20,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 public final class VisualSmokeCheck {
     private static boolean checked;
     private static int galleryTicks;
+    private static java.util.concurrent.CompletableFuture<Void> reload;
     private static final AnimatedMachineRenderer previewRenderer=new AnimatedMachineRenderer(null);
     private static final class Gallery extends Screen {
         private final List<ItemStack> items=new ArrayList<>();
@@ -58,7 +59,10 @@ public final class VisualSmokeCheck {
         if(!Boolean.getBoolean("rotarycraft.visualSmoke")) return;
         if(checked) {
             if(++galleryTicks==20||galleryTicks==40||galleryTicks==55)Screenshot.grab(Minecraft.getInstance().gameDirectory,Minecraft.getInstance().getMainRenderTarget(),message->System.out.println(message.getString()));
-            if(galleryTicks==60)Minecraft.getInstance().stop();
+            if(galleryTicks==60)reload=Minecraft.getInstance().reloadResourcePacks();
+            if(galleryTicks>60 && reload!=null && reload.isDone() && Minecraft.getInstance().getOverlay()==null) {
+                reload.join();System.out.println("ROTARYCRAFT_RESOURCE_RELOAD_OK");Minecraft.getInstance().stop();
+            }
             return;
         }
         var client=Minecraft.getInstance();
