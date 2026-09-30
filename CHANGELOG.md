@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.9.0 - Defoliator
+
+- Added the powered Defoliator, inspired by the legacy poison-fed vegetation-clearing machine.
+  - Accepts poison potions through its item capability, stores up to 4,000 poison charge, and returns empty glass bottles.
+  - Uses 8 FE per tick to clear eligible leaves, logs, saplings, plants, vines, and cactus within a bounded three-block radius; each cleared block consumes one poison charge and poisons nearby living entities.
+  - Persists its energy, potion inventory, poison charge, and work progress; includes energy and item-handler capabilities, active/redstone indication, recipe-book advancement, block/item models, loot, and English localization.
+  - Added original pixel-art block and item textures under `assets/rotarycraft/textures` and GameTests for recipe/capability registration and powered operation.
+
 ## 0.8.0 - Mob Harvester
 
 - Added the powered Mob Harvester, which damages eligible living mobs in a four-block vertical column.

@@ -109,6 +109,15 @@ public class MachineContent {
         BLOCK_ENTITY_TYPES.register("mob_harvester", () ->
             BlockEntityType.Builder.of(MobHarvesterBlockEntity::new, MOB_HARVESTER.get()).build(null));
 
+    // Defoliator
+    public static final DeferredBlock<DefoliatorBlock> DEFOLIATOR = BLOCKS.register("defoliator",
+        () -> new DefoliatorBlock(BlockBehaviour.Properties.of().strength(3.0f, 10.0f).requiresCorrectToolForDrops()));
+    public static final DeferredItem<BlockItem> DEFOLIATOR_ITEM =
+        ITEMS.registerSimpleBlockItem("defoliator", DEFOLIATOR);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DefoliatorBlockEntity>> DEFOLIATOR_BLOCK_ENTITY =
+        BLOCK_ENTITY_TYPES.register("defoliator", () ->
+            BlockEntityType.Builder.of(DefoliatorBlockEntity::new, DEFOLIATOR.get()).build(null));
+
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
@@ -158,12 +167,23 @@ public class MachineContent {
             MOB_HARVESTER_BLOCK_ENTITY.get(),
             (harvester, side) -> harvester.getEnergyStorage()
         );
+        event.registerBlockEntity(
+            Capabilities.EnergyStorage.BLOCK,
+            DEFOLIATOR_BLOCK_ENTITY.get(),
+            (defoliator, side) -> defoliator.getEnergyStorage()
+        );
+        event.registerBlockEntity(
+            Capabilities.ItemHandler.BLOCK,
+            DEFOLIATOR_BLOCK_ENTITY.get(),
+            (defoliator, side) -> defoliator.getItemHandler()
+        );
     }
 
     private static void addToCreativeTab(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {
             event.accept(FAN_ITEM.get());
             event.accept(MOB_HARVESTER_ITEM.get());
+            event.accept(DEFOLIATOR_ITEM.get());
         }
     }
 }

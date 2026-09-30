@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IPI",
+    "PDP",
+    "IRI"
+  ],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "P": { "item": "minecraft:piston" },
+    "D": { "item": "minecraft:potion" },
+    "R": { "item": "minecraft:redstone" }
+  },
+  "result": { "id": "rotarycraft:defoliator" }
+}
