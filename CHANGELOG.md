@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.7.0 - Fan
+
+- Added the Fan, a powered directional airflow machine inspired by the legacy RotaryCraft Fan.
+  - Pushes entities in a bounded eight-block airflow path and stops at solid block collision shapes.
+  - Stores up to 50,000 FE, accepts up to 160 FE per tick, and consumes 16 FE per operating tick.
+  - Added energy capability, crafting recipe, recipe-book advancement, block/item models, blockstates, loot, and English localization.
+  - Added GameTests for recipe registration, energy capability, directional entity movement, solid-block occlusion, and unpowered behavior.
+
 ## 0.6.0 - Sorting
 
 - Added the Sorting Machine, a powered item router with nine persistent filter slots.

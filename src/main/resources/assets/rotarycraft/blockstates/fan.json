@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "facing=north,lit=false": { "model": "rotarycraft:block/fan" },
+    "facing=east,lit=false": { "model": "rotarycraft:block/fan", "y": 90 },
+    "facing=south,lit=false": { "model": "rotarycraft:block/fan", "y": 180 },
+    "facing=west,lit=false": { "model": "rotarycraft:block/fan", "y": 270 },
+    "facing=north,lit=true": { "model": "rotarycraft:block/fan_active" },
+    "facing=east,lit=true": { "model": "rotarycraft:block/fan_active", "y": 90 },
+    "facing=south,lit=true": { "model": "rotarycraft:block/fan_active", "y": 180 },
+    "facing=west,lit=true": { "model": "rotarycraft:block/fan_active", "y": 270 }
+  }
+}

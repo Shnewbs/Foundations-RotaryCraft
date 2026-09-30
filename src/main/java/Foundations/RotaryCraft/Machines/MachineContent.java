@@ -2,9 +2,11 @@ package Foundations.RotaryCraft.Machines;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -90,11 +92,20 @@ public class MachineContent {
         BLOCK_ENTITY_TYPES.register("sorting", () ->
             BlockEntityType.Builder.of(SortingBlockEntity::new, SORTING.get()).build(null));
 
+    // Fan
+    public static final DeferredBlock<FanBlock> FAN = BLOCKS.register("fan",
+        () -> new FanBlock(BlockBehaviour.Properties.of().strength(2.5f, 8.0f).requiresCorrectToolForDrops()));
+    public static final DeferredItem<BlockItem> FAN_ITEM = ITEMS.registerSimpleBlockItem("fan", FAN);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FanBlockEntity>> FAN_BLOCK_ENTITY =
+        BLOCK_ENTITY_TYPES.register("fan", () ->
+            BlockEntityType.Builder.of(FanBlockEntity::new, FAN.get()).build(null));
+
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCK_ENTITY_TYPES.register(modEventBus);
         modEventBus.addListener(MachineContent::registerCapabilities);
+        modEventBus.addListener(MachineContent::addToCreativeTab);
     }
 
     private static void registerCapabilities(RegisterCapabilitiesEvent event) {
@@ -128,5 +139,16 @@ public class MachineContent {
             SORTING_BLOCK_ENTITY.get(),
             (sorter, side) -> sorter.getInput()
         );
+        event.registerBlockEntity(
+            Capabilities.EnergyStorage.BLOCK,
+            FAN_BLOCK_ENTITY.get(),
+            (fan, side) -> fan.getEnergyStorage()
+        );
+    }
+
+    private static void addToCreativeTab(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {
+            event.accept(FAN_ITEM.get());
+        }
     }
 }

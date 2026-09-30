@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IPI",
+    "PCP",
+    "IRI"
+  ],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "P": { "item": "minecraft:piston" },
+    "C": { "item": "minecraft:copper_block" },
+    "R": { "item": "minecraft:redstone" }
+  },
+  "result": { "id": "rotarycraft:fan" }
+}
