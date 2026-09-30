@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## 0.4.0 - Detection Utilities
+
+- Added the Player Detector, a powered proximity sensor with configurable range and binary or analog redstone output.
+  - Detects players within up to 64 blocks after a five-second reaction delay.
+  - Analog mode outputs up to 15 based on the number of nearby players.
+- Added the Smoke Detector, a powered fire sensor with an eight-block detection range.
+  - Emits a full redstone alarm while fire or soul fire is nearby.
+  - Reports a low-battery state to automation and persists its energy buffer.
+- Added registration, energy capabilities, recipes, advancements, models, blockstates, and English localization for both detectors.
+
 ## 0.3.0 - Decorative Storage
 
 - Added the DecoTank: A decorative fluid storage and display block.

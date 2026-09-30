@@ -3,6 +3,8 @@ package Foundations.RotaryCraft.Machines;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -52,9 +54,41 @@ public class MachineContent {
         BLOCK_ENTITY_TYPES.register("deco_tank", () -> 
             BlockEntityType.Builder.of(DecoTankBlockEntity::new, DECO_TANK.get()).build(null));
 
+    // Player Detector
+    public static final DeferredBlock<PlayerDetectorBlock> PLAYER_DETECTOR = BLOCKS.register("player_detector",
+        () -> new PlayerDetectorBlock(BlockBehaviour.Properties.of().strength(2.5f, 8.0f).requiresCorrectToolForDrops()));
+    public static final DeferredItem<BlockItem> PLAYER_DETECTOR_ITEM =
+        ITEMS.registerSimpleBlockItem("player_detector", PLAYER_DETECTOR);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlayerDetectorBlockEntity>> PLAYER_DETECTOR_BLOCK_ENTITY =
+        BLOCK_ENTITY_TYPES.register("player_detector", () ->
+            BlockEntityType.Builder.of(PlayerDetectorBlockEntity::new, PLAYER_DETECTOR.get()).build(null));
+
+    // Smoke Detector
+    public static final DeferredBlock<SmokeDetectorBlock> SMOKE_DETECTOR = BLOCKS.register("smoke_detector",
+        () -> new SmokeDetectorBlock(BlockBehaviour.Properties.of().strength(1.5f, 4.0f).requiresCorrectToolForDrops()));
+    public static final DeferredItem<BlockItem> SMOKE_DETECTOR_ITEM =
+        ITEMS.registerSimpleBlockItem("smoke_detector", SMOKE_DETECTOR);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SmokeDetectorBlockEntity>> SMOKE_DETECTOR_BLOCK_ENTITY =
+        BLOCK_ENTITY_TYPES.register("smoke_detector", () ->
+            BlockEntityType.Builder.of(SmokeDetectorBlockEntity::new, SMOKE_DETECTOR.get()).build(null));
+
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCK_ENTITY_TYPES.register(modEventBus);
+        modEventBus.addListener(MachineContent::registerCapabilities);
+    }
+
+    private static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(
+            Capabilities.EnergyStorage.BLOCK,
+            PLAYER_DETECTOR_BLOCK_ENTITY.get(),
+            (detector, side) -> detector.getEnergyStorage()
+        );
+        event.registerBlockEntity(
+            Capabilities.EnergyStorage.BLOCK,
+            SMOKE_DETECTOR_BLOCK_ENTITY.get(),
+            (detector, side) -> detector.getEnergyStorage()
+        );
     }
 }

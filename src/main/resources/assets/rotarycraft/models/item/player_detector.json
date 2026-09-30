@@ -1,0 +1,4 @@
+{
+  "parent": "item/block",
+  "textures": { "layer0": "rotarycraft:block/player_detector" }
+}
