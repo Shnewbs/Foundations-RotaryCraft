@@ -1,83 +1,13 @@
 {
   "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "loader": "neoforge:obj",
+  "model": "rotarycraft:models/legacy/wind_generator.obj",
+  "automatic_culling": false,
+  "shade_quads": true,
+  "flip_v": false,
+  "emissive_ambient": false,
   "textures": {
-    "particle": "minecraft:block/iron_block",
-    "metal": "minecraft:block/iron_block",
-    "copper": "minecraft:block/cut_copper",
-    "blade": "minecraft:block/smooth_stone"
-  },
-  "elements": [
-    {
-      "from": [2, 0, 2],
-      "to": [14, 2, 14],
-      "faces": {
-        "down": {"texture": "#metal"},
-        "up": {"texture": "#metal"},
-        "north": {"texture": "#metal"},
-        "south": {"texture": "#metal"},
-        "west": {"texture": "#metal"},
-        "east": {"texture": "#metal"}
-      }
-    },
-    {
-      "from": [7, 2, 7],
-      "to": [9, 12, 9],
-      "faces": {
-        "down": {"texture": "#metal"},
-        "up": {"texture": "#metal"},
-        "north": {"texture": "#metal"},
-        "south": {"texture": "#metal"},
-        "west": {"texture": "#metal"},
-        "east": {"texture": "#metal"}
-      }
-    },
-    {
-      "from": [5, 12, 5],
-      "to": [11, 16, 11],
-      "faces": {
-        "down": {"texture": "#copper"},
-        "up": {"texture": "#copper"},
-        "north": {"texture": "#copper"},
-        "south": {"texture": "#copper"},
-        "west": {"texture": "#copper"},
-        "east": {"texture": "#copper"}
-      }
-    },
-    {
-      "from": [7, 7, 3],
-      "to": [9, 15, 5],
-      "faces": {
-        "down": {"texture": "#blade"},
-        "up": {"texture": "#blade"},
-        "north": {"texture": "#blade"},
-        "south": {"texture": "#blade"},
-        "west": {"texture": "#blade"},
-        "east": {"texture": "#blade"}
-      }
-    },
-    {
-      "from": [3, 10, 3],
-      "to": [13, 12, 5],
-      "faces": {
-        "down": {"texture": "#blade"},
-        "up": {"texture": "#blade"},
-        "north": {"texture": "#blade"},
-        "south": {"texture": "#blade"},
-        "west": {"texture": "#blade"},
-        "east": {"texture": "#blade"}
-      }
-    },
-    {
-      "from": [7, 10, 2],
-      "to": [9, 12, 6],
-      "faces": {
-        "down": {"texture": "#copper"},
-        "up": {"texture": "#copper"},
-        "north": {"texture": "#copper"},
-        "south": {"texture": "#copper"},
-        "west": {"texture": "#copper"},
-        "east": {"texture": "#copper"}
-      }
-    }
-  ]
+    "particle": "rotarycraft:legacy/wind_generator"
+  }
 }

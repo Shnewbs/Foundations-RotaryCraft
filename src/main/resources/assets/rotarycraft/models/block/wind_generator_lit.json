@@ -1,6 +1,13 @@
 {
-  "parent": "rotarycraft:block/wind_generator",
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "loader": "neoforge:obj",
+  "model": "rotarycraft:models/legacy/wind_generator.obj",
+  "automatic_culling": false,
+  "shade_quads": true,
+  "flip_v": false,
+  "emissive_ambient": false,
   "textures": {
-    "copper": "minecraft:block/exposed_copper"
+    "particle": "rotarycraft:legacy/wind_generator"
   }
 }

@@ -1,12 +1,13 @@
 {
-  "parent": "minecraft:block/cube",
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "loader": "neoforge:obj",
+  "model": "rotarycraft:models/legacy/fan.obj",
+  "automatic_culling": false,
+  "shade_quads": true,
+  "flip_v": false,
+  "emissive_ambient": false,
   "textures": {
-    "down": "rotarycraft:block/fan_casing",
-    "up": "rotarycraft:block/fan_casing",
-    "north": "rotarycraft:block/fan_rotor_idle",
-    "south": "rotarycraft:block/fan_casing",
-    "east": "rotarycraft:block/fan_casing",
-    "west": "rotarycraft:block/fan_casing",
-    "particle": "rotarycraft:block/fan_casing"
+    "particle": "rotarycraft:legacy/fan"
   }
 }

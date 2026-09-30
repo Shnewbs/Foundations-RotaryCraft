@@ -37,7 +37,12 @@ public class GrindstoneBlockEntity extends BlockEntity {
         super(MachineContent.GRINDSTONE_BLOCK_ENTITY.get(), pos, state);
     }
     public static void serverTick(Level level, BlockPos pos, BlockState state, GrindstoneBlockEntity entity) {
-        if (!level.isClientSide) entity.tryGrind();
+        if (!level.isClientSide) {
+            entity.tryGrind();
+            var property = net.minecraft.world.level.block.state.properties.BlockStateProperties.LIT;
+            var current = entity.getBlockState();
+            if (current.getValue(property) != entity.operating) level.setBlock(pos, current.setValue(property, entity.operating), 2);
+        }
     }
     private void tryGrind() {
         if (level == null) return;

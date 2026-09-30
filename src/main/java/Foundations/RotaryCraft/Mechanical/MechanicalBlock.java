@@ -35,7 +35,7 @@ public final class MechanicalBlock extends BaseEntityBlock {
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new MechanicalBlockEntity(pos, state); }
     @Override public <T extends BlockEntity> net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(
             Level level, BlockState state, net.minecraft.world.level.block.entity.BlockEntityType<T> type) {
-        if (level.isClientSide || !state.is(MechanicalContent.DC_ENGINE.get())) return null;
+        if (level.isClientSide) return null;
         return createTickerHelper(type, MechanicalContent.ENTITY.get(), MechanicalBlockEntity::serverTick);
     }
     @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {

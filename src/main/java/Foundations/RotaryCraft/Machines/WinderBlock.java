@@ -23,8 +23,12 @@ public class WinderBlock extends BaseEntityBlock {
 
     public WinderBlock(BlockBehaviour.Properties properties) {
         super(properties);
+        registerDefaultState(defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.LIT, false));
     }
 
+    @Override protected void createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(net.minecraft.world.level.block.state.properties.BlockStateProperties.LIT);
+    }
     @Override
     public MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;

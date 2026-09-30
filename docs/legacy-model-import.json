@@ -5,8 +5,9 @@
     ],
     "texture": "Textures/TileEntityTex/Engine/dc.png",
     "parts": 11,
-    "quads": 66,
-    "status": "rest-pose import; animation and in-client acceptance pending"
+    "stationary_quads": 54,
+    "moving_groups": 2,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
   },
   "shaft": {
     "sources": [
@@ -14,8 +15,9 @@
     ],
     "texture": "Textures/TileEntityTex/Transmission/Shaft/shafttexs.png",
     "parts": 13,
-    "quads": 78,
-    "status": "rest-pose import; animation and in-client acceptance pending"
+    "stationary_quads": 66,
+    "moving_groups": 2,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
   },
   "gearbox_2": {
     "sources": [
@@ -24,8 +26,9 @@
     ],
     "texture": "Textures/TileEntityTex/Transmission/Gear/geartexs.png",
     "parts": 28,
-    "quads": 168,
-    "status": "rest-pose import; animation and in-client acceptance pending"
+    "stationary_quads": 72,
+    "moving_groups": 16,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
   },
   "gearbox_4": {
     "sources": [
@@ -34,8 +37,9 @@
     ],
     "texture": "Textures/TileEntityTex/Transmission/Gear/geartexs.png",
     "parts": 35,
-    "quads": 210,
-    "status": "rest-pose import; animation and in-client acceptance pending"
+    "stationary_quads": 78,
+    "moving_groups": 22,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
   },
   "gearbox_8": {
     "sources": [
@@ -44,8 +48,9 @@
     ],
     "texture": "Textures/TileEntityTex/Transmission/Gear/geartexs.png",
     "parts": 41,
-    "quads": 246,
-    "status": "rest-pose import; animation and in-client acceptance pending"
+    "stationary_quads": 78,
+    "moving_groups": 28,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
   },
   "gearbox_16": {
     "sources": [
@@ -54,8 +59,9 @@
     ],
     "texture": "Textures/TileEntityTex/Transmission/Gear/geartexs.png",
     "parts": 51,
-    "quads": 306,
-    "status": "rest-pose import; animation and in-client acceptance pending"
+    "stationary_quads": 78,
+    "moving_groups": 38,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
   },
   "grindstone": {
     "sources": [
@@ -63,8 +69,9 @@
     ],
     "texture": "Textures/TileEntityTex/grindertex.png",
     "parts": 69,
-    "quads": 422,
-    "status": "rest-pose import; animation and in-client acceptance pending"
+    "stationary_quads": 74,
+    "moving_groups": 58,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
   },
   "player_detector": {
     "sources": [
@@ -72,8 +79,9 @@
     ],
     "texture": "Textures/TileEntityTex/detectortex.png",
     "parts": 35,
-    "quads": 210,
-    "status": "rest-pose import; animation and in-client acceptance pending"
+    "stationary_quads": 210,
+    "moving_groups": 0,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
   },
   "smoke_detector": {
     "sources": [
@@ -81,8 +89,9 @@
     ],
     "texture": "Textures/TileEntityTex/smokedetectortex.png",
     "parts": 2,
-    "quads": 12,
-    "status": "rest-pose import; animation and in-client acceptance pending"
+    "stationary_quads": 12,
+    "moving_groups": 0,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
   },
   "item_cannon": {
     "sources": [
@@ -90,8 +99,69 @@
     ],
     "texture": "Textures/TileEntityTex/itemcannontex.png",
     "parts": 19,
-    "quads": 114,
-    "status": "rest-pose import; animation and in-client acceptance pending"
+    "stationary_quads": 114,
+    "moving_groups": 0,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
+  },
+  "power_generator": {
+    "sources": [
+      "Models/Engine/ModelCombustion.java"
+    ],
+    "texture": "Textures/TileEntityTex/Engine/combtex.png",
+    "parts": 9,
+    "stationary_quads": 42,
+    "moving_groups": 2,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
+  },
+  "steam_generator": {
+    "sources": [
+      "Models/Engine/ModelSteam.java"
+    ],
+    "texture": "Textures/TileEntityTex/Engine/steamtex.png",
+    "parts": 23,
+    "stationary_quads": 54,
+    "moving_groups": 14,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
+  },
+  "wind_generator": {
+    "sources": [
+      "Models/Engine/ModelWind.java"
+    ],
+    "texture": "Textures/TileEntityTex/Engine/windtex.png",
+    "parts": 24,
+    "stationary_quads": 72,
+    "moving_groups": 12,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
+  },
+  "hydro_generator": {
+    "sources": [
+      "Models/Engine/ModelHydro.java"
+    ],
+    "texture": "Textures/TileEntityTex/Engine/hydrotex.png",
+    "parts": 8,
+    "stationary_quads": 12,
+    "moving_groups": 6,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
+  },
+  "geothermal_generator": {
+    "sources": [
+      "Models/Engine/ModelPerformance.java"
+    ],
+    "texture": "Textures/TileEntityTex/Engine/perftex.png",
+    "parts": 30,
+    "stationary_quads": 180,
+    "moving_groups": 0,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
+  },
+  "fan": {
+    "sources": [
+      "Models/Animated/ModelFan.java"
+    ],
+    "texture": "Textures/TileEntityTex/fantex.png",
+    "parts": 21,
+    "stationary_quads": 54,
+    "moving_groups": 12,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
   },
   "winder": {
     "sources": [
@@ -99,8 +169,9 @@
     ],
     "texture": "Textures/TileEntityTex/windertex.png",
     "parts": 8,
-    "quads": 58,
-    "status": "rest-pose import; animation and in-client acceptance pending"
+    "stationary_quads": 46,
+    "moving_groups": 2,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
   },
   "defoliator": {
     "sources": [
@@ -108,8 +179,9 @@
     ],
     "texture": "Textures/TileEntityTex/defoliatortex.png",
     "parts": 35,
-    "quads": 210,
-    "status": "rest-pose import; animation and in-client acceptance pending"
+    "stationary_quads": 6,
+    "moving_groups": 34,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
   },
   "sprinkler": {
     "sources": [
@@ -117,8 +189,9 @@
     ],
     "texture": "Textures/TileEntityTex/sprinklertex.png",
     "parts": 10,
-    "quads": 60,
-    "status": "rest-pose import; animation and in-client acceptance pending"
+    "stationary_quads": 60,
+    "moving_groups": 0,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
   },
   "mob_harvester": {
     "sources": [
@@ -126,7 +199,8 @@
     ],
     "texture": "Textures/TileEntityTex/harvestertex.png",
     "parts": 15,
-    "quads": 90,
-    "status": "rest-pose import; animation and in-client acceptance pending"
+    "stationary_quads": 90,
+    "moving_groups": 0,
+    "status": "source geometry and renderer operations imported; client acceptance pending"
   }
 }

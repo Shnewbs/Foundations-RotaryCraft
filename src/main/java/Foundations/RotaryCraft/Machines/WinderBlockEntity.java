@@ -30,6 +30,9 @@ public class WinderBlockEntity extends BlockEntity {
         if (level == null || level.isClientSide) return;
         
         entity.tickWinder();
+        boolean active = entity.energyStorage.getEnergyStored() > 0;
+        var property = net.minecraft.world.level.block.state.properties.BlockStateProperties.LIT;
+        if (state.getValue(property) != active) level.setBlock(pos, state.setValue(property, active), 2);
     }
 
     private void tickWinder() {

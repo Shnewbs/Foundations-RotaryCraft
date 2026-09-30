@@ -8,6 +8,10 @@ import json
 import math
 import re
 import shutil
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import legacy_animation
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,6 +27,12 @@ ENTRIES = {
     'player_detector': (['Models/ModelDetector.java'], 'detectortex.png', 0),
     'smoke_detector': (['Models/ModelSmokeDetector.java'], 'smokedetectortex.png', 0),
     'item_cannon': (['Models/ModelItemCannon.java'], 'itemcannontex.png', 0),
+    'power_generator': (['Models/Engine/ModelCombustion.java'], 'Engine/combtex.png', 90),
+    'steam_generator': (['Models/Engine/ModelSteam.java'], 'Engine/steamtex.png', 90),
+    'wind_generator': (['Models/Engine/ModelWind.java'], 'Engine/windtex.png', 90),
+    'hydro_generator': (['Models/Engine/ModelHydro.java'], 'Engine/hydrotex.png', 90),
+    'geothermal_generator': (['Models/Engine/ModelPerformance.java'], 'Engine/perftex.png', 90),
+    'fan': (['Models/Animated/ModelFan.java'], 'fantex.png', 0),
     'winder': (['Models/Animated/ModelWinder.java'], 'windertex.png', 0),
     'defoliator': (['Models/Animated/ModelDefoliator.java'], 'defoliatortex.png', 0),
     'sprinkler': (['Models/ModelSprinkler.java'], 'sprinklertex.png', 0),
@@ -126,60 +136,75 @@ def wrap_uvs(face):
             piece=[interpolate(t0,s0),interpolate(t1,s0),interpolate(t1,s1),interpolate(t0,s1)]
             yield [(point,tuple(uv[i]-tile[i] for i in range(2))) for point,uv in piece]
 
+def render_faces(part, operations, orientation):
+    for face in mesh(part,0):
+        for piece in wrap_uvs(face):
+            output=[]
+            for point,uv in piece:
+                raw=(point[0]-0.5,1.5-point[1],0.5-point[2])
+                x,y,z=legacy_animation.transform(raw,operations)
+                x,y,z=rotate((x,1-y,-z),(0,math.radians(orientation),0))
+                output.append(((x+0.5,y+0.5,z+0.5),uv))
+            yield output
+
+def write_obj(path,name,groups,orientation):
+    lines=['# Original RotaryCraft geometry; see License.txt.',f'mtllib rotarycraft:models/legacy/{name}.mtl','usemtl original']
+    positions={};coordinates={}; quads=0
+    for group in groups:
+        part=group['part'];lines.append('g '+part['name'])
+        for face in render_faces(part,group['operations'],orientation):
+            indices=[]
+            for vertex,uv in face:
+                pos=' '.join(f'{v:.9f}' for v in vertex); tex=' '.join(f'{v:.9f}' for v in uv)
+                if pos not in positions:positions[pos]=len(positions)+1;lines.append('v '+pos)
+                if tex not in coordinates:coordinates[tex]=len(coordinates)+1;lines.append('vt '+tex)
+                indices.append(f'{positions[pos]}/{coordinates[tex]}')
+            lines.append('f '+' '.join(indices));quads+=1
+    path.write_text('\n'.join(lines)+'\n');return quads
+
 def export():
-    target = ASSETS / 'models/legacy'
-    textures = ASSETS / 'textures/legacy'
-    target.mkdir(parents=True, exist_ok=True)
-    textures.mkdir(parents=True, exist_ok=True)
+    target=ASSETS/'models/legacy';textures=ASSETS/'textures/legacy';motion=ASSETS/'motion'
+    for path in [target,textures,motion]:path.mkdir(parents=True,exist_ok=True)
     report={}
+    animated={'dc_engine','shaft','gearbox_2','gearbox_4','gearbox_8','gearbox_16','grindstone','fan','winder','defoliator','power_generator','steam_generator','wind_generator','hydro_generator'}
     for name,(sources,texture,orientation) in ENTRIES.items():
         original=ROOT/'Textures/TileEntityTex'/texture
         shutil.copyfile(original,textures/(name+'.png'))
         modelparts=[part for source in sources for part in parts(source)]
-        if name == 'winder':
-            # Original renderer omits Shape6* unless a coil is installed. This port has no coil inventory yet.
-            modelparts=[part for part in modelparts if not part['name'].split('_')[-1].startswith('Shape6')]
-        if name == 'defoliator':
-            # Renderer repeats these blade parts around the Y axis in its rest pose.
-            instances=[]
-            for part in modelparts:
-                local=part['name'].split('_')[-1]
-                angles={'Shape6':[0,120,240],'Shape6a':[60,180,300],'Shape6c':[45,135,225,315]}.get(local,[0])
-                for angle in angles:
-                    copy=dict(part)
-                    copy['instance_y']=-angle
-                    copy['name']+=f'_instance_{angle}'
-                    instances.append(copy)
-            modelparts=instances
-        lines=['# Derived from original RotaryCraft model source; see License.txt.',f'mtllib rotarycraft:models/legacy/{name}.mtl','usemtl original']
-        positions={}
-        coordinates={}
-        for part in modelparts:
-            lines.append('g '+part['name'])
-            for face in (piece for original in mesh(part,orientation+part.get('instance_y',0)) for piece in wrap_uvs(original)):
-                indices=[]
-                for vertex,uv in face:
-                    position=' '.join(f'{v:.9f}' for v in vertex)
-                    coordinate=' '.join(f'{v:.9f}' for v in uv)
-                    if position not in positions:
-                        positions[position]=len(positions)+1
-                        lines.append('v '+position)
-                    if coordinate not in coordinates:
-                        coordinates[coordinate]=len(coordinates)+1
-                        lines.append('vt '+coordinate)
-                    indices.append(f'{positions[position]}/{coordinates[coordinate]}')
-                lines.append('f '+' '.join(indices))
-        (target/(name+'.obj')).write_text('\n'.join(lines)+'\n')
+        if name=='winder':modelparts=[p for p in modelparts if not p['name'].split('_')[-1].startswith('Shape6')]
+        if name in animated:
+            rendered=legacy_animation.groups(ROOT/sources[-1],modelparts)
+        else:rendered=[{'part':p,'operations':[]} for p in modelparts]
+        moving=[];stationary=[]
+        for group in rendered:
+            # A symbolic rotation may cancel completely; compare three non-collinear points.
+            changed=any(any(abs(a-b)>1e-8 for a,b in zip(legacy_animation.transform(point,group['operations'],0),legacy_animation.transform(point,group['operations'],37))) for point in [(0,0,0),(1,0,0),(0,1,0),(0,0,1)])
+            (moving if changed else stationary).append(group)
+        blocks=stationary if moving else rendered
+        quads=write_obj(target/(name+'.obj'),name,blocks,orientation)
+        write_obj(target/(name+'_inventory.obj'),name,rendered,orientation)
         (target/(name+'.mtl')).write_text('newmtl original\nKd 1 1 1\nd 1\nmap_Kd rotarycraft:legacy/'+name+'\n')
-        model={'parent':'minecraft:block/block','render_type':'minecraft:cutout','loader':'neoforge:obj','model':f'rotarycraft:models/legacy/{name}.obj',
-               'automatic_culling':False,'shade_quads':True,'flip_v':False,'emissive_ambient':False,
-               'textures':{'particle':f'rotarycraft:legacy/{name}'}}
+        model={'parent':'minecraft:block/block','render_type':'minecraft:cutout','loader':'neoforge:obj','model':f'rotarycraft:models/legacy/{name}.obj','automatic_culling':False,'shade_quads':True,'flip_v':False,'emissive_ambient':False,'textures':{'particle':f'rotarycraft:legacy/{name}'}}
         (ASSETS/'models/block'/(name+'.json')).write_text(json.dumps(model,indent=2)+'\n')
-        for variant in {'defoliator':['defoliator_active'],'sprinkler':['sprinkler_active'],'mob_harvester':['mob_harvester_active']}.get(name,[]):
+        inventory=dict(model);inventory['model']=f'rotarycraft:models/legacy/{name}_inventory.obj'
+        inventory['display']={'gui':{'rotation':[30,225,0],'translation':[0,0,0],'scale':[0.65,0.65,0.65]},'ground':{'scale':[0.25,0.25,0.25],'translation':[0,3,0]},'fixed':{'scale':[0.5,0.5,0.5]},'thirdperson_righthand':{'rotation':[75,45,0],'scale':[0.375,0.375,0.375],'translation':[0,2.5,0]},'firstperson_righthand':{'rotation':[0,45,0],'scale':[0.4,0.4,0.4]}}
+        (ASSETS/'models/item'/(name+'.json')).write_text(json.dumps(inventory,indent=2)+'\n')
+        for variant in {'power_generator':['power_generator_lit'],'steam_generator':['steam_generator_lit'],'wind_generator':['wind_generator_lit'],'hydro_generator':['hydro_generator_lit'],'geothermal_generator':['geothermal_generator_lit'],'fan':['fan_active'],'defoliator':['defoliator_active'],'sprinkler':['sprinkler_active'],'mob_harvester':['mob_harvester_active']}.get(name,[]):
             (ASSETS/'models/block'/(variant+'.json')).write_text(json.dumps(model,indent=2)+'\n')
-        report[name]={'sources':sources,'texture':str(original.relative_to(ROOT)),'parts':len(modelparts),
-                      'quads':sum(line.startswith('f ') for line in lines),'status':'rest-pose import; animation and in-client acceptance pending'}
+        data={'orientation':orientation,'groups':[]}
+        combined={}
+        for group in moving:
+            faces=[]
+            for face in mesh(group['part'],0):
+                for piece in wrap_uvs(face):
+                    faces.append([[point[0]-0.5,1.5-point[1],0.5-point[2],*uv] for point,uv in piece])
+            key=json.dumps(group['operations'],sort_keys=True)
+            if key not in combined:combined[key]={'operations':group['operations'],'faces':[]}
+            combined[key]['faces'].extend(faces)
+        data['groups']=list(combined.values())
+        if moving:(motion/(name+'.json')).write_text(json.dumps(data,separators=(',',':'))+'\n')
+        report[name]={'sources':sources,'texture':str(original.relative_to(ROOT)),'parts':len(rendered),'stationary_quads':quads,'moving_groups':len(moving),'status':'source geometry and renderer operations imported; client acceptance pending'}
     (ROOT/'docs/legacy-model-import.json').write_text(json.dumps(report,indent=2)+'\n')
-    print(f'Imported {len(report)} original model/atlas pairs')
+    print(f'Imported {len(report)} original model/atlas pairs with animation groups')
 
 if __name__=='__main__':export()
