@@ -1,0 +1,1 @@
+{"parent":"minecraft:recipes/redstone/root","criteria":{"has_piston":{"trigger":"minecraft:inventory_changed","conditions":{"items":[{"items":["minecraft:piston"]}]}}},"requirements":[["has_piston"]],"rewards":{"recipes":["rotarycraft:item_cannon"]}}
