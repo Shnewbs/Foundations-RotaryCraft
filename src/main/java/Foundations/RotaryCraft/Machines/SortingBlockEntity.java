@@ -17,8 +17,8 @@ public class SortingBlockEntity extends BlockEntity {
     private static final int ENERGY_CAPACITY = 50_000;
     private static final int MIN_ENERGY = 16;
     private final EnergyStorage energy = new EnergyStorage(ENERGY_CAPACITY, 160, 0);
-    private final ItemStackHandler filters = new ItemStackHandler(9);
-    private final ItemStackHandler input = new ItemStackHandler(1);
+    private final ItemStackHandler filters = new ItemStackHandler(9){@Override protected void onContentsChanged(int slot){setChanged();}};
+    private final ItemStackHandler input = new ItemStackHandler(1){@Override protected void onContentsChanged(int slot){setChanged();}};
     private int facingIndex;
 
     public SortingBlockEntity(BlockPos pos, BlockState state) {

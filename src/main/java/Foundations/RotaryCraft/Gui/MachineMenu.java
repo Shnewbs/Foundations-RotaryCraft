@@ -17,6 +17,7 @@ import Foundations.RotaryCraft.Machines.*;
 public final class MachineMenu extends AbstractContainerMenu {
     public final BlockPos position;
     public final int machineSlots;
+    public final boolean sorter;
     private final BlockEntity entity;
     private final ContainerData values;
     public static final int STATUS_COUNT=16;
@@ -36,33 +37,46 @@ public final class MachineMenu extends AbstractContainerMenu {
     public static MachineMenu client(int id,Inventory inventory,net.minecraft.network.FriendlyByteBuf buffer) {
         BlockPos pos=buffer.readBlockPos();int count=buffer.readVarInt();
         if(count<0||count>54)throw new IllegalArgumentException("Invalid machine slot count");
-        return new MachineMenu(id,inventory,pos,null,List.of(new ItemStackHandler(count)),new SimpleContainerData(STATUS_COUNT*2));
+        return new MachineMenu(id,inventory,pos,null,List.of(new ItemStackHandler(count)),new SimpleContainerData(STATUS_COUNT*2),buffer.readBoolean());
     }
     public MachineMenu(int id,Inventory inventory,BlockEntity entity) {
         this(id,inventory,entity.getBlockPos(),entity,handlers(entity),new ContainerData(){
             public int getCount(){return STATUS_COUNT*2;}
             public int get(int index){int value=status(entity,index/2);return (value>>>((index%2)*16))&65535;}
             public void set(int index,int value){}
-        });
+        },entity instanceof SortingBlockEntity);
     }
-    private MachineMenu(int id,Inventory inventory,BlockPos pos,BlockEntity entity,List<IItemHandler> handlers,ContainerData values) {
-        super(MachineMenus.MACHINE.get(),id);this.position=pos;this.entity=entity;this.values=values;
+    private MachineMenu(int id,Inventory inventory,BlockPos pos,BlockEntity entity,List<IItemHandler> handlers,ContainerData values,boolean sorter) {
+        super(MachineMenus.MACHINE.get(),id);this.position=pos;this.entity=entity;this.values=values;this.sorter=sorter;
         machineSlots=handlers.stream().mapToInt(IItemHandler::getSlots).sum();
         int index=0;
         for(var handler:handlers)for(int slot=0;slot<handler.getSlots();slot++) {
-            final int local=slot;var owner=entity;
-            addSlot(new SlotItemHandler(handler,slot,8+(index%9)*18,88+(index/9)*18){
+            final int local=slot;var owner=entity;final boolean ghost=sorter&&index>0;
+            int x=ghost?44+((index-1)%3)*18:8+(index%9)*18;
+            int y=ghost?88+((index-1)/3)*18:88+(index/9)*18;
+            addSlot(new SlotItemHandler(handler,slot,x,y){
+                @Override public boolean mayPlace(ItemStack stack){return !ghost&&super.mayPlace(stack);}
                 @Override public void setChanged(){super.setChanged();if(owner!=null)owner.setChanged();}
-                @Override public boolean mayPickup(Player player){return handler instanceof IItemHandlerModifiable;}
+                @Override public boolean mayPickup(Player player){return !ghost&&handler instanceof IItemHandlerModifiable;}
                 @Override public ItemStack remove(int amount){
-                    if(!(handler instanceof IItemHandlerModifiable mutable))return ItemStack.EMPTY;
+                    if(ghost||!(handler instanceof IItemHandlerModifiable mutable))return ItemStack.EMPTY;
                     var stack=handler.getStackInSlot(local).copy();var removed=stack.split(amount);mutable.setStackInSlot(local,stack);setChanged();return removed;
                 }
             });index++;
         }
-        for(int row=0;row<3;row++)for(int col=0;col<9;col++)addSlot(new Slot(inventory,col+row*9+9,8+col*18,144+row*18));
-        for(int col=0;col<9;col++)addSlot(new Slot(inventory,col,8+col*18,202));
+        for(int row=0;row<3;row++)for(int col=0;col<9;col++)addSlot(new Slot(inventory,col+row*9+9,8+col*18,156+row*18));
+        for(int col=0;col<9;col++)addSlot(new Slot(inventory,col,8+col*18,214));
         addDataSlots(values);
+    }
+    @Override public void clicked(int slotId,int button,ClickType type,Player player) {
+        if(sorter&&slotId>0&&slotId<machineSlots) {
+            if((type==ClickType.PICKUP||type==ClickType.QUICK_MOVE)&&stillValid(player)) {
+                slots.get(slotId).set(getCarried().isEmpty()?ItemStack.EMPTY:getCarried().copyWithCount(1));
+                broadcastChanges();
+            }
+            return;
+        }
+        super.clicked(slotId,button,type,player);
     }
     public int value(int field){return (values.get(field*2)&65535)|((values.get(field*2+1)&65535)<<16);}
     public static int status(BlockEntity entity,int field) {
@@ -71,7 +85,7 @@ public final class MachineMenu extends AbstractContainerMenu {
         if(entity instanceof GrindstoneBlockEntity grinder){if(field==2)return grinder.getElapsed();if(field==3)return grinder.getDuration();if(field==4)return grinder.getMechanicalInput().power().omega();if(field==5)return grinder.getMechanicalInput().power().torque();}
         if(entity instanceof Foundations.RotaryCraft.Mechanical.MechanicalBlockEntity mechanical){if(field==4)return mechanical.power().omega();if(field==5)return mechanical.power().torque();}
         if(entity instanceof WinderBlockEntity winder){if(field==2)return Math.round(winder.getOperationProgress()*100);if(field==3)return 100;}
-        if(entity instanceof Foundations.RotaryCraft.Farming.SprinklerBlockEntity sprinkler && field==6)return sprinkler.getStoredWater();
+        if(entity instanceof Foundations.RotaryCraft.Farming.SprinklerBlockEntity sprinkler){if(field==6)return sprinkler.getStoredWater();if(field==7)return 1000;}
         if(entity instanceof DecoTankBlockEntity tank){if(field==6)return tank.getFluidAmount();if(field==7)return tank.getMaxFluidAmount();}
         if(entity instanceof PlayerDetectorBlockEntity detector){if(field==8)return detector.getSelectedRange();if(field==9)return detector.isAnalog()?1:0;if(field==10)return detector.getRedstoneOutput();}
         var state=entity.getBlockState();
@@ -86,7 +100,7 @@ public final class MachineMenu extends AbstractContainerMenu {
         if(index<0||index>=slots.size())return ItemStack.EMPTY;var slot=slots.get(index);if(!slot.hasItem()||!slot.mayPickup(player))return ItemStack.EMPTY;
         var source=slot.getItem();var copy=source.copy();
         if(index<machineSlots){if(!moveItemStackTo(source,machineSlots,slots.size(),true))return ItemStack.EMPTY;}
-        else if(!moveItemStackTo(source,0,machineSlots,false))return ItemStack.EMPTY;
+        else if(!moveItemStackTo(source,0,sorter?1:machineSlots,false))return ItemStack.EMPTY;
         if(source.isEmpty())slot.setByPlayer(ItemStack.EMPTY);else slot.setChanged();slot.onTake(player,source);return copy;
     }
     @Override public boolean clickMenuButton(Player player,int button) {

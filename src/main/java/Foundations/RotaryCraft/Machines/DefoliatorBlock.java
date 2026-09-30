@@ -48,6 +48,12 @@ public class DefoliatorBlock extends BaseEntityBlock {
         return RenderShape.MODEL;
     }
 
+    @Override
+    protected void onRemove(BlockState state,Level level,BlockPos pos,BlockState replacement,boolean moving) {
+        if(!state.is(replacement.getBlock()))Foundations.RotaryCraft.Gui.MachineMenus.dropInventory(level,pos);
+        super.onRemove(state,level,pos,replacement,moving);
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {

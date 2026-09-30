@@ -136,6 +136,7 @@ public class MachineContent {
     }
 
     private static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK,DECO_TANK_BLOCK_ENTITY.get(),(tank,side)->tank.getTank());
         event.registerBlockEntity(
             Capabilities.EnergyStorage.BLOCK,
             PLAYER_DETECTOR_BLOCK_ENTITY.get(),

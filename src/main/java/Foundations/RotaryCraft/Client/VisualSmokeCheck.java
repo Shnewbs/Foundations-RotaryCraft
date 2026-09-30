@@ -21,6 +21,7 @@ public final class VisualSmokeCheck {
     private static boolean checked;
     private static int galleryTicks;
     private static java.util.concurrent.CompletableFuture<Void> reload;
+    private static int menuTicks;
     private static final AnimatedMachineRenderer previewRenderer=new AnimatedMachineRenderer(null);
     private static final class Gallery extends Screen {
         private final List<ItemStack> items=new ArrayList<>();
@@ -55,13 +56,30 @@ public final class VisualSmokeCheck {
             if(galleryTicks==50)System.out.println("ROTARYCRAFT_GALLERY_RENDER_CPU mean_ms="+(nanos/1e6/Math.max(1,samples))+" samples="+samples+" models="+items.size()+" softwareGL="+System.getenv("LIBGL_ALWAYS_SOFTWARE"));
         }
     }
+    private static void showMenu(boolean sorter) {
+        var inventory=new net.minecraft.world.entity.player.Inventory(null);
+        var buffer=new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.buffer());
+        buffer.writeBlockPos(net.minecraft.core.BlockPos.ZERO);buffer.writeVarInt(sorter?10:2);buffer.writeBoolean(sorter);
+        var menu=Foundations.RotaryCraft.Gui.MachineMenu.client(0,inventory,buffer);buffer.release();
+        int[] values=new int[Foundations.RotaryCraft.Gui.MachineMenu.STATUS_COUNT];
+        values[0]=40000;values[1]=50000;values[2]=30;values[3]=100;values[4]=sorter?0:256;values[5]=sorter?0:32;values[12]=-1;values[13]=-1;values[14]=-1;
+        for(int i=0;i<values.length;i++){menu.setData(i*2,values[i]&65535);menu.setData(i*2+1,(values[i]>>>16)&65535);}
+        menu.slots.get(0).set(new ItemStack(net.minecraft.world.item.Items.COBBLESTONE,12));
+        menu.slots.get(1).set(new ItemStack(sorter?net.minecraft.world.item.Items.DIAMOND:net.minecraft.world.item.Items.GRAVEL));
+        Minecraft.getInstance().setScreen(new MachineScreen(menu,inventory,Component.literal(sorter?"Sorting Machine":"Grindstone")));
+    }
     @SubscribeEvent public static void tick(ClientTickEvent.Post event) {
         if(!Boolean.getBoolean("rotarycraft.visualSmoke")) return;
         if(checked) {
             if(++galleryTicks==20||galleryTicks==40||galleryTicks==55)Screenshot.grab(Minecraft.getInstance().gameDirectory,Minecraft.getInstance().getMainRenderTarget(),message->System.out.println(message.getString()));
             if(galleryTicks==60)reload=Minecraft.getInstance().reloadResourcePacks();
             if(galleryTicks>60 && reload!=null && reload.isDone() && Minecraft.getInstance().getOverlay()==null) {
-                reload.join();System.out.println("ROTARYCRAFT_RESOURCE_RELOAD_OK");Minecraft.getInstance().stop();
+                reload.join();
+                if(menuTicks++==0){System.out.println("ROTARYCRAFT_RESOURCE_RELOAD_OK");showMenu(false);}
+                if(menuTicks==20)Screenshot.grab(Minecraft.getInstance().gameDirectory,"grinder-gui.png",Minecraft.getInstance().getMainRenderTarget(),message->System.out.println(message.getString()));
+                if(menuTicks==30)showMenu(true);
+                if(menuTicks==50)Screenshot.grab(Minecraft.getInstance().gameDirectory,"sorter-gui.png",Minecraft.getInstance().getMainRenderTarget(),message->System.out.println(message.getString()));
+                if(menuTicks==60){System.out.println("ROTARYCRAFT_MACHINE_GUI_RENDER_OK");Minecraft.getInstance().stop();}
             }
             return;
         }

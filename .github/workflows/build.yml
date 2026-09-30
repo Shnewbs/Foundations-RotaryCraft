@@ -67,6 +67,7 @@ jobs:
           printf 'accessibilityOnboarded:true\nguiScale:2\n' > run-visual/options.txt
           xvfb-run -a -s "-screen 0 1280x720x24" bash gradlew --no-daemon runVisualSmokeClient -PcompatMods=true | tee visual-smoke.log
           grep ROTARYCRAFT_VISUAL_SMOKE_OK visual-smoke.log
+          grep ROTARYCRAFT_MACHINE_GUI_RENDER_OK visual-smoke.log
           python - <<'PY'
           import base64,pathlib
           for p in pathlib.Path('run-visual/screenshots').glob('*.png'):

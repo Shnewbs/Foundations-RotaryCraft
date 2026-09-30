@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 /** Machine-specific fields over a shared compact inventory layout. No client-side machine mutation. */
 public final class MachineScreen extends AbstractContainerScreen<MachineMenu> {
-    public MachineScreen(MachineMenu menu,Inventory inventory,Component title) {super(menu,inventory,title);imageWidth=248;imageHeight=226;inventoryLabelY=132;}
+    public MachineScreen(MachineMenu menu,Inventory inventory,Component title) {super(menu,inventory,title);imageWidth=248;imageHeight=238;inventoryLabelY=144;}
     private void action(int id){if(minecraft!=null&&minecraft.gameMode!=null)minecraft.gameMode.handleInventoryButtonClick(menu.containerId,id);}
     @Override protected void init() {
         super.init();
@@ -33,7 +33,7 @@ public final class MachineScreen extends AbstractContainerScreen<MachineMenu> {
         int duration=menu.value(3);if(duration>0){gui.fill(x+8,y+69,x+170,y+74,0xff78858c);gui.fill(x+8,y+69,x+8+(int)(162L*Math.min(duration,Math.max(0,menu.value(2)))/duration),y+74,0xff71a785);}
     }
     @Override protected void renderLabels(GuiGraphics gui,int mouseX,int mouseY) {
-        gui.drawString(font,font.substrByWidth(title,232),8,6,0xffffff,false);
+        gui.drawString(font,font.plainSubstrByWidth(title.getString(),232),8,6,0xffffff,false);
         if(menu.value(1)>0)gui.drawString(font,compact(menu.value(0))+" / "+compact(menu.value(1))+" FE",8,25,0x26343c,false);
         else gui.drawString(font,menu.value(14)>=0?(menu.value(14)==1?"Switch enabled":"Disabled by redstone"):"Machine status",8,25,0x26343c,false);
         if(menu.value(4)>0||menu.value(5)>0)gui.drawString(font,compact(menu.value(4))+" rad/s · "+compact(menu.value(5))+" Nm",8,48,0x26343c,false);
@@ -41,8 +41,10 @@ public final class MachineScreen extends AbstractContainerScreen<MachineMenu> {
         else if(menu.value(8)>0)gui.drawString(font,"Range "+menu.value(8)+" · output "+menu.value(10),8,48,0x26343c,false);
         else gui.drawString(font,menu.value(11)==1?"Active":"Idle",8,48,0x26343c,false);
         if(menu.value(3)>0)gui.drawString(font,"Progress "+menu.value(2)+" / "+menu.value(3),8,58,0x26343c,false);
+        if(menu.sorter) {gui.drawString(font,"N",110,92,0x26343c,false);gui.drawString(font,"S",110,110,0x26343c,false);gui.drawString(font,"Down",110,128,0x26343c,false);}
+        if(menu.machineSlots==0)gui.drawString(font,"Shift + item for hand use",8,88,0x26343c,false);
         if(menu.machineSlots>0)gui.drawString(font,menu.machineSlots==10?"Input / routing filters":"Machine inventory",8,78,0x26343c,false);
-        gui.drawString(font,playerInventoryTitle,8,132,0x26343c,false);
+        gui.drawString(font,playerInventoryTitle,8,144,0x26343c,false);
         gui.drawString(font,"Shift-click",180,158,0x26343c,false);
         gui.drawString(font,"moves items",180,170,0x26343c,false);
     }
