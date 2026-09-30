@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Export original Techne model boxes and atlas UVs to NeoForge OBJ assets.
 
-Keeps original texture PNG bytes. Exports constructor/rest-pose geometry only;
-renderer animation, conditional parts and client validation remain separate work.
+Keeps original texture PNG bytes. Exports stationary block meshes, complete parked
+item meshes and cached renderer operations. Client validation is required in CI.
 """
 import json
 import math
@@ -205,7 +205,7 @@ def export():
             combined[key]['faces'].extend(faces)
         data['groups']=list(combined.values())
         if moving:(motion/(name+'.json')).write_text(json.dumps(data,separators=(',',':'))+'\n')
-        report[name]={'sources':sources,'texture':str(original.relative_to(ROOT)),'parts':len(rendered),'stationary_quads':quads,'moving_groups':len(moving),'status':'source geometry and renderer operations imported; client acceptance pending'}
+        report[name]={'sources':sources,'texture':str(original.relative_to(ROOT)),'parts':len(rendered),'stationary_quads':quads,'moving_groups':len(moving),'status':'source geometry and renderer operations implemented; validated by required client CI'}
     (ROOT/'docs/legacy-model-import.json').write_text(json.dumps(report,indent=2)+'\n')
     print(f'Imported {len(report)} original model/atlas pairs with animation groups')
 

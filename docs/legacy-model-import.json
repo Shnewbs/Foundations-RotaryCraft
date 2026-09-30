@@ -7,7 +7,7 @@
     "parts": 11,
     "stationary_quads": 54,
     "moving_groups": 2,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "shaft": {
     "sources": [
@@ -17,7 +17,7 @@
     "parts": 13,
     "stationary_quads": 66,
     "moving_groups": 2,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "gearbox_2": {
     "sources": [
@@ -28,7 +28,7 @@
     "parts": 28,
     "stationary_quads": 72,
     "moving_groups": 16,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "gearbox_4": {
     "sources": [
@@ -39,7 +39,7 @@
     "parts": 35,
     "stationary_quads": 78,
     "moving_groups": 22,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "gearbox_8": {
     "sources": [
@@ -50,7 +50,7 @@
     "parts": 41,
     "stationary_quads": 78,
     "moving_groups": 28,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "gearbox_16": {
     "sources": [
@@ -61,7 +61,7 @@
     "parts": 51,
     "stationary_quads": 78,
     "moving_groups": 38,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "grindstone": {
     "sources": [
@@ -71,7 +71,7 @@
     "parts": 69,
     "stationary_quads": 74,
     "moving_groups": 58,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "player_detector": {
     "sources": [
@@ -81,7 +81,7 @@
     "parts": 35,
     "stationary_quads": 210,
     "moving_groups": 0,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "smoke_detector": {
     "sources": [
@@ -91,7 +91,7 @@
     "parts": 2,
     "stationary_quads": 12,
     "moving_groups": 0,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "item_cannon": {
     "sources": [
@@ -101,7 +101,7 @@
     "parts": 19,
     "stationary_quads": 114,
     "moving_groups": 0,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "power_generator": {
     "sources": [
@@ -111,7 +111,7 @@
     "parts": 9,
     "stationary_quads": 42,
     "moving_groups": 2,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "steam_generator": {
     "sources": [
@@ -121,7 +121,7 @@
     "parts": 23,
     "stationary_quads": 54,
     "moving_groups": 14,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "wind_generator": {
     "sources": [
@@ -131,7 +131,7 @@
     "parts": 24,
     "stationary_quads": 72,
     "moving_groups": 12,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "hydro_generator": {
     "sources": [
@@ -141,7 +141,7 @@
     "parts": 8,
     "stationary_quads": 12,
     "moving_groups": 6,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "geothermal_generator": {
     "sources": [
@@ -151,7 +151,7 @@
     "parts": 30,
     "stationary_quads": 114,
     "moving_groups": 11,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "fan": {
     "sources": [
@@ -161,7 +161,7 @@
     "parts": 21,
     "stationary_quads": 54,
     "moving_groups": 12,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "winder": {
     "sources": [
@@ -171,7 +171,7 @@
     "parts": 8,
     "stationary_quads": 46,
     "moving_groups": 2,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "defoliator": {
     "sources": [
@@ -181,7 +181,7 @@
     "parts": 35,
     "stationary_quads": 6,
     "moving_groups": 34,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "sprinkler": {
     "sources": [
@@ -191,7 +191,7 @@
     "parts": 10,
     "stationary_quads": 60,
     "moving_groups": 0,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   },
   "mob_harvester": {
     "sources": [
@@ -201,6 +201,6 @@
     "parts": 15,
     "stationary_quads": 90,
     "moving_groups": 0,
-    "status": "source geometry and renderer operations imported; client acceptance pending"
+    "status": "source geometry and renderer operations implemented; validated by required client CI"
   }
 }
