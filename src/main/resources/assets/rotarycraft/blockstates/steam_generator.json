@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "rotarycraft:block/steam_generator"
+    },
+    "lit=true": {
+      "model": "rotarycraft:block/steam_generator_lit"
+    }
+  }
+}

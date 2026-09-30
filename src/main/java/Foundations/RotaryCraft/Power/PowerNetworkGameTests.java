@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.neoforged.neoforge.gametest.GameTestHolder;
@@ -283,6 +284,121 @@ public final class PowerNetworkGameTests {
                     "Hydro generator showed its generating state while dry"
             );
             helper.succeed();
+        });
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void steamGeneratorConsumesWaterAndFuelAndChargesCable(GameTestHelper helper) {
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        BlockPos cablePos = generatorPos.east();
+        helper.setBlock(generatorPos, PowerContent.STEAM_GENERATOR.get());
+        helper.setBlock(
+                cablePos,
+                PowerContent.POWER_CABLE.get().defaultBlockState().setValue(
+                        PowerNodeBlock.propertyFor(Direction.WEST),
+                        true
+                )
+        );
+
+        SteamGeneratorBlockEntity generator = (SteamGeneratorBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(generatorPos));
+        PowerNodeBlockEntity cable = (PowerNodeBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(cablePos));
+        helper.assertTrue(generator != null, "Steam generator block entity was not created");
+        helper.assertTrue(cable != null, "Cable block entity was not created");
+        generator.getItemHandler().setStackInSlot(
+                SteamGeneratorBlockEntity.WATER_SLOT,
+                new net.minecraft.world.item.ItemStack(Items.WATER_BUCKET)
+        );
+        generator.getItemHandler().setStackInSlot(
+                SteamGeneratorBlockEntity.FUEL_SLOT,
+                new net.minecraft.world.item.ItemStack(Items.COAL)
+        );
+
+        helper.succeedWhen(() -> {
+            helper.assertTrue(
+                    cable.getEnergyStorage().getEnergyStored() > 0,
+                    "Steam generator did not transfer energy into the adjacent cable"
+            );
+            helper.assertTrue(
+                    generator.getItemHandler().getStackInSlot(SteamGeneratorBlockEntity.WATER_SLOT).is(Items.BUCKET),
+                    "Steam generator did not return an empty bucket after consuming water"
+            );
+            helper.assertTrue(
+                    helper.getLevel().getBlockState(helper.absolutePos(generatorPos))
+                            .getValue(SteamGeneratorBlock.LIT),
+                    "Steam generator did not enter its generating state"
+            );
+        });
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void steamGeneratorDoesNotGenerateWithoutInputs(GameTestHelper helper) {
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        helper.setBlock(generatorPos, PowerContent.STEAM_GENERATOR.get());
+        SteamGeneratorBlockEntity generator = (SteamGeneratorBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(generatorPos));
+        helper.assertTrue(generator != null, "Steam generator block entity was not created");
+
+        helper.runAfterDelay(10, () -> {
+            helper.assertTrue(
+                    generator.getEnergyStorage().getEnergyStored() == 0,
+                    "Steam generator produced energy without water or fuel"
+            );
+            helper.assertTrue(
+                    !helper.getLevel().getBlockState(helper.absolutePos(generatorPos))
+                            .getValue(SteamGeneratorBlock.LIT),
+                    "Steam generator showed its generating state without inputs"
+            );
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void steamGeneratorBuffersEnergyWhenNetworkIsBlocked(GameTestHelper helper) {
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        BlockPos cellPos = generatorPos.east();
+        helper.setBlock(generatorPos, PowerContent.STEAM_GENERATOR.get());
+        helper.setBlock(
+                cellPos,
+                PowerContent.POWER_CELL.get().defaultBlockState().setValue(
+                        PowerNodeBlock.propertyFor(Direction.WEST),
+                        true
+                )
+        );
+
+        SteamGeneratorBlockEntity generator = (SteamGeneratorBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(generatorPos));
+        PowerNodeBlockEntity cell = (PowerNodeBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(cellPos));
+        helper.assertTrue(generator != null, "Steam generator block entity was not created");
+        helper.assertTrue(cell != null, "Power cell block entity was not created");
+        IEnergyStorage cellEnergy = cell.getEnergyStorage();
+        while (cellEnergy.getEnergyStored() < cellEnergy.getMaxEnergyStored()) {
+            cellEnergy.receiveEnergy(cellEnergy.getMaxEnergyStored(), false);
+        }
+        generator.getItemHandler().setStackInSlot(
+                SteamGeneratorBlockEntity.WATER_SLOT,
+                new net.minecraft.world.item.ItemStack(Items.WATER_BUCKET)
+        );
+        generator.getItemHandler().setStackInSlot(
+                SteamGeneratorBlockEntity.FUEL_SLOT,
+                new net.minecraft.world.item.ItemStack(Items.COAL)
+        );
+
+        helper.succeedWhen(() -> {
+            helper.assertTrue(
+                    cellEnergy.getEnergyStored() == cellEnergy.getMaxEnergyStored(),
+                    "Blocked network test cell unexpectedly accepted energy"
+            );
+            helper.assertTrue(
+                    generator.getEnergyStorage().getEnergyStored() > 0,
+                    "Steam generator did not buffer energy when the adjacent cell was full"
+            );
+            helper.assertTrue(
+                    generator.getEnergyStorage().getEnergyStored() <= SteamGeneratorBlockEntity.ENERGY_CAPACITY,
+                    "Steam generator exceeded its bounded energy capacity"
+            );
         });
     }
 
