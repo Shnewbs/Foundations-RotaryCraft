@@ -1,47 +1,33 @@
 # 1.21.1-1.6.0 visual and performance release
 
-Status: implementation in progress; visual acceptance pending. Latest published version: 1.21.1-1.5.0.
+Scope: all currently registered content. The larger RotaryCraft/ElectriCraft gameplay port remains tracked separately in ROADMAP.md.
 
-## Coverage
+## Implementation
 
-All content already registered in the current port is in scope: DC engine, shafts, every gearbox ratio, generators, power cables/cells/switches, material processing, farming blocks/items and all other existing machines. Include each blockstate and inventory, held, dropped and placed appearance. Unimplemented machines remain in the gameplay parity roadmap.
+- Twenty original model/atlas pairs, including complete inventory models, source pivots, mirrors, rotations and per-part texture dimensions.
+- Fifteen motion resources with stationary/moving geometry separated. Performance-engine cranks and all nine pistons retain original phase offsets.
+- Original atlases explicitly stitched into Minecraft's block atlas; direct animation textures use identical source PNG bytes.
+- Foundations electrical housings, solar collector, transparent tank and staged canola meshes replace generic machine/crop substitutes.
+- Sprinkler spray, harvester targeting laser and inspected harvester/fan range overlays.
+- Cache geometry, normals, render types, reusable quaternion and speed-dependent animation rate. Weak entity phase storage is reset on reload.
+- Stagger five-tick changed-only mechanical speed packets. The processor receives actual mechanical speed; other interim FE machines use active indicators.
+- Display-only shaft traversal memoized within a tick, bounded to 4096 entries per level; live gameplay remains uncached and chunk-safe.
+- Empty processor inputs skip recipe lookup. Overlapping recipe selection uses a stable linear ID comparison, preserving reload semantics.
 
-Use the original RotaryCraft model and texture sources where applicable, preserving geometry, texture coordinates, scale and orientation. Do not treat original texture sheets applied to generic cubes as a completed port. Content without a matching original machine needs an explicit, finished visual design and must be identified as Foundations content. The preserved grindstone ID currently represents material processing; use the original Grinder visual reference, not the tool-repair Grindstone.
+## Validation
 
-## Visual acceptance
+The required `client-visual` CI job launches Minecraft/NeoForge with JEI, Jade and KubeJS under Xvfb/software Mesa. It bakes all 380 registered blockstates and 30 item models, rejects missing models and missing particle sprites, renders inventory models plus stationary/moving assemblies, captures multiple angles/phases including horizontal and vertical states, and exercises resource reload. CI artifacts retain screenshots and logs.
 
-- [ ] Record a complete registry-to-model/texture/render-reference mapping and per-entry status.
-- [ ] Replace all temporary substitute textures and placeholder machine shapes.
-- [ ] Restore original component pivots, UV mapping, material variants and correct input/output alignment.
-- [ ] Restore applicable animations from original renderer/tick behavior; show static parts only once, animate moving parts without double rendering and stop them at zero speed.
-- [ ] Verify horizontal/vertical mechanical placement and all supported orientations, active/idle/coasting states, inventory and held-item transforms.
-- [ ] Inspect transparency, lighting, normals, face culling, seams and overlays in a real Minecraft client, with screenshots from multiple angles.
-- [ ] Verify resource reload and multiplayer state synchronization; dedicated servers must not load client rendering classes.
-- [ ] Confirm JEI presentation and Jade information remain correct with integrations present and absent.
+Python tests cover numeric expression restrictions, scale, rotated/mirrored face winding, repeated UVs, pivot/inverse operations, piston phases, finite moving meshes, atlas stitching and release rules. Server GameTests exercise mechanical behavior, recipes, save/load, same-tick gameplay independence from display caching and next-tick display cache expiry, with optional integrations installed and absent.
 
-## Performance acceptance
+## Performance methodology
 
-Profile the same representative scenes and machine networks before/after changes. Record hardware, render distance, counts, graphics settings and warm-up conditions. Compare frame time and server tick time, allocation and network traffic where relevant. No unsupported FPS improvement claims.
+Server fixture: five-node DC/shaft network, Java 21, Ubuntu GitHub runner, 2000 warm-up queries of each path, five batches of 5000 queries, median batch duration. Compare live traversal with the display-only cache on the same network. An integration-enabled run measured 16.810748 ms live versus 4.668918 ms cached; a subsequent integration-absent run measured 17.699740 ms versus 3.819665 ms (4.63x query throughput). This measures repeated display lookups; it does not imply a 3.6x whole-world tick improvement.
 
-- [ ] Measure idle versus active machine rendering and larger repeated installations.
-- [ ] Measure server recipe lookup, mechanical traversal and existing energy networks.
-- [ ] Cache reusable model geometry and resources; avoid rebuilding meshes, repeated allocations and texture uploads every frame.
-- [ ] Limit animation/state synchronization to needed updates; verify interpolation without excessive packets.
-- [ ] Implement findings without changing mechanical results, recipe reload behavior, chunk loading policy or save compatibility.
-- [ ] Document baseline, changes, repeatable results and remaining bottlenecks.
+Client fixture: 1280x720 Xvfb, GUI scale 2, software Mesa, no world/render distance involved; 30 inventory models and their available block assemblies with moving components, warmed for five ticks. Measured gallery rendering CPU time was approximately 6.6–8.0 ms per frame in the atlas validation run. This is a reproducible client rendering workload, not a hardware FPS guarantee or a before/after world benchmark.
 
-## Publication
+Limitations: no claim of full upstream gameplay parity or universal FE/EU/J conversion. Upstream icons absent from preserved sources are identified as Foundations artwork in `visual-coverage.json`. Range overlays follow the current port's gameplay volumes. Restored animations do not fabricate inventories, failure modes or upgrades that the current gameplay lacks.
 
-Keep the current published mod_version while implementation is incomplete. Once all visual acceptance items and applicable performance/regression checks pass, bump to 1.21.1-1.6.0 with final changelog notes. The existing workflow publishes the tested JAR automatically. Python asset validation and server GameTests alone cannot mark this visual release complete.
+## Publication gate
 
-
-## Implementation checkpoint
-
-Fourteen rest-pose model imports now use original atlas bytes and source geometry through NeoForge's cached OBJ loader. Mesh export preserves model-part rotations, mirrors, pivots and per-part texture dimensions, and deduplicates vertex/UV entries. `docs/legacy-model-import.json` records each source mapping. Import tests check base scale and outward face winding under rotated/mirrored transforms; asset validation checks OBJ/material/texture references.
-
-This checkpoint is not visual acceptance. Legacy renderer motion and conditional pieces, remaining content, vertical transmission appearance, client UV/orientation/lighting checks and actual performance profiling are outstanding. No graphical Minecraft client or Xvfb display is currently available in this workspace, so a real-client visual check has not been performed. The mod_version remains at the published baseline to prevent a premature automatic 1.6 release.
-
-The processing tick skips recipe lookup for empty inputs and selects the lowest matching recipe ID with a linear scan, retaining reload behavior without stream/comparator allocations. These are code-path reductions; FPS/tick-time improvements have not been measured.
-
-
-The next rest-pose checkpoint includes Winder, Defoliator and Sprinkler. Winder imports only parts visible without a coil, matching its current lack of coil inventory. Defoliator includes the original renderer's repeated radial blade instances at zero animation angle. Static and active variants share the restored rest-pose geometry; moving parts, spray and state-dependent effects remain unfinished. Numeric source expressions accept only literal products, avoiding arbitrary code evaluation.
+Publish the exact versioned JAR and checksum only after both integration server builds and the real client job pass. GitHub releases remain immutable; failed checks prevent publication.

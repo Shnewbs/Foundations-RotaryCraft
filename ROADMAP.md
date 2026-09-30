@@ -50,16 +50,18 @@ This roadmap was established after checking master on 2026-09-30: no gameplay ro
 - [ ] Complete renderer/animation parity in docs/visual-animation-audit.md.
 - [ ] Dedicated-server and client validation; migration and multiplayer regression checks.
 
-## Next release: 1.21.1-1.6.0 — Visual restoration and performance
+## 1.21.1-1.6.0 — Visual restoration and performance
 
-User-defined scope: complete the visuals of all currently implemented content and address performance findings in the same release. See [visual release acceptance](docs/visual-release-1.6.md). The previous asset-reference checks do not establish visual parity.
+Visual implementation for current registered content is complete. See [release validation](docs/visual-release-1.6.md) and [coverage map](docs/visual-coverage.json).
 
-- [ ] Inventory every current block/item/state and map original textures, model geometry, UVs and renderer behavior to its actual machine role.
-- [ ] Replace placeholder machine models/textures throughout current content; restore correct facing, scale, pivots, inventory/held presentation and material variants.
-- [ ] Restore applicable moving parts, speed-linked rotation and active-state effects; verify idle, powered and coasting behavior.
-- [ ] Validate textures and geometry from all sides in a real client, including transparency, lighting, seams, culling and resource reload.
-- [ ] Profile client rendering and server ticking/networks before and after changes; implement measured fixes and record results.
-- [ ] Complete integration/server regression checks and publish only after visual acceptance is satisfied.
+- [x] Map all current blockstate/item resources to source geometry or explicit Foundations artwork.
+- [x] Restore original machine geometry, atlas UVs, source pivots and parked inventory/held models.
+- [x] Restore applicable moving parts, mechanical speed/coasting, FE active indicators and visible effects.
+- [x] Bake all 380 states/30 items in Minecraft; inspect multi-angle assembly screenshots and verify resource reload.
+- [x] Measure display-network lookup and client gallery rendering; cache resources and bound synchronization.
+- [x] Pass integration-present/absent server regressions and require client CI before automatic publication.
+
+Unimplemented gameplay variants remain under the earlier parity milestones; restored models do not imply those features are implemented.
 
 ## Acceptance rules
 
@@ -67,9 +69,9 @@ A feature is complete only after source comparison, behavior checks and required
 
 ## Releases
 
-Commit a new `mod_version` and matching CHANGELOG.md section to master. CI tests with KubeJS/JEI/Jade installed and absent, then automatically creates `v<mod_version>` and a GitHub prerelease with `Foundations-RotaryCraft-<mod_version>.jar`, SHA256 checksum and version-specific notes. No manual tag is required. Ordinary commits keep building but do not overwrite published versions. Failed builds/tests never publish. The workflow also accepts explicit matching version tags and manual runs.
+Commit a new `mod_version` and matching CHANGELOG.md section to master. CI tests with KubeJS/JEI/Jade installed and absent, requires the real client model/render/reload check, then automatically creates `v<mod_version>` and a GitHub prerelease with `Foundations-RotaryCraft-<mod_version>.jar`, SHA256 checksum and version-specific notes. No manual tag is required. Ordinary commits keep building but do not overwrite published versions. Failed builds/tests never publish. The workflow also accepts explicit matching version tags and manual runs.
 
-Current development milestone: 1.21.1-1.5.0. World mechanical transmission and an initial material-processing shaft input are connected. Other machines retain the interim FE baseline; the processing block also retains FE operation when no shaft is connected. Full machine behavior and explicit converters remain pending.
+Current development milestone: 1.21.1-1.6.0. World mechanical transmission and an initial material-processing shaft input are connected. Other machines retain the interim FE baseline; the processing block also retains FE operation when no shaft is connected. Full machine behavior and explicit converters remain pending.
 
 ## Source checkpoints
 

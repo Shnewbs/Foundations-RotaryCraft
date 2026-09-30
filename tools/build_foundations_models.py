@@ -13,7 +13,7 @@ def save(name,elements,transparent=False):
     if transparent:value['render_type']='minecraft:cutout'
     (A/'models/block'/f'{name}.json').write_text(json.dumps(value,separators=(',',':'))+'\n')
 # Insulated bus coupler and directed arms; connection states remain gameplay driven.
-save('power_cable',[box([4,4,4],[12,12,12],'dark'),box([5,5,5],[11,11,11])])
+save('power_cable',[box([5,5,5],[11,11,11],'dark')]+[box([4,y,4],[12,y+1,12]) for y in (4,11)]+[box([x,5,z],[x+1,11,z+1]) for x,z in ((4,4),(11,4),(4,11),(11,11))])
 save('power_cable_arm',[box([6,6,0],[10,10,8],'dark'),box([5,5,0],[11,11,2]),box([5,5,5],[11,11,7])])
 # Accumulator case, terminal pairs, and separated reinforcing bands.
 e=[box([2,1,2],[14,14,14],'dark'),box([1,0,1],[15,2,15]),box([1,12,1],[15,14,15])]
@@ -40,7 +40,12 @@ for stage in range(8):
             for dx,dz in ((-1,0),(1,0),(0,-1),(0,1)):
                 e.append(box([x+dx-.6,h,z+dz-.6],[x+dx+.6,h+.4,z+dz+.6],'flower' if stage<7 else 'dark'))
     save('canola_crop_stage'+str(stage),e)
-(A/'models/item/canola_seeds.json').write_text(json.dumps({'parent':'rotarycraft:block/canola_crop_stage7'},indent=2)+'\n')
+# Preserve original canola item sprites 80 and 81 without editing the atlas PNG.
+import shutil
+shutil.copyfile(A.parents[4]/'Textures/Items/items.png',A/'textures/legacy/items.png')
+for name,column in (('canola_seeds',0),('dense_canola_seeds',1)):
+    item={'parent':'minecraft:block/block','render_type':'minecraft:cutout','textures':{'seed':'rotarycraft:legacy/items','particle':'rotarycraft:legacy/items'},'elements':[{'from':[0,0,7.99],'to':[16,16,8.01],'faces':{face:{'texture':'#seed','uv':[column,5,column+1,6]} for face in ('north','south')}}],'display':{'gui':{'rotation':[0,0,0],'scale':[1,1,1]},'ground':{'scale':[.5,.5,.5],'translation':[0,2,0]},'firstperson_righthand':{'rotation':[0,-90,25],'translation':[1.13,3.2,1.13],'scale':[.68,.68,.68]},'thirdperson_righthand':{'rotation':[0,0,0],'translation':[0,3,1],'scale':[.55,.55,.55]}}}
+    (A/'models/item'/f'{name}.json').write_text(json.dumps(item,indent=2)+'\n')
 print('Built Foundations electrical models and eight canola growth stages')
 
 # Transparent decorative reservoir, with a solid metal frame instead of an opaque cube.

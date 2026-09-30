@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 1.21.1-1.6.0 - Models, Animation and Visual Performance
+
+- Restored twenty original machine/model atlas pairs with original pivots, rotations, mirrored faces and UVs. Inventory and held models include complete parked geometry; placed models draw moving parts only once.
+- Added fifteen cached animation meshes: DC engine, shaft, all gearbox ratios, processor, fan, winder, defoliator and five generator models. Cranks, blades, waterwheel and all nine phased performance-engine pistons animate.
+- Mechanical rotation follows synchronized speed, including coast-down and stopping. Processing uses its actual mechanical speed; current FE machines use active indicators, preserving their existing gameplay.
+- Finished Foundations solar panels, insulated cable couplers, accumulator terminals and switch housings. Added transparent tank frames, eight canola growth models and original canola seed sprites.
+- Added sprinkler spray, harvester targeting laser and inspected fan/harvester range overlays. Existing block-shaped blower, sorting and refresher machines retain their custom face artwork.
+- Fixed original texture atlas stitching, and removed unused substitute textures. Added real Minecraft client CI coverage for 380 states and 30 items, missing sprites, assembled animations, multiple-angle screenshots and resource reload with JEI/Jade/KubeJS present.
+- Cached geometry, normals, render types, rotation storage and animation rates. Limited speed synchronization to changed, staggered five-tick updates. Display-only network caching never affects live gameplay or loads chunks.
+- Added a display-cache regression and repeatable five-node benchmark. A measured 5000-query batch dropped from 17.70 ms live traversal to 3.82 ms cached display lookup; this is not a whole-world FPS/tick claim. All 64 server GameTests pass with integrations present and absent.
+- Full upstream gameplay parity, conditional coil/failure/material variants and universal cross-mod energy converters remain separate roadmap work. This release completes the visual implementation for currently registered content.
+
 ## 1.21.1-1.5.0 - Mechanical Processing Input
 
 - Added a horizontal facing and rear shaft input to the existing material-processing block, preserving its `rotarycraft:grindstone` save ID.
