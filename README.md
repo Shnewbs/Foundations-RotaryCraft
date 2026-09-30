@@ -23,6 +23,21 @@ The original code's license applies to this migration and its assets. See `Licen
 
 See [CHANGELOG.md](CHANGELOG.md) for migration progress.
 
+Versioned builds and releases
+=============================
+
+Use Java 21 and the Gradle wrapper for local builds and tests:
+
+```sh
+./gradlew clean build
+./gradlew test
+./gradlew runGameTestServer
+```
+
+On Windows, use `gradlew.bat` instead of `./gradlew`. The distributable mod JAR is `build/libs/rotarycraft-<mod_version>.jar`; source archives are not release assets.
+
+To prepare a release, update `mod_version` in `gradle.properties` (currently `1.21.1-0.1.0`), commit the version change, and push a tag matching `v<mod_version>`—for example, `v1.21.1-0.1.0`. GitHub Actions builds on every push and pull request. A pushed version tag must exactly match the Gradle version; after the build succeeds, the workflow creates a GitHub Release and attaches that build's mod JAR. A mismatched tag fails validation and cannot publish a release.
+
 
 Pull Requests
 =============
