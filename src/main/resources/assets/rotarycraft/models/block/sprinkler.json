@@ -1,47 +1,13 @@
 {
   "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "loader": "neoforge:obj",
+  "model": "rotarycraft:models/legacy/sprinkler.obj",
+  "automatic_culling": false,
+  "shade_quads": true,
+  "flip_v": false,
+  "emissive_ambient": false,
   "textures": {
-    "particle": "minecraft:block/iron_block",
-    "base": "minecraft:block/iron_block",
-    "pipe": "minecraft:block/copper_block",
-    "nozzle": "minecraft:block/prismarine"
-  },
-  "elements": [
-    {
-      "from": [2, 0, 2],
-      "to": [14, 3, 14],
-      "faces": {
-        "down": {"texture": "#base"},
-        "up": {"texture": "#base"},
-        "north": {"texture": "#base"},
-        "south": {"texture": "#base"},
-        "west": {"texture": "#base"},
-        "east": {"texture": "#base"}
-      }
-    },
-    {
-      "from": [7, 3, 7],
-      "to": [9, 12, 9],
-      "faces": {
-        "down": {"texture": "#pipe"},
-        "up": {"texture": "#pipe"},
-        "north": {"texture": "#pipe"},
-        "south": {"texture": "#pipe"},
-        "west": {"texture": "#pipe"},
-        "east": {"texture": "#pipe"}
-      }
-    },
-    {
-      "from": [4, 11, 4],
-      "to": [12, 14, 12],
-      "faces": {
-        "down": {"texture": "#nozzle"},
-        "up": {"texture": "#nozzle"},
-        "north": {"texture": "#nozzle"},
-        "south": {"texture": "#nozzle"},
-        "west": {"texture": "#nozzle"},
-        "east": {"texture": "#nozzle"}
-      }
-    }
-  ]
+    "particle": "rotarycraft:legacy/sprinkler"
+  }
 }

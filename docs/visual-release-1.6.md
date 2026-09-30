@@ -37,8 +37,11 @@ Keep the current published mod_version while implementation is incomplete. Once 
 
 ## Implementation checkpoint
 
-Eleven rest-pose model imports now use original atlas bytes and source geometry through NeoForge's cached OBJ loader. Mesh export preserves model-part rotations, mirrors, pivots and per-part texture dimensions, and deduplicates vertex/UV entries. `docs/legacy-model-import.json` records each source mapping. Import tests check base scale and outward face winding under rotated/mirrored transforms; asset validation checks OBJ/material/texture references.
+Fourteen rest-pose model imports now use original atlas bytes and source geometry through NeoForge's cached OBJ loader. Mesh export preserves model-part rotations, mirrors, pivots and per-part texture dimensions, and deduplicates vertex/UV entries. `docs/legacy-model-import.json` records each source mapping. Import tests check base scale and outward face winding under rotated/mirrored transforms; asset validation checks OBJ/material/texture references.
 
 This checkpoint is not visual acceptance. Legacy renderer motion and conditional pieces, remaining content, vertical transmission appearance, client UV/orientation/lighting checks and actual performance profiling are outstanding. No graphical Minecraft client or Xvfb display is currently available in this workspace, so a real-client visual check has not been performed. The mod_version remains at the published baseline to prevent a premature automatic 1.6 release.
 
 The processing tick skips recipe lookup for empty inputs and selects the lowest matching recipe ID with a linear scan, retaining reload behavior without stream/comparator allocations. These are code-path reductions; FPS/tick-time improvements have not been measured.
+
+
+The next rest-pose checkpoint includes Winder, Defoliator and Sprinkler. Winder imports only parts visible without a coil, matching its current lack of coil inventory. Defoliator includes the original renderer's repeated radial blade instances at zero animation angle. Static and active variants share the restored rest-pose geometry; moving parts, spray and state-dependent effects remain unfinished. Numeric source expressions accept only literal products, avoiding arbitrary code evaluation.

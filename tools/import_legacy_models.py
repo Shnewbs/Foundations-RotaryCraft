@@ -23,12 +23,21 @@ ENTRIES = {
     'player_detector': (['Models/ModelDetector.java'], 'detectortex.png', 0),
     'smoke_detector': (['Models/ModelSmokeDetector.java'], 'smokedetectortex.png', 0),
     'item_cannon': (['Models/ModelItemCannon.java'], 'itemcannontex.png', 0),
+    'winder': (['Models/Animated/ModelWinder.java'], 'windertex.png', 0),
+    'defoliator': (['Models/Animated/ModelDefoliator.java'], 'defoliatortex.png', 0),
+    'sprinkler': (['Models/ModelSprinkler.java'], 'sprinklertex.png', 0),
     'mob_harvester': (['Models/ModelHarvester.java'], 'harvestertex.png', 0),
 }
 NUMBER = r'[-+]?\d+(?:\.\d+)?[FfDd]?'
 
 def numbers(value):
-    return [float(v.rstrip('FfDd')) for v in value.split(',')]
+    result=[]
+    for expression in value.split(','):
+        factors=expression.strip().split('*')
+        if not all(re.fullmatch(NUMBER, factor.strip()) for factor in factors):
+            raise ValueError(f'Unsupported numeric expression: {expression}')
+        result.append(math.prod(float(factor.strip().rstrip('FfDd')) for factor in factors))
+    return result
 
 def parts(path):
     source = (ROOT / path).read_text()
@@ -127,12 +136,27 @@ def export():
         original=ROOT/'Textures/TileEntityTex'/texture
         shutil.copyfile(original,textures/(name+'.png'))
         modelparts=[part for source in sources for part in parts(source)]
+        if name == 'winder':
+            # Original renderer omits Shape6* unless a coil is installed. This port has no coil inventory yet.
+            modelparts=[part for part in modelparts if not part['name'].split('_')[-1].startswith('Shape6')]
+        if name == 'defoliator':
+            # Renderer repeats these blade parts around the Y axis in its rest pose.
+            instances=[]
+            for part in modelparts:
+                local=part['name'].split('_')[-1]
+                angles={'Shape6':[0,120,240],'Shape6a':[60,180,300],'Shape6c':[45,135,225,315]}.get(local,[0])
+                for angle in angles:
+                    copy=dict(part)
+                    copy['instance_y']=-angle
+                    copy['name']+=f'_instance_{angle}'
+                    instances.append(copy)
+            modelparts=instances
         lines=['# Derived from original RotaryCraft model source; see License.txt.',f'mtllib rotarycraft:models/legacy/{name}.mtl','usemtl original']
         positions={}
         coordinates={}
         for part in modelparts:
             lines.append('g '+part['name'])
-            for face in (piece for original in mesh(part,orientation) for piece in wrap_uvs(original)):
+            for face in (piece for original in mesh(part,orientation+part.get('instance_y',0)) for piece in wrap_uvs(original)):
                 indices=[]
                 for vertex,uv in face:
                     position=' '.join(f'{v:.9f}' for v in vertex)
@@ -147,10 +171,12 @@ def export():
                 lines.append('f '+' '.join(indices))
         (target/(name+'.obj')).write_text('\n'.join(lines)+'\n')
         (target/(name+'.mtl')).write_text('newmtl original\nKd 1 1 1\nd 1\nmap_Kd rotarycraft:legacy/'+name+'\n')
-        model={'parent':'minecraft:block/block','loader':'neoforge:obj','model':f'rotarycraft:models/legacy/{name}.obj',
+        model={'parent':'minecraft:block/block','render_type':'minecraft:cutout','loader':'neoforge:obj','model':f'rotarycraft:models/legacy/{name}.obj',
                'automatic_culling':False,'shade_quads':True,'flip_v':False,'emissive_ambient':False,
                'textures':{'particle':f'rotarycraft:legacy/{name}'}}
         (ASSETS/'models/block'/(name+'.json')).write_text(json.dumps(model,indent=2)+'\n')
+        for variant in {'defoliator':['defoliator_active'],'sprinkler':['sprinkler_active'],'mob_harvester':['mob_harvester_active']}.get(name,[]):
+            (ASSETS/'models/block'/(variant+'.json')).write_text(json.dumps(model,indent=2)+'\n')
         report[name]={'sources':sources,'texture':str(original.relative_to(ROOT)),'parts':len(modelparts),
                       'quads':sum(line.startswith('f ') for line in lines),'status':'rest-pose import; animation and in-client acceptance pending'}
     (ROOT/'docs/legacy-model-import.json').write_text(json.dumps(report,indent=2)+'\n')

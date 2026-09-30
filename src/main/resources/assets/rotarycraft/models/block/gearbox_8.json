@@ -1,5 +1,6 @@
 {
   "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
   "loader": "neoforge:obj",
   "model": "rotarycraft:models/legacy/gearbox_8.obj",
   "automatic_culling": false,

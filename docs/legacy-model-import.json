@@ -93,6 +93,33 @@
     "quads": 114,
     "status": "rest-pose import; animation and in-client acceptance pending"
   },
+  "winder": {
+    "sources": [
+      "Models/Animated/ModelWinder.java"
+    ],
+    "texture": "Textures/TileEntityTex/windertex.png",
+    "parts": 8,
+    "quads": 58,
+    "status": "rest-pose import; animation and in-client acceptance pending"
+  },
+  "defoliator": {
+    "sources": [
+      "Models/Animated/ModelDefoliator.java"
+    ],
+    "texture": "Textures/TileEntityTex/defoliatortex.png",
+    "parts": 35,
+    "quads": 210,
+    "status": "rest-pose import; animation and in-client acceptance pending"
+  },
+  "sprinkler": {
+    "sources": [
+      "Models/ModelSprinkler.java"
+    ],
+    "texture": "Textures/TileEntityTex/sprinklertex.png",
+    "parts": 10,
+    "quads": 60,
+    "status": "rest-pose import; animation and in-client acceptance pending"
+  },
   "mob_harvester": {
     "sources": [
       "Models/ModelHarvester.java"

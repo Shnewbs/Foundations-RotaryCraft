@@ -8,6 +8,10 @@ legacy = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(legacy)
 
 class LegacyModels(unittest.TestCase):
+    def test_numeric_expressions_are_restricted(self):
+        self.assertEqual(legacy.numbers('0F, -1.047198F*0, 2F*3'), [0,0,6])
+        with self.assertRaises(ValueError):legacy.numbers('function()')
+
     def test_original_dc_geometry(self):
         parts = legacy.parts('Models/Engine/ModelDC.java')
         self.assertEqual(len(parts), 11)
