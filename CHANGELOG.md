@@ -2,6 +2,58 @@
 
 ## Unreleased
 
+## 0.5.0 - Item Transport
+
+- Added the Item Cannon, a powered nine-slot transport machine.
+  - Sends items to a configured target inventory every eight ticks.
+  - Supports high-power full-stack transfers and persists its target, inventory, and energy buffer.
+  - Added item-handler and energy capabilities, recipe, advancement, blockstate, models, and localization.
+
+## 0.4.0 - Detection Utilities
+
+- Added the Player Detector, a powered proximity sensor with configurable range and binary or analog redstone output.
+  - Detects players within up to 64 blocks after a five-second reaction delay.
+  - Analog mode outputs up to 15 based on the number of nearby players.
+- Added the Smoke Detector, a powered fire sensor with an eight-block detection range.
+  - Emits a full redstone alarm while fire or soul fire is nearby.
+  - Reports a low-battery state to automation and persists its energy buffer.
+- Added registration, energy capabilities, recipes, advancements, models, blockstates, and English localization for both detectors.
+
+## 0.3.0 - Decorative Storage
+
+- Added the DecoTank: A decorative fluid storage and display block.
+  - Stores up to 16 buckets (16,000 mB) of any fluid type.
+  - Provides comparator output proportional to fill level (0-15).
+  - Added shaped recipe: 4 iron ingots + 4 glass panes + 1 glass block = DecoTank.
+  - Persists fluid amount and type on block destruction.
+
+- Added DecoTank blockstates, models, item models, English localization, and recipe-book advancement triggers.
+
+## 0.2.0 - Utility Machines
+
+- Added the Grindstone machine: A rotational-powered grinding block for processing materials.
+  - Accepts 2 input/output slots, requires 100 FE per operation cycle, and grinds items into products based on a recipe registry.
+  - Integrated with NeoForge energy capability network; exposes stored energy and accepts FE input.
+  - Added shaped recipe: 9 iron ingots + cobblestone = Grindstone.
+  - Basic recipes: cobblestone → gravel, gravel → sand.
+  - Added comparator output proportional to Grindstone progress (0-15).
+  
+- Added the Winder machine: A power-conditioning device for speed and flow regulation.
+  - Buffers up to 50,000 FE with 160 FE/tick input and output capacity.
+  - Acts as an intermediate regulator between generators and machinery.
+  - Added shaped recipe: 1 copper block + 5 iron ingots + 4 redstone blocks = Winder.
+  - Comparator output shows active operation status.
+  
+- Added the Blower machine: An air/pressure generation system for pneumatic operations.
+  - Requires 80 FE/tick to operate, stores up to 50,000 FE.
+  - Generates directional air flow for material transport and pneumatic systems.
+  - Added shaped recipe: 1 copper block + 4 iron ingots + 4 pistons = Blower.
+  - Comparator output shows operating state (0 = idle, 15 = operating).
+
+- Added Grindstone, Winder, and Blower blockstates, models, item models, English localization, and recipe-book advancement triggers.
+
+## 0.1.0 - Initial Power System
+
 - Renamed the user-visible mod and distributable JAR to `Foundations-RotaryCraft`; the `rotarycraft` mod ID and resource namespace remain unchanged.
 - Added recipe-book advancements for all native power-network crafting recipes, with a GameTest covering recipe registration and results.
 - Added a NeoForge 1.21.1 / Minecraft 1.21.1 Gradle project targeting Java 21.
