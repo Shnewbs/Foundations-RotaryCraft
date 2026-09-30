@@ -100,6 +100,15 @@ public class MachineContent {
         BLOCK_ENTITY_TYPES.register("fan", () ->
             BlockEntityType.Builder.of(FanBlockEntity::new, FAN.get()).build(null));
 
+    // Mob Harvester
+    public static final DeferredBlock<MobHarvesterBlock> MOB_HARVESTER = BLOCKS.register("mob_harvester",
+        () -> new MobHarvesterBlock(BlockBehaviour.Properties.of().strength(3.0f, 10.0f).requiresCorrectToolForDrops()));
+    public static final DeferredItem<BlockItem> MOB_HARVESTER_ITEM =
+        ITEMS.registerSimpleBlockItem("mob_harvester", MOB_HARVESTER);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MobHarvesterBlockEntity>> MOB_HARVESTER_BLOCK_ENTITY =
+        BLOCK_ENTITY_TYPES.register("mob_harvester", () ->
+            BlockEntityType.Builder.of(MobHarvesterBlockEntity::new, MOB_HARVESTER.get()).build(null));
+
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
@@ -144,11 +153,17 @@ public class MachineContent {
             FAN_BLOCK_ENTITY.get(),
             (fan, side) -> fan.getEnergyStorage()
         );
+        event.registerBlockEntity(
+            Capabilities.EnergyStorage.BLOCK,
+            MOB_HARVESTER_BLOCK_ENTITY.get(),
+            (harvester, side) -> harvester.getEnergyStorage()
+        );
     }
 
     private static void addToCreativeTab(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {
             event.accept(FAN_ITEM.get());
+            event.accept(MOB_HARVESTER_ITEM.get());
         }
     }
 }

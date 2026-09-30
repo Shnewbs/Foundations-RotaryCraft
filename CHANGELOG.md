@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 0.8.0 - Mob Harvester
+
+- Added the powered Mob Harvester, which damages eligible living mobs in a four-block vertical column.
+  - Excludes players and villagers, stops its targeting column at solid obstructions, consumes 8 FE per operating tick, and deals 6 damage once per second.
+  - Stores up to 50,000 FE, indicates active targeting with its lit model state, and emits a full analog redstone signal while a valid target is present.
+  - Added energy capability, recipe, recipe-book advancement, block/item models, blockstate, loot, and English localization.
+  - Converted the legacy `Textures/TileEntityTex/harvestertex.png` atlas to the in-game block texture; the original atlas remains in the repository as the source asset.
+  - Added GameTests for recipe registration, capability and energy persistence, powered damage, safe exclusions, obstruction handling, and unpowered behavior.
+
 ## 0.7.0 - Fan
 
 - Added the Fan, a powered directional airflow machine inspired by the legacy RotaryCraft Fan.

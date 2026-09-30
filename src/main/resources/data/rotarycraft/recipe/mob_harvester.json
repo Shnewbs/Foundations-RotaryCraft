@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IPI",
+    "DCD",
+    "IRI"
+  ],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "P": { "item": "minecraft:piston" },
+    "D": { "item": "minecraft:dispenser" },
+    "C": { "item": "minecraft:copper_block" },
+    "R": { "item": "minecraft:redstone" }
+  },
+  "result": { "id": "rotarycraft:mob_harvester" }
+}

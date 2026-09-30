@@ -1,0 +1,2 @@
+Converted in-game texture from the retained legacy source asset:
+Textures/TileEntityTex/harvestertex.png
