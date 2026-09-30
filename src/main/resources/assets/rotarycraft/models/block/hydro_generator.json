@@ -1,0 +1,71 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "minecraft:block/iron_block",
+    "base": "minecraft:block/iron_block",
+    "copper": "minecraft:block/copper_block",
+    "wheel": "minecraft:block/prismarine"
+  },
+  "elements": [
+    {
+      "from": [2, 0, 2],
+      "to": [14, 3, 14],
+      "faces": {
+        "down": {"texture": "#base"},
+        "up": {"texture": "#base"},
+        "north": {"texture": "#base"},
+        "south": {"texture": "#base"},
+        "west": {"texture": "#base"},
+        "east": {"texture": "#base"}
+      }
+    },
+    {
+      "from": [6, 3, 6],
+      "to": [10, 14, 10],
+      "faces": {
+        "down": {"texture": "#copper"},
+        "up": {"texture": "#copper"},
+        "north": {"texture": "#copper"},
+        "south": {"texture": "#copper"},
+        "west": {"texture": "#copper"},
+        "east": {"texture": "#copper"}
+      }
+    },
+    {
+      "from": [3, 6, 7],
+      "to": [13, 10, 9],
+      "faces": {
+        "down": {"texture": "#wheel"},
+        "up": {"texture": "#wheel"},
+        "north": {"texture": "#wheel"},
+        "south": {"texture": "#wheel"},
+        "west": {"texture": "#wheel"},
+        "east": {"texture": "#wheel"}
+      }
+    },
+    {
+      "from": [7, 5, 3],
+      "to": [9, 11, 13],
+      "faces": {
+        "down": {"texture": "#wheel"},
+        "up": {"texture": "#wheel"},
+        "north": {"texture": "#wheel"},
+        "south": {"texture": "#wheel"},
+        "west": {"texture": "#wheel"},
+        "east": {"texture": "#wheel"}
+      }
+    },
+    {
+      "from": [5, 13, 5],
+      "to": [11, 16, 11],
+      "faces": {
+        "down": {"texture": "#copper"},
+        "up": {"texture": "#copper"},
+        "north": {"texture": "#copper"},
+        "south": {"texture": "#copper"},
+        "west": {"texture": "#copper"},
+        "east": {"texture": "#copper"}
+      }
+    }
+  ]
+}

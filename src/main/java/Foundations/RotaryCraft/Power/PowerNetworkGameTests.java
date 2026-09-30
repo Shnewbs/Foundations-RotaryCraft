@@ -215,6 +215,77 @@ public final class PowerNetworkGameTests {
         });
     }
 
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void hydroGeneratorChargesAdjacentCableWhenTouchingWater(GameTestHelper helper) {
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        BlockPos cablePos = generatorPos.east();
+        helper.setBlock(generatorPos.above(), Blocks.WATER);
+        helper.setBlock(generatorPos.north(), Blocks.WATER);
+        helper.setBlock(
+                cablePos,
+                PowerContent.POWER_CABLE.get().defaultBlockState().setValue(
+                        PowerNodeBlock.propertyFor(Direction.WEST),
+                        true
+                )
+        );
+        helper.setBlock(generatorPos, PowerContent.HYDRO_GENERATOR.get());
+
+        HydroGeneratorBlockEntity generator = (HydroGeneratorBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(generatorPos));
+        PowerNodeBlockEntity cable = (PowerNodeBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(cablePos));
+        helper.assertTrue(generator != null, "Hydro generator block entity was not created");
+        helper.assertTrue(cable != null, "Cable block entity was not created");
+        helper.assertTrue(
+                HydroGeneratorBlockEntity.countAdjacentWater(
+                        helper.getLevel(),
+                        helper.absolutePos(generatorPos)
+                ) == 2,
+                "Hydro generator must count its two face-adjacent water blocks"
+        );
+
+        helper.succeedWhen(() -> {
+            helper.assertTrue(
+                    cable.getEnergyStorage().getEnergyStored() > 0,
+                    "Hydro generator did not transfer energy into the adjacent cable"
+            );
+            helper.assertTrue(
+                    helper.getLevel().getBlockState(helper.absolutePos(generatorPos))
+                            .getValue(HydroGeneratorBlock.LIT),
+                    "Hydro generator did not enter its generating state"
+            );
+        });
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void hydroGeneratorDoesNotGenerateWhenDry(GameTestHelper helper) {
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        helper.setBlock(generatorPos, PowerContent.HYDRO_GENERATOR.get());
+        HydroGeneratorBlockEntity generator = (HydroGeneratorBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(generatorPos));
+        helper.assertTrue(generator != null, "Hydro generator block entity was not created");
+
+        helper.runAfterDelay(10, () -> {
+            helper.assertTrue(
+                    HydroGeneratorBlockEntity.countAdjacentWater(
+                            helper.getLevel(),
+                            helper.absolutePos(generatorPos)
+                    ) == 0,
+                    "Dry hydro generator test must have no adjacent water"
+            );
+            helper.assertTrue(
+                    generator.getEnergyStorage().getEnergyStored() == 0,
+                    "Hydro generator produced energy without adjacent water"
+            );
+            helper.assertTrue(
+                    !helper.getLevel().getBlockState(helper.absolutePos(generatorPos))
+                            .getValue(HydroGeneratorBlock.LIT),
+                    "Hydro generator showed its generating state while dry"
+            );
+            helper.succeed();
+        });
+    }
+
     private static BlockPos elevatedPosition(GameTestHelper helper) {
         BlockPos templateOrigin = helper.absolutePos(BlockPos.ZERO);
         int y = Math.max(128, helper.getLevel().getSeaLevel() + WindGeneratorBlockEntity.MIN_ELEVATION_ABOVE_SEA_LEVEL);
