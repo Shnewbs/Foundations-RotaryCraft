@@ -32,6 +32,10 @@ public final class FarmingContent {
             "canola_seeds",
             () -> new ItemNameBlockItem(CANOLA_CROP.get(), new Item.Properties())
     );
+    public static final DeferredItem<DenseCanolaSeedItem> DENSE_CANOLA_SEEDS = ITEMS.register(
+            "dense_canola_seeds",
+            () -> new DenseCanolaSeedItem(CANOLA_CROP.get(), new Item.Properties())
+    );
     private static final DeferredItem<BlockItem> SPRINKLER_ITEM = ITEMS.registerSimpleBlockItem("sprinkler", SPRINKLER);
     static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SprinklerBlockEntity>> SPRINKLER_ENTITY =
             BLOCK_ENTITY_TYPES.register(
@@ -52,6 +56,7 @@ public final class FarmingContent {
     private static void addToCreativeTab(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
             event.accept(CANOLA_SEEDS.get());
+            event.accept(DENSE_CANOLA_SEEDS.get());
         } else if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {
             event.accept(SPRINKLER_ITEM.get());
         }

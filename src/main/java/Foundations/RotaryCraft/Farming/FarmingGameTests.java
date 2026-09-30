@@ -51,6 +51,77 @@ public final class FarmingGameTests {
     }
 
     @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void denseCanolaSeedsPlantNineCrops(GameTestHelper helper) {
+        ResourceLocation recipeId = ResourceLocation.fromNamespaceAndPath("rotarycraft", "dense_canola_seeds");
+        var recipe = helper.getLevel().getRecipeManager().byKey(recipeId);
+        helper.assertTrue(recipe.isPresent(), "Missing dense canola seed recipe");
+        helper.assertTrue(
+                recipe.get().value().getResultItem(helper.getLevel().registryAccess())
+                        .is(FarmingContent.DENSE_CANOLA_SEEDS.get()),
+                "Dense canola seed recipe has an unexpected result"
+        );
+
+        BlockPos center = new BlockPos(2, 1, 2);
+        BlockPos absoluteCenter = helper.absolutePos(center);
+        for (int x = -DenseCanolaSeedItem.FIELD_RADIUS; x <= DenseCanolaSeedItem.FIELD_RADIUS; x++) {
+            for (int z = -DenseCanolaSeedItem.FIELD_RADIUS; z <= DenseCanolaSeedItem.FIELD_RADIUS; z++) {
+                helper.getLevel().setBlock(
+                        absoluteCenter.offset(x, 0, z),
+                        Blocks.AIR.defaultBlockState(),
+                        3
+                );
+                helper.getLevel().setBlock(
+                        absoluteCenter.offset(x, -1, z),
+                        Blocks.FARMLAND.defaultBlockState().setValue(FarmBlock.MOISTURE, FarmBlock.MAX_MOISTURE),
+                        3
+                );
+            }
+        }
+
+        DenseCanolaSeedItem denseSeeds = FarmingContent.DENSE_CANOLA_SEEDS.get();
+        helper.assertTrue(helper.getLevel().hasChunkAt(absoluteCenter), "Dense seed test field chunk is not loaded");
+        helper.assertTrue(
+                helper.getLevel().getBlockState(absoluteCenter.below()).is(Blocks.FARMLAND),
+                "Dense seed test center has no farmland"
+        );
+        helper.assertTrue(
+                helper.getLevel().getBlockState(absoluteCenter).canBeReplaced(),
+                "Dense seed test center is not replaceable"
+        );
+        helper.assertTrue(
+                FarmingContent.CANOLA_CROP.get().defaultBlockState().canSurvive(helper.getLevel(), absoluteCenter),
+                "Canola cannot survive in the dense seed test center"
+        );
+        for (int x = -DenseCanolaSeedItem.FIELD_RADIUS; x <= DenseCanolaSeedItem.FIELD_RADIUS; x++) {
+            for (int z = -DenseCanolaSeedItem.FIELD_RADIUS; z <= DenseCanolaSeedItem.FIELD_RADIUS; z++) {
+                BlockPos cropPos = absoluteCenter.offset(x, 0, z);
+                helper.assertTrue(
+                        helper.getLevel().getBlockState(cropPos).canBeReplaced(),
+                        "Dense seed test crop position is not replaceable: " + cropPos
+                );
+                helper.assertTrue(
+                        FarmingContent.CANOLA_CROP.get().defaultBlockState().canSurvive(helper.getLevel(), cropPos),
+                        "Canola cannot survive at dense seed test crop position: " + cropPos
+                );
+            }
+        }
+        net.minecraft.world.item.ItemStack seedStack = new net.minecraft.world.item.ItemStack(denseSeeds, 2);
+        int planted = denseSeeds.plantField(helper.getLevel(), absoluteCenter, null, seedStack);
+        helper.assertTrue(planted == 9, "Dense canola seed should plant a 3x3 patch");
+        helper.assertTrue(seedStack.getCount() == 1, "A successful 3x3 planting should consume one dense seed");
+        for (int x = -DenseCanolaSeedItem.FIELD_RADIUS; x <= DenseCanolaSeedItem.FIELD_RADIUS; x++) {
+            for (int z = -DenseCanolaSeedItem.FIELD_RADIUS; z <= DenseCanolaSeedItem.FIELD_RADIUS; z++) {
+                helper.assertTrue(
+                        helper.getLevel().getBlockState(absoluteCenter.offset(x, 0, z))
+                                .is(FarmingContent.CANOLA_CROP.get()),
+                        "Dense seed failed to plant the complete 3x3 field"
+                );
+            }
+        }
+        helper.succeed();
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
     public static void sprinklerWatersFarmlandAndAcceleratesCanola(GameTestHelper helper) {
         ResourceLocation recipeId = ResourceLocation.fromNamespaceAndPath("rotarycraft", "sprinkler");
         var recipe = helper.getLevel().getRecipeManager().byKey(recipeId);

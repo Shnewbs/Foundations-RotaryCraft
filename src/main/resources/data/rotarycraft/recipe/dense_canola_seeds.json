@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "CCC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "rotarycraft:canola_seeds"
+    }
+  },
+  "result": {
+    "id": "rotarycraft:dense_canola_seeds",
+    "count": 1
+  }
+}

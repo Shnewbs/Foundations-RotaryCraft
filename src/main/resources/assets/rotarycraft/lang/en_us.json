@@ -10,5 +10,6 @@
   "block.rotarycraft.geothermal_generator": "Geothermal Generator",
   "block.rotarycraft.sprinkler": "Sprinkler",
   "block.rotarycraft.canola_crop": "Canola",
-  "item.rotarycraft.canola_seeds": "Canola Seeds"
+  "item.rotarycraft.canola_seeds": "Canola Seeds",
+  "item.rotarycraft.dense_canola_seeds": "Dense Canola Seeds"
 }
