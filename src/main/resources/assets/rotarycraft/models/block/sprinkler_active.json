@@ -1,0 +1,6 @@
+{
+  "parent": "rotarycraft:block/sprinkler",
+  "textures": {
+    "nozzle": "minecraft:block/lapis_block"
+  }
+}

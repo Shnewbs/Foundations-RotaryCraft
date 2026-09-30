@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_canola_seeds": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "rotarycraft:canola_seeds"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_canola_seeds"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "rotarycraft:dense_canola_seeds"
+    ]
+  }
+}

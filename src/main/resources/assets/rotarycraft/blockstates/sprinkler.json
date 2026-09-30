@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "rotarycraft:block/sprinkler"
+    },
+    "lit=true": {
+      "model": "rotarycraft:block/sprinkler_active"
+    }
+  }
+}
