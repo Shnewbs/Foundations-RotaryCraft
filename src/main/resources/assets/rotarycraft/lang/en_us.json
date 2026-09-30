@@ -23,5 +23,13 @@
   "block.rotarycraft.item_refresher": "Item Refresher",
   "block.rotarycraft.canola_crop": "Canola",
   "item.rotarycraft.canola_seeds": "Canola Seeds",
-  "item.rotarycraft.dense_canola_seeds": "Dense Canola Seeds"
+  "item.rotarycraft.dense_canola_seeds": "Dense Canola Seeds",
+  "jei.rotarycraft.grinding": "Grinding",
+  "jei.rotarycraft.duration": "Duration: %s ticks",
+  "jei.rotarycraft.energy": "Power: %s FE/t",
+  "config.jade.plugin_rotarycraft.grinding_status": "Grinding status",
+  "jade.rotarycraft.energy": "Energy: %s / %s FE",
+  "jade.rotarycraft.progress": "Progress: %s / %s ticks",
+  "jade.rotarycraft.running": "Running",
+  "jade.rotarycraft.idle": "Idle / waiting"
 }

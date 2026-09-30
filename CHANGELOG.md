@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 1.21.1-1.2.0 - Recipe Integrations and Automatic Releases
+
+- Added reloadable `rotarycraft:grinding` recipes with ingredient tags, outputs, duration and FE cost; KubeJS can add/remove/replace them through `event.custom`.
+- Added a JEI Grinding category and machine catalyst, and server-authoritative Jade grinder energy/progress/status tooltips. Integrations remain optional to install.
+- Fixed grinder energy consumption, saved energy loading, blocked/full output handling and component-safe result merging. Replaced the placeholder sand identity recipe with actual processing recipes.
+- Added grinding GameTests and CI with integrations installed and absent, including a real KubeJS recipe script.
+- Versions committed to master publish automatically after all CI checks pass, with the exact versioned JAR name, release notes and checksum. Published versions are preserved.
 - Began the 1:1 mechanical foundation with independent torque/speed signals, safe long power products, legacy ideal gearbox ratios and machine thresholds; not yet wired to world blocks.
 - Added ideal ElectriCraft voltage/current signal conversions using the legacy 8 Nm/amp constant, with overflow rejection and conservation checks; world networks remain pending.
 - Added mechanical regression checks to Gradle check.

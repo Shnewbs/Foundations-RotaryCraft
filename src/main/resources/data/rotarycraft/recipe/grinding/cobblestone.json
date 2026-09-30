@@ -1,0 +1,12 @@
+{
+  "type": "rotarycraft:grinding",
+  "ingredient": {
+    "item": "minecraft:cobblestone"
+  },
+  "result": {
+    "id": "minecraft:gravel",
+    "count": 1
+  },
+  "duration": 100,
+  "energy_per_tick": 1
+}

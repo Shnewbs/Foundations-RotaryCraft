@@ -30,6 +30,7 @@ neoForge {
         }
 
         gameTestServer {
+            gameDirectory = file('run-gametest')
             type = 'gameTestServer'
         }
     }
@@ -74,3 +75,21 @@ tasks.register('verifyMechanicalPower', JavaExec) {
     mainClass = 'Foundations.RotaryCraft.Mechanical.MechanicalPowerTest'
 }
 tasks.named('check') { dependsOn tasks.named('verifyMechanicalPower') }
+
+repositories {
+    maven { url = 'https://maven.blamejared.com' }
+    maven { url = 'https://api.modrinth.com/maven' }
+}
+
+dependencies {
+    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:19.57.0.450"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:19.57.0.450"
+    compileOnly 'maven.modrinth:jade:15.10.6+neoforge'
+    if (providers.gradleProperty('compatMods').getOrElse('false').toBoolean()) {
+        runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:19.57.0.450"
+        runtimeOnly 'maven.modrinth:jade:15.10.6+neoforge'
+        runtimeOnly 'maven.modrinth:kubejs:2101.7.2-build.377'
+        runtimeOnly 'maven.modrinth:rhino:2101.2.8-build.91+Rhino-1.21'
+        runtimeOnly 'maven.modrinth:better-advanced-tooltips:2101.1.0-build.5'
+    }
+}

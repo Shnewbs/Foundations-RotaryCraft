@@ -1,13 +1,22 @@
-name: Verify master
+name: Build and release
 on:
   push:
     branches: [master]
+    tags: ['v*']
   pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: rotarycraft-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        compat: [false, true]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -17,11 +26,68 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+      - run: python -m unittest discover -s tools/tests
       - run: python tools/validate_assets.py
-      - run: bash gradlew --no-daemon build
-      - run: bash gradlew --no-daemon runGameTestServer
+      - name: Build and regression checks
+        env:
+          COMPAT_MODS: ${{ matrix.compat }}
+        run: bash gradlew --no-daemon build -PcompatMods="$COMPAT_MODS"
+      - name: Install KubeJS smoke-test script
+        if: matrix.compat
+        run: |
+          mkdir -p run-gametest/kubejs/server_scripts
+          cp tools/tests/kubejs_smoke.js run-gametest/kubejs/server_scripts/rotarycraft_ci.js
+      - name: GameTests
+        env:
+          COMPAT_MODS: ${{ matrix.compat }}
+        run: bash gradlew --no-daemon runGameTestServer -PcompatMods="$COMPAT_MODS"
       - uses: actions/upload-artifact@v4
+        if: ${{ !matrix.compat }}
         with:
           name: tested-mod-jar
-          path: build/libs/*.jar
+          path: build/libs/Foundations-RotaryCraft-*.jar
           if-no-files-found: error
+  release:
+    needs: build
+    if: ${{ github.event_name != 'pull_request' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: rotarycraft-publish
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Require a commit on master
+        run: git merge-base --is-ancestor HEAD origin/master
+      - name: Select unpublished version
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python tools/prepare_release.py
+      - uses: actions/download-artifact@v4
+        if: steps.version.outputs.publish == 'true'
+        with:
+          name: tested-mod-jar
+          path: build/libs
+      - name: Publish checked version
+        if: steps.version.outputs.publish == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          RELEASE_DRAFT: ${{ steps.version.outputs.draft }}
+        run: |
+          JAR="build/libs/Foundations-RotaryCraft-${RELEASE_VERSION}.jar"
+          test -s "$JAR"
+          (cd build/libs && sha256sum "Foundations-RotaryCraft-${RELEASE_VERSION}.jar" > SHA256SUMS.txt)
+          if [ "$RELEASE_DRAFT" != 'true' ]; then
+            gh release create "$RELEASE_TAG" --target "$GITHUB_SHA" --title "Foundations-RotaryCraft-${RELEASE_VERSION}" --notes-file release-notes.md --prerelease --draft
+          fi
+          gh release upload "$RELEASE_TAG" "$JAR" build/libs/SHA256SUMS.txt --clobber
+          gh release edit "$RELEASE_TAG" --draft=false

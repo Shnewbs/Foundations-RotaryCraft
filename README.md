@@ -42,7 +42,9 @@ The distributable mod JAR is generated at `build/libs/Foundations-RotaryCraft-<m
 
 Development continues on `master` toward a 1:1 combined RotaryCraft and ElectriCraft port. See [ROADMAP.md](ROADMAP.md) for current parity gaps and the order of work. Existing FE-powered machines remain approximations; the new mechanical signal API is a foundation and is not yet connected to world blocks.
 
-To publish a tested release, update `mod_version` and add its matching version section to `CHANGELOG.md`, commit to `master`, then push tag `v<mod_version>`. `.github/workflows/release.yml` verifies the version and master ancestry, validates resources, builds with Java 21, runs mechanical regression checks and GameTests, and publishes a prerelease with the JAR, SHA256 checksum and release-specific notes. Ordinary commits do not publish releases. GitHub supplies source archives automatically.
+Releases are automatic: update `mod_version` and its matching CHANGELOG.md section, then commit to `master`. CI validates resources, builds with Java 21, runs regression/GameTests with integrations present and absent, and publishes the checked version in GitHub Releases. The release contains `Foundations-RotaryCraft-<mod_version>.jar`, a SHA256 checksum and release-specific notes; GitHub supplies source archives. Manual tags are supported but no longer required. Published versions are not overwritten.
+
+Version 1.21.1-1.2.0 adds data-driven grinding, KubeJS custom recipe support, JEI grinding display and Jade grinder status. See [integration documentation](docs/integrations.md). The mechanical/electrical core remains an API foundation; legacy gameplay parity and power adapters are still in progress.
 
 Standard NeoForge Forge Energy compatibility is retained. The parity plan adds explicit FE/electrical/mechanical converters rather than replacing shaft torque and speed with FE. Other power APIs require dedicated adapters; universal compatibility has not been tested.
 

@@ -1,120 +1,119 @@
 package Foundations.RotaryCraft.Machines;
 
+import java.util.Comparator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import Foundations.RotaryCraft.Recipes.GrindingRecipe;
+import Foundations.RotaryCraft.Recipes.RecipeContent;
 
-/**
- * Grindstone: Rotational-powered grinding machine.
- * Grinds various items into powder, dust, or other products based on recipes.
- * Requires continuous power input to operate.
- */
+/** Data-driven FE grinding baseline; legacy mechanical behavior is still being ported. */
 public class GrindstoneBlockEntity extends BlockEntity {
-
     private static final int MAX_ENERGY = 100000;
-    private static final int POWER_REQUIREMENT = 100;
-    private static final int GRIND_TIME_TICKS = 100;
-    
-    private final EnergyStorage energyStorage = new EnergyStorage(MAX_ENERGY, POWER_REQUIREMENT, 0, 0);
+    private final MachineEnergy energyStorage = new MachineEnergy();
     private final ItemStackHandler itemHandler = new ItemStackHandler(2) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            GrindstoneBlockEntity.this.setChanged();
-        }
+        @Override public boolean isItemValid(int slot, ItemStack stack) { return slot == 0; }
+        @Override protected void onContentsChanged(int slot) { GrindstoneBlockEntity.this.setChanged(); }
     };
-
-    private int grindProgress = 0;
-    private int grindTime = 0;
+    private int elapsed;
+    private int duration;
+    private ResourceLocation activeRecipe;
+    private GrindingRecipe activeDefinition;
+    private boolean operating;
 
     public GrindstoneBlockEntity(BlockPos pos, BlockState state) {
         super(MachineContent.GRINDSTONE_BLOCK_ENTITY.get(), pos, state);
     }
-
     public static void serverTick(Level level, BlockPos pos, BlockState state, GrindstoneBlockEntity entity) {
-        if (level == null || level.isClientSide) return;
-        
-        entity.tryGrind();
+        if (!level.isClientSide) entity.tryGrind();
     }
-
     private void tryGrind() {
+        if (level == null) return;
+        operating = false;
         ItemStack input = itemHandler.getStackInSlot(0);
+        SingleRecipeInput recipeInput = new SingleRecipeInput(input);
+        // Stable ID ordering avoids nondeterministic overlapping tag recipes.
+        var matched = level.getRecipeManager().getAllRecipesFor(RecipeContent.GRINDING_TYPE.get()).stream()
+                .filter(holder -> holder.value().matches(recipeInput, level))
+                .min(Comparator.comparing(holder -> holder.id().toString()));
+        if (input.isEmpty() || matched.isEmpty()) { resetProgress(); return; }
+        RecipeHolder<GrindingRecipe> holder = matched.get();
+        GrindingRecipe recipe = holder.value();
+        // A reload changes the recipe instance; never complete with stale progress or output.
+        if (!holder.id().equals(activeRecipe) || (activeDefinition != null && activeDefinition != recipe)) {
+            resetProgress();
+            activeRecipe = holder.id();
+        }
+        activeDefinition = recipe;
+        duration = recipe.duration();
+        ItemStack result = recipe.assemble(recipeInput, level.registryAccess());
         ItemStack output = itemHandler.getStackInSlot(1);
-
-        if (input.isEmpty()) {
-            grindProgress = 0;
-            grindTime = 0;
-            return;
+        if (!canAccept(output, result) || energyStorage.getEnergyStored() < recipe.energyPerTick()) return;
+        energyStorage.consume(recipe.energyPerTick());
+        operating = true;
+        elapsed++;
+        if (elapsed >= duration) {
+            itemHandler.setStackInSlot(1, output.isEmpty() ? result : output.copyWithCount(output.getCount() + result.getCount()));
+            itemHandler.extractItem(0, 1, false);
+            elapsed = 0;
         }
-
-        if (energyStorage.getEnergyStored() >= POWER_REQUIREMENT) {
-            if (grindTime < GRIND_TIME_TICKS) {
-                grindTime++;
-                energyStorage.extractEnergy(POWER_REQUIREMENT / GRIND_TIME_TICKS, false);
-            } else {
-                grindProgress++;
-                grindTime = 0;
-                
-                if (grindProgress >= 10) {
-                    completeGrind(input, output);
-                    grindProgress = 0;
-                }
-            }
-        } else {
-            grindTime = 0;
-        }
+        setChanged();
+        level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
     }
-
-    private void completeGrind(ItemStack input, ItemStack output) {
-        ItemStack result = GrindstoneRecipes.grind(input);
-        if (!result.isEmpty()) {
-            if (output.isEmpty()) {
-                itemHandler.setStackInSlot(1, result.copy());
-                input.shrink(1);
-            } else if (ItemStack.isSameItem(output, result) && output.getCount() < output.getMaxStackSize()) {
-                output.grow(result.getCount());
-                input.shrink(1);
-            }
+    private boolean canAccept(ItemStack output, ItemStack result) {
+        int limit = Math.min(itemHandler.getSlotLimit(1), result.getMaxStackSize());
+        return result.getCount() <= limit && (output.isEmpty()
+                || (ItemStack.isSameItemSameComponents(output, result) && output.getCount() <= limit - result.getCount()));
+    }
+    private void resetProgress() {
+        boolean changed = elapsed != 0 || duration != 0 || activeRecipe != null;
+        elapsed = 0; duration = 0; activeRecipe = null; activeDefinition = null;
+        if (changed) {
             setChanged();
+            if (level != null) level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
         }
     }
-
-    @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+    @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        if (tag.contains("energy")) {
-            energyStorage.deserializeNBT(registries, tag.getCompound("energy"));
-        }
-        if (tag.contains("items")) {
-            itemHandler.deserializeNBT(registries, tag.getCompound("items"));
-        }
-        grindProgress = tag.getInt("grind_progress");
-        grindTime = tag.getInt("grind_time");
+        if (tag.contains("energy")) energyStorage.restore(tag.getInt("energy"));
+        if (tag.contains("items")) itemHandler.deserializeNBT(registries, tag.getCompound("items"));
+        duration = Math.max(0, Math.min(72000, tag.getInt("grind_duration")));
+        elapsed = Math.max(0, Math.min(Math.max(0, duration - 1), tag.getInt("grind_elapsed")));
+        activeRecipe = ResourceLocation.tryParse(tag.getString("grind_recipe"));
+        activeDefinition = null;
+        operating = false;
     }
-
-    @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+    @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.put("energy", energyStorage.serializeNBT(registries));
         tag.put("items", itemHandler.serializeNBT(registries));
-        tag.putInt("grind_progress", grindProgress);
-        tag.putInt("grind_time", grindTime);
+        tag.putInt("grind_elapsed", elapsed);
+        tag.putInt("grind_duration", duration);
+        if (activeRecipe != null) tag.putString("grind_recipe", activeRecipe.toString());
     }
-
-    public EnergyStorage getEnergyStorage() {
-        return energyStorage;
-    }
-
-    public ItemStackHandler getItemHandler() {
-        return itemHandler;
-    }
-
-    public float getGrindProgress() {
-        return grindProgress / 10.0f;
+    public EnergyStorage getEnergyStorage() { return energyStorage; }
+    public ItemStackHandler getItemHandler() { return itemHandler; }
+    public float getGrindProgress() { return duration > 0 ? Math.min(1F, elapsed / (float) duration) : 0F; }
+    public int getElapsed() { return elapsed; }
+    public int getDuration() { return duration; }
+    public boolean isOperating() { return operating; }
+    private final class MachineEnergy extends EnergyStorage {
+        private MachineEnergy() { super(MAX_ENERGY, 100, 0); }
+        @Override public int receiveEnergy(int amount, boolean simulate) {
+            int received = super.receiveEnergy(amount, simulate);
+            if (!simulate && received > 0) setChanged();
+            return received;
+        }
+        private void restore(int amount) { energy = Math.max(0, Math.min(MAX_ENERGY, amount)); }
+        private void consume(int amount) { energy -= amount; setChanged(); }
     }
 }

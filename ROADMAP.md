@@ -9,6 +9,14 @@ This roadmap was established after checking master on 2026-09-30: no gameplay ro
 
 1.21.1-1.1.0 provides FE-powered approximations and partial assets. It is not a 1:1 port. Existing block IDs and saves must be preserved during migration. The mechanical foundation below is not yet connected to world blocks.
 
+## Required recipe and information integrations
+
+- [x] Reloadable grinding recipes plus KubeJS `event.custom` example.
+- [x] JEI grinding category and catalyst.
+- [x] Server-authoritative Jade grinder energy, progress and running state.
+- [ ] Extend these integrations to every machine as each legacy behavior is ported.
+- [ ] Client visual validation for JEI and Jade; live recipe reload validation.
+
 ## Work order
 
 - [x] Establish non-buffered shaft signal: independent speed, torque, long watt product.
@@ -45,7 +53,9 @@ A feature is complete only after source comparison, behavior checks and required
 
 ## Releases
 
-Update gradle.properties and CHANGELOG.md; run build, resource validation and GameTests. Tag the tested master commit as v<mod_version>. The release workflow verifies the tag/version, runs checks, and publishes the mod JAR plus checksum and release-specific notes to GitHub Releases. Ordinary commits do not publish releases.
+Commit a new `mod_version` and matching CHANGELOG.md section to master. CI tests with KubeJS/JEI/Jade installed and absent, then automatically creates `v<mod_version>` and a GitHub prerelease with `Foundations-RotaryCraft-<mod_version>.jar`, SHA256 checksum and version-specific notes. No manual tag is required. Ordinary commits keep building but do not overwrite published versions. Failed builds/tests never publish. The workflow also accepts explicit matching version tags and manual runs.
+
+Current development milestone: 1.21.1-1.2.0. The native mechanical signal foundation is still not connected to world blocks; the grinding changes retain the interim FE baseline.
 
 ## Source checkpoints
 
