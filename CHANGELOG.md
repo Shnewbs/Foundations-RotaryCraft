@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Began the 1:1 mechanical foundation with independent torque/speed signals, safe long power products, legacy ideal gearbox ratios and machine thresholds; not yet wired to world blocks.
+- Added ideal ElectriCraft voltage/current signal conversions using the legacy 8 Nm/amp constant, with overflow rejection and conservation checks; world networks remain pending.
+- Added mechanical regression checks to Gradle check.
+- Added the combined parity roadmap, including ElectriCraft and standard NeoForge FE converters.
+- Restored tag-triggered GitHub Releases with Java 21 builds, resource checks, GameTests, exact changelog notes and JAR checksums.
+
 ## 1.21.1-1.1.0 - Asset Restoration
 
 - Audited blockstate, block-model, item-model, parent-model, and local texture references; restored every missing machine texture and the Smoke Detector block model.

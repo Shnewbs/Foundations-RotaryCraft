@@ -40,7 +40,12 @@ gradlew.bat runGameTestServer
 
 The distributable mod JAR is generated at `build/libs/Foundations-RotaryCraft-<mod_version>.jar`; source archives are not release assets.
 
-To prepare a release, update `mod_version` in `gradle.properties` (currently `1.21.1-1.1.0`), build locally with Java 21 using `gradlew.bat build`, then create a GitHub Release manually and attach `build/libs/Foundations-RotaryCraft-<mod_version>.jar`. GitHub Actions builds and releases have been removed; pushing commits, pull requests, or tags no longer triggers builds or releases.
+Development continues on `master` toward a 1:1 combined RotaryCraft and ElectriCraft port. See [ROADMAP.md](ROADMAP.md) for current parity gaps and the order of work. Existing FE-powered machines remain approximations; the new mechanical signal API is a foundation and is not yet connected to world blocks.
+
+To publish a tested release, update `mod_version` and add its matching version section to `CHANGELOG.md`, commit to `master`, then push tag `v<mod_version>`. `.github/workflows/release.yml` verifies the version and master ancestry, validates resources, builds with Java 21, runs mechanical regression checks and GameTests, and publishes a prerelease with the JAR, SHA256 checksum and release-specific notes. Ordinary commits do not publish releases. GitHub supplies source archives automatically.
+
+Standard NeoForge Forge Energy compatibility is retained. The parity plan adds explicit FE/electrical/mechanical converters rather than replacing shaft torque and speed with FE. Other power APIs require dedicated adapters; universal compatibility has not been tested.
+
 
 
 Pull Requests

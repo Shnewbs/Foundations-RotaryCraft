@@ -66,3 +66,11 @@ tasks.withType(JavaCompile).configureEach {
 tasks.named('jar', Jar).configure {
     from('License.txt')
 }
+
+// Runs the dependency-free mechanical regression suite as part of every build.
+tasks.register('verifyMechanicalPower', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'Foundations.RotaryCraft.Mechanical.MechanicalPowerTest'
+}
+tasks.named('check') { dependsOn tasks.named('verifyMechanicalPower') }
