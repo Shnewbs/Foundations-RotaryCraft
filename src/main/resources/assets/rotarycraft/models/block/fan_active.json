@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "rotarycraft:block/fan_casing",
+    "up": "rotarycraft:block/fan_casing",
+    "north": "rotarycraft:block/fan_rotor",
+    "south": "rotarycraft:block/fan_casing",
+    "east": "rotarycraft:block/fan_casing",
+    "west": "rotarycraft:block/fan_casing",
+    "particle": "rotarycraft:block/fan_casing"
+  }
+}

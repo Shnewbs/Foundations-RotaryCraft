@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "lit=false": { "model": "rotarycraft:block/defoliator" },
+    "lit=true": { "model": "rotarycraft:block/defoliator_active" }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_potion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [{ "items": "minecraft:potion" }]
+      }
+    }
+  },
+  "requirements": [["has_potion"]],
+  "rewards": { "recipes": ["rotarycraft:defoliator"] }
+}

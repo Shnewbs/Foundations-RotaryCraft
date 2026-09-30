@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "rotarycraft:block/item_refresher",
+    "particle": "rotarycraft:block/item_refresher"
+  }
+}

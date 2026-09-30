@@ -1,4 +1,4 @@
 {
-  "parent": "item/block",
+  "parent": "rotarycraft:block/smoke_detector",
   "textures": { "layer0": "rotarycraft:block/smoke_detector" }
 }

@@ -2,6 +2,47 @@
 
 ## Unreleased
 
+## 1.21.1-1.1.0 - Asset Restoration
+
+- Audited blockstate, block-model, item-model, parent-model, and local texture references; restored every missing machine texture and the Smoke Detector block model.
+- Replaced ambiguous item-model parents with explicit references to their block models.
+- Added original pixel-art machine textures and a frame-animated Fan rotor that runs only in the powered blockstate; its eight 16×16 frames advance once per game tick.
+- Added `docs/visual-animation-audit.md` to compare legacy renderer/tick behavior across the ported machines and track remaining visual-fidelity work.
+- Added `tools/validate_assets.py` to check resource JSON, model/blockstate references, local PNG integrity, and animation frame bounds.
+
+## 1.21.1-1.0.0 - Item Refresher
+
+- Added the powered Item Refresher, based on the legacy machine that keeps dropped items from despawning.
+  - Uses 16 FE per tick and affects item entities within four blocks; it extends their lifespan while in range and gives stationary items a gentle upward nudge.
+  - Stores up to 50,000 FE, exposes the NeoForge energy capability, and shows its active state while powered.
+  - Added a crafting recipe, recipe-book advancement, block/item models, blockstate, loot, English localization, and original active/inactive pixel-art textures.
+  - Added GameTests for recipe registration, powered lifespan refresh and energy use, range limits, and unpowered behavior.
+
+## 0.9.0 - Defoliator
+
+- Added the powered Defoliator, inspired by the legacy poison-fed vegetation-clearing machine.
+  - Accepts poison potions through its item capability, stores up to 4,000 poison charge, and returns empty glass bottles.
+  - Uses 8 FE per tick to clear eligible leaves, logs, saplings, plants, vines, and cactus within a bounded three-block radius; each cleared block consumes one poison charge and poisons nearby living entities.
+  - Persists its energy, potion inventory, poison charge, and work progress; includes energy and item-handler capabilities, active/redstone indication, recipe-book advancement, block/item models, loot, and English localization.
+  - Added original pixel-art block and item textures under `assets/rotarycraft/textures` and GameTests for recipe/capability registration and powered operation.
+
+## 0.8.0 - Mob Harvester
+
+- Added the powered Mob Harvester, which damages eligible living mobs in a four-block vertical column.
+  - Excludes players and villagers, stops its targeting column at solid obstructions, consumes 8 FE per operating tick, and deals 6 damage once per second.
+  - Stores up to 50,000 FE, indicates active targeting with its lit model state, and emits a full analog redstone signal while a valid target is present.
+  - Added energy capability, recipe, recipe-book advancement, block/item models, blockstate, loot, and English localization.
+  - Converted the legacy `Textures/TileEntityTex/harvestertex.png` atlas to the in-game block texture; the original atlas remains in the repository as the source asset.
+  - Added GameTests for recipe registration, capability and energy persistence, powered damage, safe exclusions, obstruction handling, and unpowered behavior.
+
+## 0.7.0 - Fan
+
+- Added the Fan, a powered directional airflow machine inspired by the legacy RotaryCraft Fan.
+  - Pushes entities in a bounded eight-block airflow path and stops at solid block collision shapes.
+  - Stores up to 50,000 FE, accepts up to 160 FE per tick, and consumes 16 FE per operating tick.
+  - Added energy capability, crafting recipe, recipe-book advancement, block/item models, blockstates, loot, and English localization.
+  - Added GameTests for recipe registration, energy capability, directional entity movement, solid-block occlusion, and unpowered behavior.
+
 ## 0.6.0 - Sorting
 
 - Added the Sorting Machine, a powered item router with nine persistent filter slots.
