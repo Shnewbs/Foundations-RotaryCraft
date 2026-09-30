@@ -8,6 +8,7 @@
   "block.rotarycraft.hydro_generator": "Hydro Generator",
   "block.rotarycraft.steam_generator": "Steam Generator",
   "block.rotarycraft.geothermal_generator": "Geothermal Generator",
+  "block.rotarycraft.sprinkler": "Sprinkler",
   "block.rotarycraft.grindstone": "Grindstone",
   "block.rotarycraft.winder": "Winder",
   "block.rotarycraft.blower": "Blower",
@@ -21,5 +22,6 @@
   "block.rotarycraft.defoliator": "Defoliator",
   "block.rotarycraft.item_refresher": "Item Refresher",
   "block.rotarycraft.canola_crop": "Canola",
-  "item.rotarycraft.canola_seeds": "Canola Seeds"
+  "item.rotarycraft.canola_seeds": "Canola Seeds",
+  "item.rotarycraft.dense_canola_seeds": "Dense Canola Seeds"
 }
