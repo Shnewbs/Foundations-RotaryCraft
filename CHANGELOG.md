@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## 1.21.1-1.5.0 - Mechanical Processing Input
+
+- Added a horizontal facing and rear shaft input to the existing material-processing block, preserving its `rotarycraft:grindstone` save ID.
+- Mechanical operation requires the legacy Grinder thresholds: 128 Nm, 1 rad/s and 4096 W. The legacy tool-repair Grindstone is a separate machine and remains pending.
+- A connected shaft selects mechanical operation, including when stopped or underpowered; FE cannot bypass those thresholds. Without a shaft connection, the interim FE recipe behavior remains available.
+- Sufficient mechanical input advances reloadable grinding recipes without consuming FE. Losing power pauses progress; full or incompatible output still blocks processing.
+- Jade displays the current shaft signal and required thresholds when mechanical input is connected. Native grinding recipes remain compatible with JEI and KubeJS.
+- Added five GameTests covering sufficient/insufficient signals, torque versus watts, pause/resume, blocked output, and a real sided DC connection.
+- Successful high-power processing tests inject a signal at the machine boundary; the current DC engine cannot reach the Grinder requirements. Stronger engines, legacy processing duration/recipes, tool repair and cross-mod converters remain pending.
+
 ## 1.21.1-1.4.0 - DC Engine Inertia and Persistence
 
 - Replaced instant DC output with legacy server-tick spin-up: 32 rad/s per tick, capped at 256 rad/s and 4 Nm.

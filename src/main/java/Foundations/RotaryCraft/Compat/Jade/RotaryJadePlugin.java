@@ -36,13 +36,21 @@ public final class RotaryJadePlugin implements IWailaPlugin {
                 status.putInt("elapsed", machine.getElapsed());
                 status.putInt("duration", machine.getDuration());
                 status.putBoolean("operating", machine.isOperating());
+                var shaft = machine.getMechanicalInput();
+                status.putBoolean("shaft_connected", shaft.connected());
+                status.putInt("shaft_speed", shaft.power().omega());
+                status.putInt("shaft_torque", shaft.power().torque());
+                status.putLong("shaft_watts", shaft.power().watts());
                 data.put("rotarycraft:grinding", status);
             }
         }
         @Override public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
             if (!accessor.getServerData().contains("rotarycraft:grinding")) return;
             CompoundTag status = accessor.getServerData().getCompound("rotarycraft:grinding");
-            tooltip.add(Component.translatable("jade.rotarycraft.energy", status.getInt("energy"), status.getInt("capacity")));
+            if (status.getBoolean("shaft_connected")) {
+                tooltip.add(Component.translatable("jade.rotarycraft.shaft", status.getInt("shaft_speed"), status.getInt("shaft_torque"), status.getLong("shaft_watts")));
+                tooltip.add(Component.translatable("jade.rotarycraft.grinder_requirement"));
+            } else tooltip.add(Component.translatable("jade.rotarycraft.energy", status.getInt("energy"), status.getInt("capacity")));
             tooltip.add(Component.translatable("jade.rotarycraft.progress", status.getInt("elapsed"), status.getInt("duration")));
             tooltip.add(Component.translatable(status.getBoolean("operating") ? "jade.rotarycraft.running" : "jade.rotarycraft.idle"));
         }

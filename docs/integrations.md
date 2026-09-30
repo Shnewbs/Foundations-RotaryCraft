@@ -35,7 +35,7 @@ Place a DC Engine with its copper/redstone output face aimed along the shaft lin
 
 Gearboxes default to speed reduction/torque increase. Empty-hand right click toggles speed increase/torque reduction. Their configuration is stored in blockstate. Integer truncation follows the legacy ideal arithmetic, so increasing speed with insufficient torque can produce zero usable power. Material, lubricant, damage, upgrades and original recipes/models are pending; these six recipes and vanilla-material models are temporary scaffolding.
 
-All six blocks have native crafting recipes that JEI discovers automatically. KubeJS can remove/replace them by their `rotarycraft:dc_engine`, `rotarycraft:shaft` and `rotarycraft:gearbox_2/4/8/16` IDs. Jade receives live speed, torque, wattage and mode from the server. Client visual validation remains pending. Existing FE machines do not consume shaft signals yet; electrical and cross-mod bridges remain roadmap work.
+All six blocks have native crafting recipes that JEI discovers automatically. KubeJS can remove/replace them by their `rotarycraft:dc_engine`, `rotarycraft:shaft` and `rotarycraft:gearbox_2/4/8/16` IDs. Jade receives live speed, torque, wattage and mode from the server. Client visual validation remains pending. The material-processing block gains a shaft input in 1.21.1-1.5.0; other FE machines and electrical/cross-mod bridges remain roadmap work.
 
 
 ### DC engine inertia (1.21.1-1.4.0)
@@ -43,3 +43,12 @@ All six blocks have native crafting recipes that JEI discovers automatically. Ku
 The DC engine reaches 256 rad/s after eight powered server ticks, increasing by 32 rad/s each tick. Removing redstone starts coast-down: subtract `speed / 256 + 1` each tick, keeping 4 Nm until speed reaches zero. From full speed it stops after 255 ticks. Reapplying redstone accelerates from the current speed. Jade shows redstone/running, coasting or stopped status.
 
 Only the engine saves rotational state. Restored speed/torque are clamped to 0–256 rad/s and 0–4 Nm; a zero-speed engine has zero torque. Old saves with no rotational data start stopped. Saved engines do not simulate time while their chunks are unloaded. Transmission still recomputes its signal on demand. Sounds, legacy models, integrated gears and redstone upgrades remain pending.
+
+
+### Processing shaft input (1.21.1-1.5.0)
+
+The existing `rotarycraft:grindstone` block processes materials, so its mechanical requirements follow the legacy **Grinder** (128 Nm, 1 rad/s, 4096 W), rather than the legacy tool-repair **Grindstone**. The latter remains a separate parity task. Place the processing block facing you and aim a shaft's output into its rear face. Existing saves default to facing north, with input from the south.
+
+A connected shaft selects mechanical operation even when its source is stopped or too weak. Its torque, speed and watts must all meet the thresholds; stored FE does not bypass them. With no connection, the interim FE mode remains available. Changing/removing a connection takes effect on the next machine tick. Progress pauses during insufficient power and resumes when sufficient power returns. Mechanical mode uses the recipe's configured duration and output, consuming no FE. Full legacy speed-dependent duration is pending.
+
+The current DC engine produces only 1024 W and cannot run this machine, even after gearing. The successful mechanical-processing GameTests inject sufficient power at the input boundary; full end-to-end validation with a stronger engine remains pending. Jade displays input speed/torque/watts and thresholds. JEI and KubeJS continue to use the existing reloadable grinding recipe type.

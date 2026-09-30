@@ -19,12 +19,18 @@ import org.jetbrains.annotations.Nullable;
 public class GrindstoneBlock extends BaseEntityBlock {
     
     private static final MapCodec<GrindstoneBlock> CODEC = simpleCodec(GrindstoneBlock::new);
+    public static final net.minecraft.world.level.block.state.properties.DirectionProperty FACING = net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
     private static final VoxelShape SHAPE = box(2, 0, 2, 14, 14, 14);
 
     public GrindstoneBlock(BlockBehaviour.Properties properties) {
         super(properties);
+        registerDefaultState(stateDefinition.any().setValue(FACING, net.minecraft.core.Direction.NORTH));
     }
 
+    @Override protected void createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder<Block, BlockState> builder) { builder.add(FACING); }
+    @Override public BlockState getStateForPlacement(net.minecraft.world.item.context.BlockPlaceContext context) {
+        return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+    }
     @Override
     public MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;

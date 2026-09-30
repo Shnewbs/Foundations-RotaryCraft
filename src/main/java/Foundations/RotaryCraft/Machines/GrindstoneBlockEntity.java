@@ -16,8 +16,12 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import Foundations.RotaryCraft.Recipes.GrindingRecipe;
 import Foundations.RotaryCraft.Recipes.RecipeContent;
 
-/** Data-driven FE grinding baseline; legacy mechanical behavior is still being ported. */
+/** Material processing under the preserved grindstone save ID; tool-repair parity is separate. */
 public class GrindstoneBlockEntity extends BlockEntity {
+    public static final Foundations.RotaryCraft.Mechanical.PowerRequirement MECHANICAL_REQUIREMENT =
+            new Foundations.RotaryCraft.Mechanical.PowerRequirement(128, 1, 4096);
+    public record MechanicalInput(boolean connected, Foundations.RotaryCraft.Mechanical.ShaftPower power) {}
+    private MechanicalInput shaft = new MechanicalInput(false, Foundations.RotaryCraft.Mechanical.ShaftPower.STOPPED);
     private static final int MAX_ENERGY = 100000;
     private final MachineEnergy energyStorage = new MachineEnergy();
     private final ItemStackHandler itemHandler = new ItemStackHandler(2) {
@@ -39,6 +43,7 @@ public class GrindstoneBlockEntity extends BlockEntity {
     private void tryGrind() {
         if (level == null) return;
         operating = false;
+        shaft = readMechanicalInput();
         ItemStack input = itemHandler.getStackInSlot(0);
         SingleRecipeInput recipeInput = new SingleRecipeInput(input);
         // Stable ID ordering avoids nondeterministic overlapping tag recipes.
@@ -57,8 +62,13 @@ public class GrindstoneBlockEntity extends BlockEntity {
         duration = recipe.duration();
         ItemStack result = recipe.assemble(recipeInput, level.registryAccess());
         ItemStack output = itemHandler.getStackInSlot(1);
-        if (!canAccept(output, result) || energyStorage.getEnergyStored() < recipe.energyPerTick()) return;
-        energyStorage.consume(recipe.energyPerTick());
+        if (!canAccept(output, result)) return;
+        if (shaft.connected()) {
+            if (!MECHANICAL_REQUIREMENT.isSatisfiedBy(shaft.power())) return;
+        } else {
+            if (energyStorage.getEnergyStored() < recipe.energyPerTick()) return;
+            energyStorage.consume(recipe.energyPerTick());
+        }
         operating = true;
         elapsed++;
         if (elapsed >= duration) {
@@ -69,6 +79,17 @@ public class GrindstoneBlockEntity extends BlockEntity {
         setChanged();
         level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
     }
+    protected MechanicalInput readMechanicalInput() {
+        if (level == null || level.isClientSide) return new MechanicalInput(false, Foundations.RotaryCraft.Mechanical.ShaftPower.STOPPED);
+        var inputSide = getBlockState().getValue(GrindstoneBlock.FACING).getOpposite();
+        var pos = worldPosition.relative(inputSide);
+        var outputSide = inputSide.getOpposite();
+        boolean connected = level.hasChunkAt(pos) && level.getCapability(Foundations.RotaryCraft.Mechanical.ShaftNetwork.CAPABILITY, pos, outputSide) != null;
+        var power = connected ? Foundations.RotaryCraft.Mechanical.ShaftNetwork.resolve(level, pos, outputSide)
+                : Foundations.RotaryCraft.Mechanical.ShaftPower.STOPPED;
+        return new MechanicalInput(connected, power);
+    }
+    public MechanicalInput getMechanicalInput() { return shaft; }
     private boolean canAccept(ItemStack output, ItemStack result) {
         int limit = Math.min(itemHandler.getSlotLimit(1), result.getMaxStackSize());
         return result.getCount() <= limit && (output.isEmpty()

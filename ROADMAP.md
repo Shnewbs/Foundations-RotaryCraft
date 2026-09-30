@@ -25,7 +25,8 @@ This roadmap was established after checking master on 2026-09-30: no gameplay ro
 - [ ] Complete engine upgrades, shaft variants/materials, gearbox lubricant/damage/failure and reload/multiplayer validation. Facing and gearbox mode currently persist through vanilla blockstate storage.
 - [x] Port DC engine steady output, spin-up, coast-down and bounded rotational-state persistence.
 - [ ] Port remaining engine outputs/fuels/upgrades, material limits, lubricant, damage and failure from legacy sources.
-- [ ] Convert existing machines to their legacy mechanical requirements and operation; retain FE interoperability at explicit converters.
+- [x] Add initial material-processing shaft input under the preserved grindstone ID, with legacy Grinder torque/speed/watt thresholds.
+- [ ] Complete processing duration/recipes, separate tool-repair Grindstone, remaining machine migration and explicit FE converters. Interim FE operation remains available without a connected shaft.
 - [x] Add ideal ElectriCraft generator/motor signal conversion (8 Nm per amp), with conservation and overflow checks. World blocks remain pending.
 - [ ] Integrate ElectriCraft voltage/current network, wire materials, resistance/losses, batteries, transformers, generators and motors from the reference implementation.
 - [ ] FE interoperability: sided standard NeoForge EnergyStorage capability on electrical bridges, bounded buffers and rates, simulation without mutation, conservation and restart tests.
@@ -57,7 +58,7 @@ A feature is complete only after source comparison, behavior checks and required
 
 Commit a new `mod_version` and matching CHANGELOG.md section to master. CI tests with KubeJS/JEI/Jade installed and absent, then automatically creates `v<mod_version>` and a GitHub prerelease with `Foundations-RotaryCraft-<mod_version>.jar`, SHA256 checksum and version-specific notes. No manual tag is required. Ordinary commits keep building but do not overwrite published versions. Failed builds/tests never publish. The workflow also accepts explicit matching version tags and manual runs.
 
-Current development milestone: 1.21.1-1.4.0. World mechanical transmission is connected; grinding and other existing machines retain the interim FE baseline until explicit converters and legacy machine requirements are implemented.
+Current development milestone: 1.21.1-1.5.0. World mechanical transmission and an initial material-processing shaft input are connected. Other machines retain the interim FE baseline; the processing block also retains FE operation when no shaft is connected. Full machine behavior and explicit converters remain pending.
 
 ## Source checkpoints
 

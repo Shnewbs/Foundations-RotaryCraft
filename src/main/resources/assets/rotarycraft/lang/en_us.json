@@ -44,5 +44,6 @@
   "jade.rotarycraft.acceleration": "%s:1 speed increase mode",
   "jade.rotarycraft.dc_powered": "Redstone on / spinning up or running",
   "jade.rotarycraft.dc_coasting": "Redstone off / coasting",
-  "jade.rotarycraft.dc_stopped": "Redstone off / stopped"
+  "jade.rotarycraft.dc_stopped": "Redstone off / stopped",
+  "jade.rotarycraft.grinder_requirement": "Required: 128 Nm, 1 rad/s, 4096 W"
 }
