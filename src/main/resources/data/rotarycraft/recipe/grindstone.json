@@ -13,7 +13,6 @@
       "item": "minecraft:cobblestone"
     }
   },
-  "result": {
-    "item": "rotarycraft:grindstone"
+  "result": { "id": "rotarycraft:grindstone"
   }
 }

@@ -16,7 +16,6 @@
       "item": "minecraft:copper_block"
     }
   },
-  "result": {
-    "item": "rotarycraft:blower"
+  "result": { "id": "rotarycraft:blower"
   }
 }

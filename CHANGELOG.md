@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.6.0 - Sorting
+
+- Added the Sorting Machine, a powered item router with nine persistent filter slots.
+  - Routes matching items to three output paths and sends unmatched items downward.
+  - Persists filters, input inventory, facing state, and energy.
+  - Added energy and item-handler capabilities, recipe, advancement, models, blockstate, and localization.
+
 ## 0.5.0 - Item Transport
 
 - Added the Item Cannon, a powered nine-slot transport machine.

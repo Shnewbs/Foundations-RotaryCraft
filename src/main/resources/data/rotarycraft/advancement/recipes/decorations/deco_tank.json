@@ -1,12 +1,12 @@
 {
-  "parent": "advancement/recipes/decorations/root",
+  "parent": "minecraft:recipes/root",
   "criteria": {
     "has_glass": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": ["minecraft:glass"]
+            "items": "minecraft:glass"
           }
         ]
       }

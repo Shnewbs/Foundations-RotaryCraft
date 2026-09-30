@@ -81,6 +81,15 @@ public class MachineContent {
         BLOCK_ENTITY_TYPES.register("item_cannon", () ->
             BlockEntityType.Builder.of(ItemCannonBlockEntity::new, ITEM_CANNON.get()).build(null));
 
+    // Sorting
+    public static final DeferredBlock<SortingBlock> SORTING = BLOCKS.register("sorting",
+        () -> new SortingBlock(BlockBehaviour.Properties.of().strength(3.0f, 10.0f).requiresCorrectToolForDrops()));
+    public static final DeferredItem<BlockItem> SORTING_ITEM =
+        ITEMS.registerSimpleBlockItem("sorting", SORTING);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SortingBlockEntity>> SORTING_BLOCK_ENTITY =
+        BLOCK_ENTITY_TYPES.register("sorting", () ->
+            BlockEntityType.Builder.of(SortingBlockEntity::new, SORTING.get()).build(null));
+
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
@@ -108,6 +117,16 @@ public class MachineContent {
             Capabilities.ItemHandler.BLOCK,
             ITEM_CANNON_BLOCK_ENTITY.get(),
             (cannon, side) -> cannon.getItemHandler()
+        );
+        event.registerBlockEntity(
+            Capabilities.EnergyStorage.BLOCK,
+            SORTING_BLOCK_ENTITY.get(),
+            (sorter, side) -> sorter.getEnergyStorage()
+        );
+        event.registerBlockEntity(
+            Capabilities.ItemHandler.BLOCK,
+            SORTING_BLOCK_ENTITY.get(),
+            (sorter, side) -> sorter.getInput()
         );
     }
 }

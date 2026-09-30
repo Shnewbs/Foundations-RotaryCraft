@@ -1,12 +1,12 @@
 {
-  "parent": "advancement/recipes/redstone_blocks/root",
+  "parent": "minecraft:recipes/root",
   "criteria": {
     "has_piston": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": ["minecraft:piston"]
+            "items": "minecraft:piston"
           }
         ]
       }

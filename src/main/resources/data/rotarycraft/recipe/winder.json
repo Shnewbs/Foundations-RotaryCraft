@@ -16,7 +16,6 @@
       "item": "minecraft:copper_block"
     }
   },
-  "result": {
-    "item": "rotarycraft:winder"
+  "result": { "id": "rotarycraft:winder"
   }
 }
