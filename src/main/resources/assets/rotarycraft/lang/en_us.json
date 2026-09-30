@@ -2,5 +2,7 @@
   "block.rotarycraft.power_cable": "Power Cable",
   "block.rotarycraft.power_cell": "Power Cell",
   "block.rotarycraft.power_generator": "Power Generator",
-  "block.rotarycraft.solar_generator": "Solar Generator"
+  "block.rotarycraft.solar_generator": "Solar Generator",
+  "block.rotarycraft.wind_generator": "Wind Generator",
+  "block.rotarycraft.hydro_generator": "Hydro Generator"
 }

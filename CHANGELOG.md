@@ -10,6 +10,10 @@
 - Added generator-to-network energy transfer and a NeoForge GameTest that verifies a fueled generator charges an adjacent cable.
 - Added a daylight solar generator with persisted energy storage, open-sky/daylight generation, balanced capability output to the existing cable/cell network, a shaped recipe, block/item models, lit state, and English localization.
 - Added daylight solar-to-cable transfer and blocked-sky no-generation GameTests.
+- Added a native wind generator with fixed, isolated tuning constants; generation requires open sky and an elevation at least 32 blocks above sea level, operates server-side, persists stored energy, and transfers output through the NeoForge energy capability.
+- Added wind-generator recipe, original vanilla-texture block/item models, blockstates, English localization, and GameTests for elevated open-air output, blocked sky, and insufficient elevation.
+- Added a native hydro generator that counts only face-adjacent water fluid blocks in already-loaded neighboring chunks, generates 8 FE per adjacent block per tick, persists its 50,000 FE buffer, and transfers up to 160 FE per tick through the existing cable/cell network.
+- Added hydro-generator registration, creative-tab item, shaped recipe, vanilla-texture block/item models, lit state, English localization, and GameTests for water-powered cable output and dry non-generation.
 - Added connection-aware cable and cell models plus comparator output proportional to stored energy.
 - Moved the new NeoForge Java package namespace to `Foundations.RotaryCraft`; original source and copyright attribution is preserved.
 - Kept the legacy source tree and assets in place as migration references; their gameplay systems are not yet part of the new build.

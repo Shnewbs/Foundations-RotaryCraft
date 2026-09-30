@@ -1,0 +1,6 @@
+{
+  "parent": "rotarycraft:block/wind_generator",
+  "textures": {
+    "copper": "minecraft:block/exposed_copper"
+  }
+}
