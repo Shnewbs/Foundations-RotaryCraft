@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "GSG",
+    "GGG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:iron_block"
+    },
+    "S": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "result": {
+    "id": "rotarycraft:gearbox_16",
+    "count": 1
+  }
+}

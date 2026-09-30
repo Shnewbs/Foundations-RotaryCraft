@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "rotarycraft:block/gearbox_8"
+    },
+    "facing=south": {
+      "model": "rotarycraft:block/gearbox_8",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "rotarycraft:block/gearbox_8",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "rotarycraft:block/gearbox_8",
+      "y": 270
+    },
+    "facing=up": {
+      "model": "rotarycraft:block/gearbox_8",
+      "x": 90
+    },
+    "facing=down": {
+      "model": "rotarycraft:block/gearbox_8",
+      "x": 270
+    }
+  }
+}

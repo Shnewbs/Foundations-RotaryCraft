@@ -7,7 +7,7 @@ This roadmap was established after checking master on 2026-09-30: no gameplay ro
 
 ## Current baseline
 
-1.21.1-1.1.0 provides FE-powered approximations and partial assets. It is not a 1:1 port. Existing block IDs and saves must be preserved during migration. The mechanical foundation below is not yet connected to world blocks.
+1.21.1-1.1.0 provides FE-powered approximations and partial assets. It is not a 1:1 port. Existing block IDs and saves must be preserved during migration. The first world mechanical foundation is available in 1.21.1-1.3.0; existing FE machines have not yet migrated.
 
 ## Required recipe and information integrations
 
@@ -21,7 +21,8 @@ This roadmap was established after checking master on 2026-09-30: no gameplay ro
 
 - [x] Establish non-buffered shaft signal: independent speed, torque, long watt product.
 - [x] Establish ideal gearbox ratio arithmetic and separate machine operating thresholds, with regression checks.
-- [ ] Register sided mechanical capability; engines, shafts and gearboxes; server-only network updates; loops, chunk boundaries and persistence tests.
+- [x] Register sided mechanical capability and initial DC engine, straight shafts and ideal gearboxes; server-authoritative live queries, loop rejection and unloaded chunk protection.
+- [ ] Complete engine inertia/upgrades, shaft variants/materials, gearbox lubricant/damage/failure and reload/multiplayer validation. Facing and gearbox mode currently persist through vanilla blockstate storage.
 - [ ] Port engine outputs, fuels, material limits, lubricant, damage and failure from legacy sources.
 - [ ] Convert existing machines to their legacy mechanical requirements and operation; retain FE interoperability at explicit converters.
 - [x] Add ideal ElectriCraft generator/motor signal conversion (8 Nm per amp), with conservation and overflow checks. World blocks remain pending.
@@ -37,7 +38,7 @@ This roadmap was established after checking master on 2026-09-30: no gameplay ro
 | System | Current status | Acceptance |
 | --- | --- | --- |
 | NeoForge FE / RF-style mods exposing FE | Existing energy capability integration; modpack testing pending | Input/output, simulation, bounded rate, persistence |
-| RotaryCraft shaft power | Signal math and threshold API only | Sided engines/transmission/machines and legacy limits |
+| RotaryCraft shaft power | Sided DC source, straight shafts, ideal gearboxes; machine conversion pending | Sided engines/transmission/machines and legacy limits |
 | ElectriCraft | Legacy reference inspected; world network pending | Voltage/current, resistance, losses and converters |
 | EU | Planned optional adapters; not implemented | Provider/version-specific voltage and packet behavior |
 | Joules / Mekanism | Planned optional adapter; not implemented | Provider configuration and exact conversion accounting |
@@ -55,7 +56,7 @@ A feature is complete only after source comparison, behavior checks and required
 
 Commit a new `mod_version` and matching CHANGELOG.md section to master. CI tests with KubeJS/JEI/Jade installed and absent, then automatically creates `v<mod_version>` and a GitHub prerelease with `Foundations-RotaryCraft-<mod_version>.jar`, SHA256 checksum and version-specific notes. No manual tag is required. Ordinary commits keep building but do not overwrite published versions. Failed builds/tests never publish. The workflow also accepts explicit matching version tags and manual runs.
 
-Current development milestone: 1.21.1-1.2.0. The native mechanical signal foundation is still not connected to world blocks; the grinding changes retain the interim FE baseline.
+Current development milestone: 1.21.1-1.3.0. World mechanical transmission is connected; grinding and other existing machines retain the interim FE baseline until explicit converters and legacy machine requirements are implemented.
 
 ## Source checkpoints
 

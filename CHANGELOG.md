@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 1.21.1-1.3.0 - World Mechanical Transmission
+
+- Added sided `rotarycraft:shaft_power` capability and live, non-buffered world transmission. Queries reject cycles, stop at unloaded chunks, and limit paths to 256 nodes without recursion or chunk loading.
+- Added a redstone-controlled DC engine with legacy steady output of 256 rad/s and 4 Nm (1024 W), straight shafts and ideal 2:1, 4:1, 8:1 and 16:1 gearboxes.
+- Gearboxes switch between speed reduction and speed increase with an empty-hand right click; facing and mode persist in blockstate. Signals are recomputed rather than saved.
+- Added crafting recipes, loot, placeholder directional models and creative entries. Vanilla crafting recipes are available to JEI and KubeJS; Jade displays server-calculated speed, torque, watts and gearbox mode.
+- Added mechanical GameTests for sided output, broken/reversed transmission, disabled sources, every gearbox ratio, integer truncation, unloaded chunks, cycles and bounded traversal.
+- This is the first world mechanical foundation. Engine inertia/upgrades, material limits/failure, gearbox lubricant/damage, legacy recipes/visuals, machine conversion and FE/EU/joule/Create bridges remain pending.
+
 ## 1.21.1-1.2.0 - Recipe Integrations and Automatic Releases
 
 - Added reloadable `rotarycraft:grinding` recipes with ingredient tags, outputs, duration and FE cost; KubeJS can add/remove/replace them through `event.custom`.

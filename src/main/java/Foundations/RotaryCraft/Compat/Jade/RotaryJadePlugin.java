@@ -19,9 +19,11 @@ import snownee.jade.api.config.IPluginConfig;
 public final class RotaryJadePlugin implements IWailaPlugin {
     @Override public void register(IWailaCommonRegistration registration) {
         registration.registerBlockDataProvider(GrindingProvider.INSTANCE, GrindstoneBlockEntity.class);
+        registration.registerBlockDataProvider(MechanicalProvider.INSTANCE, Foundations.RotaryCraft.Mechanical.MechanicalBlockEntity.class);
     }
     @Override public void registerClient(IWailaClientRegistration registration) {
         registration.registerBlockComponent(GrindingProvider.INSTANCE, GrindstoneBlock.class);
+        registration.registerBlockComponent(MechanicalProvider.INSTANCE, Foundations.RotaryCraft.Mechanical.MechanicalBlock.class);
     }
     public enum GrindingProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
         INSTANCE;
@@ -43,6 +45,28 @@ public final class RotaryJadePlugin implements IWailaPlugin {
             tooltip.add(Component.translatable("jade.rotarycraft.energy", status.getInt("energy"), status.getInt("capacity")));
             tooltip.add(Component.translatable("jade.rotarycraft.progress", status.getInt("elapsed"), status.getInt("duration")));
             tooltip.add(Component.translatable(status.getBoolean("operating") ? "jade.rotarycraft.running" : "jade.rotarycraft.idle"));
+        }
+    }
+    public enum MechanicalProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
+        INSTANCE;
+        @Override public ResourceLocation getUid() { return ResourceLocation.fromNamespaceAndPath("rotarycraft", "mechanical_status"); }
+        @Override public void appendServerData(CompoundTag data, BlockAccessor accessor) {
+            if (accessor.getBlockEntity() instanceof Foundations.RotaryCraft.Mechanical.MechanicalBlockEntity machine) {
+                var power = machine.power();
+                CompoundTag status = new CompoundTag();
+                status.putInt("speed", power.omega());
+                status.putInt("torque", power.torque());
+                status.putLong("watts", power.watts());
+                status.putInt("ratio", Foundations.RotaryCraft.Mechanical.MechanicalContent.ratio(machine.getBlockState().getBlock()));
+                status.putBoolean("reduction", machine.getBlockState().getValue(Foundations.RotaryCraft.Mechanical.MechanicalBlock.REDUCTION));
+                data.put("rotarycraft:mechanical", status);
+            }
+        }
+        @Override public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+            if (!accessor.getServerData().contains("rotarycraft:mechanical")) return;
+            CompoundTag status = accessor.getServerData().getCompound("rotarycraft:mechanical");
+            tooltip.add(Component.translatable("jade.rotarycraft.shaft", status.getInt("speed"), status.getInt("torque"), status.getLong("watts")));
+            if (status.getInt("ratio") > 1) tooltip.add(Component.translatable(status.getBoolean("reduction") ? "jade.rotarycraft.reduction" : "jade.rotarycraft.acceleration", status.getInt("ratio")));
         }
     }
 }

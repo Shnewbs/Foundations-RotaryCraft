@@ -13,6 +13,7 @@ public final class RotaryCraftNeoForge {
     public static final String MOD_ID = "rotarycraft";
 
     public RotaryCraftNeoForge(IEventBus modEventBus) {
+        Foundations.RotaryCraft.Mechanical.MechanicalContent.register(modEventBus);
         RecipeContent.register(modEventBus);
         PowerContent.register(modEventBus);
         FarmingContent.register(modEventBus);

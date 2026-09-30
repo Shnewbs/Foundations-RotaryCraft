@@ -27,3 +27,12 @@ CI builds/tests with KubeJS, JEI and Jade present and absent, and installs a Kub
 ## Power adapters still pending
 
 FE interoperability is the existing baseline. EU, joules, Create kinetic/stress and other mod-specific adapters remain on ROADMAP.md and are not implemented by this release.
+
+
+## Mechanical transmission (1.21.1-1.3.0)
+
+Place a DC Engine with its copper/redstone output face aimed along the shaft line. The facing is opposite the nearest direction the player is looking. Supply redstone to the engine. Straight shafts and gearboxes accept mechanical input only behind their output face. The initial source produces 256 rad/s at 4 Nm (1024 W); it is not an FE generator. Shaft paths up to 256 nodes are supported and never force-load chunks.
+
+Gearboxes default to speed reduction/torque increase. Empty-hand right click toggles speed increase/torque reduction. Their configuration is stored in blockstate. Integer truncation follows the legacy ideal arithmetic, so increasing speed with insufficient torque can produce zero usable power. Material, lubricant, damage, inertia, upgrades and original recipes/models are pending; these six recipes and vanilla-material models are temporary scaffolding.
+
+All six blocks have native crafting recipes that JEI discovers automatically. KubeJS can remove/replace them by their `rotarycraft:dc_engine`, `rotarycraft:shaft` and `rotarycraft:gearbox_2/4/8/16` IDs. Jade receives live speed, torque, wattage and mode from the server. Client visual validation remains pending. Existing FE machines do not consume shaft signals yet; electrical and cross-mod bridges remain roadmap work.

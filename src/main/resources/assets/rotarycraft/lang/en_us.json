@@ -31,5 +31,15 @@
   "jade.rotarycraft.energy": "Energy: %s / %s FE",
   "jade.rotarycraft.progress": "Progress: %s / %s ticks",
   "jade.rotarycraft.running": "Running",
-  "jade.rotarycraft.idle": "Idle / waiting"
+  "jade.rotarycraft.idle": "Idle / waiting",
+  "block.rotarycraft.dc_engine": "DC Engine",
+  "block.rotarycraft.shaft": "Mechanical Shaft",
+  "block.rotarycraft.gearbox_2": "2:1 Gearbox",
+  "block.rotarycraft.gearbox_4": "4:1 Gearbox",
+  "block.rotarycraft.gearbox_8": "8:1 Gearbox",
+  "block.rotarycraft.gearbox_16": "16:1 Gearbox",
+  "config.jade.plugin_rotarycraft.mechanical_status": "Mechanical power",
+  "jade.rotarycraft.shaft": "Shaft: %s rad/s, %s Nm, %s W",
+  "jade.rotarycraft.reduction": "%s:1 speed reduction / torque increase",
+  "jade.rotarycraft.acceleration": "%s:1 speed increase mode"
 }
