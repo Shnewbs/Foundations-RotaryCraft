@@ -1,0 +1,77 @@
+name: Build and release
+
+on:
+  push:
+  pull_request:
+
+permissions: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      mod_version: ${{ steps.version.outputs.mod_version }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Read version and validate release tag
+        id: version
+        shell: bash
+        run: |
+          if [ "$(grep -c '^mod_version=' gradle.properties)" -ne 1 ]; then
+            echo "Expected exactly one mod_version in gradle.properties" >&2
+            exit 1
+          fi
+          MOD_VERSION="$(sed -n 's/^mod_version=//p' gradle.properties)"
+          if [ -z "$MOD_VERSION" ]; then
+            echo "mod_version must not be empty" >&2
+            exit 1
+          fi
+          if [[ "$GITHUB_REF" == refs/tags/* && "$GITHUB_REF_NAME" != "v$MOD_VERSION" ]]; then
+            echo "Tag $GITHUB_REF_NAME does not match expected tag v$MOD_VERSION" >&2
+            exit 1
+          fi
+          echo "mod_version=$MOD_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Build mod
+        run: ./gradlew --no-daemon clean build
+
+      - name: Upload distributable mod JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: rotarycraft-mod-jar
+          path: build/libs/rotarycraft-${{ steps.version.outputs.mod_version }}.jar
+          if-no-files-found: error
+          retention-days: 7
+
+  release:
+    if: >-
+      github.event_name == 'push' &&
+      startsWith(github.ref, 'refs/tags/') &&
+      github.ref_name == format('v{0}', needs.build.outputs.mod_version)
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download distributable mod JAR
+        uses: actions/download-artifact@v4
+        with:
+          name: rotarycraft-mod-jar
+          path: release-artifact
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: RotaryCraft ${{ needs.build.outputs.mod_version }}
+          files: release-artifact/rotarycraft-${{ needs.build.outputs.mod_version }}.jar
+          generate_release_notes: true
