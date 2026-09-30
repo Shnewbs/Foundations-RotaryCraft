@@ -44,6 +44,14 @@ public class MachineContent {
         BLOCK_ENTITY_TYPES.register("blower", () -> 
             BlockEntityType.Builder.of(BlowerBlockEntity::new, BLOWER.get()).build(null));
 
+    // DecoTank
+    public static final DeferredBlock<DecoTankBlock> DECO_TANK = BLOCKS.register("deco_tank", 
+        () -> new DecoTankBlock(BlockBehaviour.Properties.of().strength(2.0f, 5.0f).noOcclusion()));
+    public static final DeferredItem<BlockItem> DECO_TANK_ITEM = ITEMS.registerSimpleBlockItem("deco_tank", DECO_TANK);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DecoTankBlockEntity>> DECO_TANK_BLOCK_ENTITY =
+        BLOCK_ENTITY_TYPES.register("deco_tank", () -> 
+            BlockEntityType.Builder.of(DecoTankBlockEntity::new, DECO_TANK.get()).build(null));
+
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);

@@ -2,15 +2,28 @@
 
 ## Unreleased
 
-## 0.2.0 - Grindstone Machine
+## 0.2.0 - Utility Machines
 
 - Added the Grindstone machine: A rotational-powered grinding block for processing materials.
-- The Grindstone accepts 2 input/output slots, requires 100 FE per operation cycle, and grinds items into products based on a recipe registry.
-- Integrated Grindstone with the NeoForge energy capability network; it exposes stored energy and accepts FE input.
-- Added shaped recipe: 9 iron ingots + cobblestone = Grindstone.
-- Added Grindstone blockstate, model, item model, English localization, and recipe-book advancement trigger.
-- Added comparator output proportional to Grindstone progress (0-15).
-- Basic recipes: cobblestone → gravel, gravel → sand.
+  - Accepts 2 input/output slots, requires 100 FE per operation cycle, and grinds items into products based on a recipe registry.
+  - Integrated with NeoForge energy capability network; exposes stored energy and accepts FE input.
+  - Added shaped recipe: 9 iron ingots + cobblestone = Grindstone.
+  - Basic recipes: cobblestone → gravel, gravel → sand.
+  - Added comparator output proportional to Grindstone progress (0-15).
+  
+- Added the Winder machine: A power-conditioning device for speed and flow regulation.
+  - Buffers up to 50,000 FE with 160 FE/tick input and output capacity.
+  - Acts as an intermediate regulator between generators and machinery.
+  - Added shaped recipe: 1 copper block + 5 iron ingots + 4 redstone blocks = Winder.
+  - Comparator output shows active operation status.
+  
+- Added the Blower machine: An air/pressure generation system for pneumatic operations.
+  - Requires 80 FE/tick to operate, stores up to 50,000 FE.
+  - Generates directional air flow for material transport and pneumatic systems.
+  - Added shaped recipe: 1 copper block + 4 iron ingots + 4 pistons = Blower.
+  - Comparator output shows operating state (0 = idle, 15 = operating).
+
+- Added Grindstone, Winder, and Blower blockstates, models, item models, English localization, and recipe-book advancement triggers.
 
 ## 0.1.0 - Initial Power System
 
