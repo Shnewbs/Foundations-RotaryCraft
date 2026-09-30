@@ -232,3 +232,6 @@ pip-log.txt
 
 # Local integration test world
 run-gametest/
+
+# Wavefront model assets are source resources, not compiled object files.
+!src/main/resources/assets/rotarycraft/models/legacy/*.obj

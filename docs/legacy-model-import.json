@@ -63,7 +63,7 @@
     ],
     "texture": "Textures/TileEntityTex/grindertex.png",
     "parts": 69,
-    "quads": 414,
+    "quads": 422,
     "status": "rest-pose import; animation and in-client acceptance pending"
   },
   "player_detector": {

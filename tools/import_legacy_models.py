@@ -95,6 +95,28 @@ def mesh(part, orientation):
         faces.append([(transformed[i],uv) for i,uv in face])
     return faces
 
+def wrap_uvs(face):
+    """Split a quad at atlas-repeat boundaries; interpolate geometry before wrapping."""
+    a,b,c,d = face
+    def cuts(first,last):
+        result={0.0,1.0}
+        for low,high in zip(first,last):
+            if abs(high-low)<1e-12: continue
+            for edge in range(math.floor(min(low,high))+1,math.ceil(max(low,high))):
+                fraction=(edge-low)/(high-low)
+                if 0<fraction<1:result.add(fraction)
+        return sorted(result)
+    ts=cuts(a[1],b[1]); ss=cuts(a[1],d[1])
+    def interpolate(t,s):
+        point=tuple(a[0][i]+t*(b[0][i]-a[0][i])+s*(d[0][i]-a[0][i]) for i in range(3))
+        uv=tuple(a[1][i]+t*(b[1][i]-a[1][i])+s*(d[1][i]-a[1][i]) for i in range(2))
+        return point,uv
+    for t0,t1 in zip(ts,ts[1:]):
+        for s0,s1 in zip(ss,ss[1:]):
+            tile=tuple(math.floor(v) for v in interpolate((t0+t1)/2,(s0+s1)/2)[1])
+            piece=[interpolate(t0,s0),interpolate(t1,s0),interpolate(t1,s1),interpolate(t0,s1)]
+            yield [(point,tuple(uv[i]-tile[i] for i in range(2))) for point,uv in piece]
+
 def export():
     target = ASSETS / 'models/legacy'
     textures = ASSETS / 'textures/legacy'
@@ -110,7 +132,7 @@ def export():
         coordinates={}
         for part in modelparts:
             lines.append('g '+part['name'])
-            for face in mesh(part,orientation):
+            for face in (piece for original in mesh(part,orientation) for piece in wrap_uvs(original)):
                 indices=[]
                 for vertex,uv in face:
                     position=' '.join(f'{v:.9f}' for v in vertex)
@@ -130,7 +152,7 @@ def export():
                'textures':{'particle':f'rotarycraft:legacy/{name}'}}
         (ASSETS/'models/block'/(name+'.json')).write_text(json.dumps(model,indent=2)+'\n')
         report[name]={'sources':sources,'texture':str(original.relative_to(ROOT)),'parts':len(modelparts),
-                      'quads':len(modelparts)*6,'status':'rest-pose import; animation and in-client acceptance pending'}
+                      'quads':sum(line.startswith('f ') for line in lines),'status':'rest-pose import; animation and in-client acceptance pending'}
     (ROOT/'docs/legacy-model-import.json').write_text(json.dumps(report,indent=2)+'\n')
     print(f'Imported {len(report)} original model/atlas pairs')
 

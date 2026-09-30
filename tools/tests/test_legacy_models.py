@@ -32,4 +32,11 @@ class LegacyModels(unittest.TestCase):
                 self.assertGreater(sum(n[i]*(a[i]-center[i]) for i in range(3)),0)
                 for point,uv in face:self.assertTrue(all(math.isfinite(v) for v in point+uv))
 
-if __name__=='__main__':unittest.main()
+    def test_repeat_coordinates_stay_inside_atlas(self):
+        for part in legacy.parts('Models/Animated/ModelGrinder.java'):
+            for original in legacy.mesh(part,0):
+                for face in legacy.wrap_uvs(original):
+                    for point,uv in face:
+                        self.assertTrue(all(-1e-9 <= v <= 1+1e-9 for v in uv))
+
+if __name__=='__main__' :unittest.main()
