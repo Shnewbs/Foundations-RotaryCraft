@@ -1,6 +1,5 @@
 package Foundations.RotaryCraft.Machines;
 
-import java.util.Comparator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -45,13 +44,15 @@ public class GrindstoneBlockEntity extends BlockEntity {
         operating = false;
         shaft = readMechanicalInput();
         ItemStack input = itemHandler.getStackInSlot(0);
+        if (input.isEmpty()) { resetProgress(); return; }
         SingleRecipeInput recipeInput = new SingleRecipeInput(input);
         // Stable ID ordering avoids nondeterministic overlapping tag recipes.
-        var matched = level.getRecipeManager().getAllRecipesFor(RecipeContent.GRINDING_TYPE.get()).stream()
-                .filter(holder -> holder.value().matches(recipeInput, level))
-                .min(Comparator.comparing(holder -> holder.id().toString()));
-        if (input.isEmpty() || matched.isEmpty()) { resetProgress(); return; }
-        RecipeHolder<GrindingRecipe> holder = matched.get();
+        RecipeHolder<GrindingRecipe> holder = null;
+        for (var candidate : level.getRecipeManager().getAllRecipesFor(RecipeContent.GRINDING_TYPE.get())) {
+            if (candidate.value().matches(recipeInput, level)
+                    && (holder == null || candidate.id().toString().compareTo(holder.id().toString()) < 0)) holder = candidate;
+        }
+        if (holder == null) { resetProgress(); return; }
         GrindingRecipe recipe = holder.value();
         // A reload changes the recipe instance; never complete with stale progress or output.
         if (!holder.id().equals(activeRecipe) || (activeDefinition != null && activeDefinition != recipe)) {

@@ -1,0 +1,105 @@
+{
+  "dc_engine": {
+    "sources": [
+      "Models/Engine/ModelDC.java"
+    ],
+    "texture": "Textures/TileEntityTex/Engine/dc.png",
+    "parts": 11,
+    "quads": 66,
+    "status": "rest-pose import; animation and in-client acceptance pending"
+  },
+  "shaft": {
+    "sources": [
+      "Models/Animated/ShaftOnly/ModelShaft.java"
+    ],
+    "texture": "Textures/TileEntityTex/Transmission/Shaft/shafttexs.png",
+    "parts": 13,
+    "quads": 78,
+    "status": "rest-pose import; animation and in-client acceptance pending"
+  },
+  "gearbox_2": {
+    "sources": [
+      "Base/ModelGearboxBase.java",
+      "Models/Animated/ModelGearbox.java"
+    ],
+    "texture": "Textures/TileEntityTex/Transmission/Gear/geartexs.png",
+    "parts": 28,
+    "quads": 168,
+    "status": "rest-pose import; animation and in-client acceptance pending"
+  },
+  "gearbox_4": {
+    "sources": [
+      "Base/ModelGearboxBase.java",
+      "Models/Animated/ModelGearbox4.java"
+    ],
+    "texture": "Textures/TileEntityTex/Transmission/Gear/geartexs.png",
+    "parts": 35,
+    "quads": 210,
+    "status": "rest-pose import; animation and in-client acceptance pending"
+  },
+  "gearbox_8": {
+    "sources": [
+      "Base/ModelGearboxBase.java",
+      "Models/Animated/ModelGearbox8.java"
+    ],
+    "texture": "Textures/TileEntityTex/Transmission/Gear/geartexs.png",
+    "parts": 41,
+    "quads": 246,
+    "status": "rest-pose import; animation and in-client acceptance pending"
+  },
+  "gearbox_16": {
+    "sources": [
+      "Base/ModelGearboxBase.java",
+      "Models/Animated/ModelGearbox16.java"
+    ],
+    "texture": "Textures/TileEntityTex/Transmission/Gear/geartexs.png",
+    "parts": 51,
+    "quads": 306,
+    "status": "rest-pose import; animation and in-client acceptance pending"
+  },
+  "grindstone": {
+    "sources": [
+      "Models/Animated/ModelGrinder.java"
+    ],
+    "texture": "Textures/TileEntityTex/grindertex.png",
+    "parts": 69,
+    "quads": 414,
+    "status": "rest-pose import; animation and in-client acceptance pending"
+  },
+  "player_detector": {
+    "sources": [
+      "Models/ModelDetector.java"
+    ],
+    "texture": "Textures/TileEntityTex/detectortex.png",
+    "parts": 35,
+    "quads": 210,
+    "status": "rest-pose import; animation and in-client acceptance pending"
+  },
+  "smoke_detector": {
+    "sources": [
+      "Models/ModelSmokeDetector.java"
+    ],
+    "texture": "Textures/TileEntityTex/smokedetectortex.png",
+    "parts": 2,
+    "quads": 12,
+    "status": "rest-pose import; animation and in-client acceptance pending"
+  },
+  "item_cannon": {
+    "sources": [
+      "Models/ModelItemCannon.java"
+    ],
+    "texture": "Textures/TileEntityTex/itemcannontex.png",
+    "parts": 19,
+    "quads": 114,
+    "status": "rest-pose import; animation and in-client acceptance pending"
+  },
+  "mob_harvester": {
+    "sources": [
+      "Models/ModelHarvester.java"
+    ],
+    "texture": "Textures/TileEntityTex/harvestertex.png",
+    "parts": 15,
+    "quads": 90,
+    "status": "rest-pose import; animation and in-client acceptance pending"
+  }
+}

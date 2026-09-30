@@ -1,42 +1,12 @@
 {
   "parent": "minecraft:block/block",
+  "loader": "neoforge:obj",
+  "model": "rotarycraft:models/legacy/dc_engine.obj",
+  "automatic_culling": false,
+  "shade_quads": true,
+  "flip_v": false,
+  "emissive_ambient": false,
   "textures": {
-    "particle": "minecraft:block/iron_block",
-    "side": "minecraft:block/iron_block",
-    "front": "minecraft:block/redstone_block"
-  },
-  "elements": [
-    {
-      "from": [
-        2,
-        2,
-        1
-      ],
-      "to": [
-        14,
-        14,
-        15
-      ],
-      "faces": {
-        "north": {
-          "texture": "#front"
-        },
-        "south": {
-          "texture": "#side"
-        },
-        "east": {
-          "texture": "#side"
-        },
-        "west": {
-          "texture": "#side"
-        },
-        "up": {
-          "texture": "#side"
-        },
-        "down": {
-          "texture": "#side"
-        }
-      }
-    }
-  ]
+    "particle": "rotarycraft:legacy/dc_engine"
+  }
 }

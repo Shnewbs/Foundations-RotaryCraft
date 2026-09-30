@@ -200,6 +200,27 @@ def validate():
         if isinstance(parent, str):
             check_local_model_reference(parent, path, "parent")
 
+    # Validate external OBJ geometry and material/texture references.
+    for path, data in model_data.items():
+        if data.get("loader") != "neoforge:obj":
+            continue
+        namespace, resource = resource_parts(data.get("model", ""))
+        obj = ROOT / "src/main/resources/assets" / namespace / resource
+        if namespace != "rotarycraft" or not obj.is_file():
+            errors.append(f"{relative(path)}: missing OBJ geometry {obj}")
+            continue
+        for line in obj.read_text().splitlines():
+            if line.startswith("mtllib "):
+                ns, material = resource_parts(line.split(maxsplit=1)[1])
+                mtl = ROOT / "src/main/resources/assets" / ns / material
+                if not mtl.is_file():
+                    errors.append(f"{relative(path)}: missing OBJ material {mtl}")
+                    continue
+                for entry in mtl.read_text().splitlines():
+                    if entry.startswith("map_Kd "):
+                        tex = texture_path(entry.split(maxsplit=1)[1])
+                        if not tex.is_file(): errors.append(f"{relative(path)}: missing OBJ texture {tex}")
+
     # Follow local model parent chains to catch missing links and cycles.
     visiting = set()
     visited = set()
