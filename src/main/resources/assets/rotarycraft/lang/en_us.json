@@ -8,6 +8,7 @@
   "block.rotarycraft.hydro_generator": "Hydro Generator",
   "block.rotarycraft.steam_generator": "Steam Generator",
   "block.rotarycraft.geothermal_generator": "Geothermal Generator",
+  "block.rotarycraft.grindstone": "Grindstone",
   "block.rotarycraft.canola_crop": "Canola",
   "item.rotarycraft.canola_seeds": "Canola Seeds"
 }

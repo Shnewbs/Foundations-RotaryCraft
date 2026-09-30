@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 0.2.0 - Grindstone Machine
+
+- Added the Grindstone machine: A rotational-powered grinding block for processing materials.
+- The Grindstone accepts 2 input/output slots, requires 100 FE per operation cycle, and grinds items into products based on a recipe registry.
+- Integrated Grindstone with the NeoForge energy capability network; it exposes stored energy and accepts FE input.
+- Added shaped recipe: 9 iron ingots + cobblestone = Grindstone.
+- Added Grindstone blockstate, model, item model, English localization, and recipe-book advancement trigger.
+- Added comparator output proportional to Grindstone progress (0-15).
+- Basic recipes: cobblestone → gravel, gravel → sand.
+
+## 0.1.0 - Initial Power System
+
 - Renamed the user-visible mod and distributable JAR to `Foundations-RotaryCraft`; the `rotarycraft` mod ID and resource namespace remain unchanged.
 - Added recipe-book advancements for all native power-network crafting recipes, with a GameTest covering recipe registration and results.
 - Added a NeoForge 1.21.1 / Minecraft 1.21.1 Gradle project targeting Java 21.
