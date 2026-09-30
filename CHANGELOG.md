@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Renamed the user-visible mod and distributable JAR to `Foundations-RotaryCraft`; the `rotarycraft` mod ID and resource namespace remain unchanged.
 - Added recipe-book advancements for all native power-network crafting recipes, with a GameTest covering recipe registration and results.
 - Added a NeoForge 1.21.1 / Minecraft 1.21.1 Gradle project targeting Java 21.
 - Added the NeoForge mod entry point and generated mod metadata.

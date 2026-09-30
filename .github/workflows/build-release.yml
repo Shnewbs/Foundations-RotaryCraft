@@ -48,8 +48,8 @@ jobs:
       - name: Upload distributable mod JAR
         uses: actions/upload-artifact@v4
         with:
-          name: rotarycraft-mod-jar
-          path: build/libs/rotarycraft-${{ steps.version.outputs.mod_version }}.jar
+          name: foundations-rotarycraft-mod-jar
+          path: build/libs/Foundations-RotaryCraft-${{ steps.version.outputs.mod_version }}.jar
           if-no-files-found: error
           retention-days: 7
 
@@ -66,12 +66,12 @@ jobs:
       - name: Download distributable mod JAR
         uses: actions/download-artifact@v4
         with:
-          name: rotarycraft-mod-jar
+          name: foundations-rotarycraft-mod-jar
           path: release-artifact
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: RotaryCraft ${{ needs.build.outputs.mod_version }}
-          files: release-artifact/rotarycraft-${{ needs.build.outputs.mod_version }}.jar
+          name: Foundations-RotaryCraft ${{ needs.build.outputs.mod_version }}
+          files: release-artifact/Foundations-RotaryCraft-${{ needs.build.outputs.mod_version }}.jar
           generate_release_notes: true
