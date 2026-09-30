@@ -23,8 +23,10 @@ public final class VisualSmokeCheck {
     private static final AnimatedMachineRenderer previewRenderer=new AnimatedMachineRenderer(null);
     private static final class Gallery extends Screen {
         private final List<ItemStack> items=new ArrayList<>();
+        private long nanos;private int samples;
         Gallery(){super(Component.literal("RotaryCraft visual gallery"));for(var item:BuiltInRegistries.ITEM)if(BuiltInRegistries.ITEM.getKey(item).getNamespace().equals("rotarycraft"))items.add(new ItemStack(item));}
         @Override public void render(GuiGraphics gui,int mouseX,int mouseY,float partial) {
+            long start=System.nanoTime();
             gui.fill(0,0,width,height,0xff24303c);
             gui.drawString(font,"RotaryCraft 1.6 — baked inventory models",8,8,0xffffff);
             for(int i=0;i<items.size();i++) {
@@ -43,6 +45,8 @@ public final class VisualSmokeCheck {
                 }
                 gui.drawString(font,BuiltInRegistries.ITEM.getKey(items.get(i).getItem()).getPath(),x,y+34,0xffffff,false);
             }
+            if(galleryTicks>5){nanos+=System.nanoTime()-start;samples++;}
+            if(galleryTicks==50)System.out.println("ROTARYCRAFT_GALLERY_RENDER_CPU mean_ms="+(nanos/1e6/Math.max(1,samples))+" samples="+samples+" models="+items.size()+" softwareGL="+System.getenv("LIBGL_ALWAYS_SOFTWARE"));
         }
     }
     @SubscribeEvent public static void tick(ClientTickEvent.Post event) {

@@ -24,7 +24,7 @@ public final class AnimatedMachineRenderer implements BlockEntityRenderer<BlockE
     private final Quaternionf rotation = new Quaternionf();
     private static volatile Map<String,Mesh> meshes = Map.of();
     private static final WeakHashMap<BlockEntity,Spin> spins = new WeakHashMap<>();
-    private static final class Spin { double time; double angle; }
+    private static final class Spin { double time; double angle; double rate; int speed=-1; }
     public AnimatedMachineRenderer(BlockEntityRendererProvider.Context context) {}
     public static final ResourceManagerReloadListener RELOAD = AnimatedMachineRenderer::reload;
     private static void reload(ResourceManager resources) {
@@ -64,14 +64,17 @@ public final class AnimatedMachineRenderer implements BlockEntityRenderer<BlockE
         String name=BuiltInRegistries.BLOCK.getKey(entity.getBlockState().getBlock()).getPath();Mesh mesh=meshes.get(name);if(mesh==null)return;
         int speed=0;
         if(entity instanceof MechanicalBlockEntity mechanical)speed=mechanical.visualSpeed();
+        else if(entity instanceof Foundations.RotaryCraft.Machines.GrindstoneBlockEntity grinder)speed=grinder.visualSpeed();
         else if(entity.getBlockState().hasProperty(BlockStateProperties.LIT)&&entity.getBlockState().getValue(BlockStateProperties.LIT))speed=256;
         Spin spin=spins.computeIfAbsent(entity,key->new Spin());double now=entity.getLevel().getGameTime()+partialTick;
-        if(spin.time!=0&&now>=spin.time)spin.angle=(spin.angle+Math.min(2,now-spin.time)*Math.pow(Math.log(speed+1)/Math.log(2),1.25))%360;
+        if(spin.speed!=speed){spin.speed=speed;spin.rate=Math.pow(Math.log(speed+1)/Math.log(2),name.equals("shaft")?1.25:1.05)*(name.equals("fan")?3:name.equals("grindstone")?.85:1);}
+        if(spin.time!=0&&now>=spin.time)spin.angle=(spin.angle+Math.min(2,now-spin.time)*spin.rate)%360;
         spin.time=now;float angle=(float)spin.angle;
         renderPreview(entity.getBlockState(),angle,pose,buffers,light,overlay);
     }
     public void renderPreview(net.minecraft.world.level.block.state.BlockState state,float angle,PoseStack pose,MultiBufferSource buffers,int light,int overlay) {
         String name=BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();Mesh mesh=meshes.get(name);if(mesh==null)return;
+        angle=-angle; // Legacy renderers pass -tile.phi to the original models.
         pose.pushPose();pose.translate(0.5,0.5,0.5);
         if(state.hasProperty(BlockStateProperties.FACING)) {
             var facing=state.getValue(BlockStateProperties.FACING);

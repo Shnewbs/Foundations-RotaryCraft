@@ -27,6 +27,27 @@ public final class MechanicalGameTests {
         return ShaftNetwork.resolve(h.getLevel(), h.absolutePos(pos), side);
     }
     @GameTest(template = "power_network_test", templateNamespace = "rotarycraft")
+    public static void visualCacheDoesNotChangeLiveNetwork(GameTestHelper h) {
+        source(h);
+        BlockPos end=SOURCE;
+        for(int i=1;i<=4;i++){end=SOURCE.east(i);h.setBlock(end,MechanicalContent.SHAFT.get().defaultBlockState().setValue(MechanicalBlock.FACING,Direction.EAST));}
+        var absolute=h.absolutePos(end);var level=h.getLevel();
+        var expected=power(h,end,Direction.EAST);
+        h.assertTrue(ShaftNetwork.resolveVisual(level,absolute,Direction.EAST).equals(expected),"Display signal differs from live signal");
+        for(int i=0;i<2000;i++){ShaftNetwork.resolve(level,absolute,Direction.EAST);ShaftNetwork.resolveVisual(level,absolute,Direction.EAST);}
+        long[] live=new long[5],cached=new long[5];
+        for(int batch=0;batch<5;batch++) {
+            long start=System.nanoTime();for(int i=0;i<5000;i++)ShaftNetwork.resolve(level,absolute,Direction.EAST);live[batch]=System.nanoTime()-start;
+            start=System.nanoTime();for(int i=0;i<5000;i++)ShaftNetwork.resolveVisual(level,absolute,Direction.EAST);cached[batch]=System.nanoTime()-start;
+        }
+        java.util.Arrays.sort(live);java.util.Arrays.sort(cached);
+        System.out.println("ROTARYCRAFT_NETWORK_PROFILE five_nodes queries=5000 warmup=2000 live_median_ms="+live[2]/1e6+" display_cached_median_ms="+cached[2]/1e6);
+        h.setBlock(SOURCE.east(),Blocks.AIR);
+        h.assertTrue(power(h,end,Direction.EAST).equals(ShaftPower.STOPPED),"Visual cache affected same-tick live gameplay");
+        h.runAfterDelay(1,()->{h.assertTrue(ShaftNetwork.resolveVisual(level,absolute,Direction.EAST).equals(ShaftPower.STOPPED),"Display cache did not expire next tick");h.succeed();});
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft")
     public static void mechanicalRecipesRegistered(GameTestHelper h) {
         for (String id : new String[]{"dc_engine", "shaft", "gearbox_2", "gearbox_4", "gearbox_8", "gearbox_16"}) {
             h.assertTrue(h.getLevel().getRecipeManager().byKey(ResourceLocation.fromNamespaceAndPath("rotarycraft", id)).isPresent(), "Missing recipe " + id);

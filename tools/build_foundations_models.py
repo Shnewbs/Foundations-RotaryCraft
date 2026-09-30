@@ -42,3 +42,9 @@ for stage in range(8):
     save('canola_crop_stage'+str(stage),e)
 (A/'models/item/canola_seeds.json').write_text(json.dumps({'parent':'rotarycraft:block/canola_crop_stage7'},indent=2)+'\n')
 print('Built Foundations electrical models and eight canola growth stages')
+
+# Transparent decorative reservoir, with a solid metal frame instead of an opaque cube.
+e=[box([1,1,1],[15,15,15],'glass')]
+for y in (0,15):e.append(box([0,y,0],[16,y+1,16]))
+for x,z in ((0,0),(15,0),(0,15),(15,15)):e.append(box([x,1,z],[x+1,15,z+1]))
+save('deco_tank',e,True)

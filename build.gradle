@@ -28,6 +28,10 @@ neoForge {
             client()
             gameDirectory = file('run-visual')
             systemProperty 'rotarycraft.visualSmoke', 'true'
+            programArgument '--width'
+            programArgument '1280'
+            programArgument '--height'
+            programArgument '720'
         }
 
         server {

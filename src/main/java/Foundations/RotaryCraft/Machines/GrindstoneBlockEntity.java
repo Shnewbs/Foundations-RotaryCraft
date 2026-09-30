@@ -32,6 +32,8 @@ public class GrindstoneBlockEntity extends BlockEntity {
     private ResourceLocation activeRecipe;
     private GrindingRecipe activeDefinition;
     private boolean operating;
+    private int visualSpeed;
+    public int visualSpeed(){return visualSpeed;}
 
     public GrindstoneBlockEntity(BlockPos pos, BlockState state) {
         super(MachineContent.GRINDSTONE_BLOCK_ENTITY.get(), pos, state);
@@ -42,6 +44,10 @@ public class GrindstoneBlockEntity extends BlockEntity {
             var property = net.minecraft.world.level.block.state.properties.BlockStateProperties.LIT;
             var current = entity.getBlockState();
             if (current.getValue(property) != entity.operating) level.setBlock(pos, current.setValue(property, entity.operating), 2);
+            if(Math.floorMod(level.getGameTime()+pos.asLong(),5)==0) {
+                int speed=entity.shaft.connected()?entity.shaft.power().omega():entity.operating?256:0;
+                if(speed!=entity.visualSpeed){entity.visualSpeed=speed;level.sendBlockUpdated(pos,entity.getBlockState(),entity.getBlockState(),2);}
+            }
         }
     }
     private void tryGrind() {
@@ -109,8 +115,15 @@ public class GrindstoneBlockEntity extends BlockEntity {
             if (level != null) level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
         }
     }
+    @Override public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        var tag=new CompoundTag();tag.putInt("visual_speed",visualSpeed);return tag;
+    }
+    @Override public net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket.create(this);
+    }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        visualSpeed=Math.max(0,tag.getInt("visual_speed"));
         if (tag.contains("energy")) energyStorage.restore(tag.getInt("energy"));
         if (tag.contains("items")) itemHandler.deserializeNBT(registries, tag.getCompound("items"));
         duration = Math.max(0, Math.min(72000, tag.getInt("grind_duration")));

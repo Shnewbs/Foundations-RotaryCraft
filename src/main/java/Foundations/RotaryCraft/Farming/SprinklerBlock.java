@@ -38,6 +38,15 @@ public final class SprinklerBlock extends BaseEntityBlock {
         registerDefaultState(stateDefinition.any().setValue(LIT, false));
     }
 
+    @Override public void animateTick(BlockState state, Level level, BlockPos pos, net.minecraft.util.RandomSource random) {
+        if(!state.getValue(LIT))return;
+        double phase=random.nextDouble()*Math.PI*2;
+        for(int nozzle=0;nozzle<4;nozzle++) {
+            double angle=phase+nozzle*Math.PI/2;
+            level.addParticle(net.minecraft.core.particles.ParticleTypes.SPLASH,pos.getX()+.5+Math.cos(angle)*.3,pos.getY()+.8,pos.getZ()+.5+Math.sin(angle)*.3,Math.cos(angle)*.12,.02,Math.sin(angle)*.12);
+        }
+    }
+
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
