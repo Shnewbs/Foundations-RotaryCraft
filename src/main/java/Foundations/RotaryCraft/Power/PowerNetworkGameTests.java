@@ -29,7 +29,8 @@ public final class PowerNetworkGameTests {
                 "solar_generator",
                 "wind_generator",
                 "hydro_generator",
-                "steam_generator"
+                "steam_generator",
+                "geothermal_generator"
         };
 
         for (String recipeId : recipeIds) {
@@ -596,5 +597,65 @@ public final class PowerNetworkGameTests {
                 helper.getLevel().getSeaLevel() + WindGeneratorBlockEntity.MIN_ELEVATION_ABOVE_SEA_LEVEL - 1
         );
         return new BlockPos(templateOrigin.getX() + 1, y, templateOrigin.getZ() + 1);
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void geothermalGeneratorConsumesLavaBucketAndChargesCable(GameTestHelper helper) {
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        BlockPos cablePos = generatorPos.east();
+        helper.setBlock(generatorPos, PowerContent.GEOTHERMAL_GENERATOR.get());
+        helper.setBlock(
+                cablePos,
+                PowerContent.POWER_CABLE.get().defaultBlockState().setValue(
+                        PowerNodeBlock.propertyFor(Direction.WEST),
+                        true
+                )
+        );
+
+        GeothermalGeneratorBlockEntity generator = (GeothermalGeneratorBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(generatorPos));
+        PowerNodeBlockEntity cable = (PowerNodeBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(cablePos));
+        helper.assertTrue(generator != null, "Geothermal generator block entity was not created");
+        helper.assertTrue(cable != null, "Cable block entity was not created");
+        generator.getItemHandler().setStackInSlot(0, new net.minecraft.world.item.ItemStack(Items.LAVA_BUCKET));
+
+        helper.succeedWhen(() -> {
+            helper.assertTrue(
+                    cable.getEnergyStorage().getEnergyStored() > 0,
+                    "Geothermal generator did not transfer energy into the adjacent cable"
+            );
+            helper.assertTrue(
+                    generator.getItemHandler().getStackInSlot(0).is(Items.BUCKET),
+                    "Geothermal generator did not return an empty bucket after consuming lava"
+            );
+            helper.assertTrue(
+                    helper.getLevel().getBlockState(helper.absolutePos(generatorPos))
+                            .getValue(GeothermalGeneratorBlock.LIT),
+                    "Geothermal generator did not enter its generating state"
+            );
+        });
+    }
+
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft", timeoutTicks = 100)
+    public static void geothermalGeneratorDoesNotGenerateWithoutLava(GameTestHelper helper) {
+        BlockPos generatorPos = new BlockPos(1, 1, 1);
+        helper.setBlock(generatorPos, PowerContent.GEOTHERMAL_GENERATOR.get());
+        GeothermalGeneratorBlockEntity generator = (GeothermalGeneratorBlockEntity) helper.getLevel()
+                .getBlockEntity(helper.absolutePos(generatorPos));
+        helper.assertTrue(generator != null, "Geothermal generator block entity was not created");
+
+        helper.runAfterDelay(10, () -> {
+            helper.assertTrue(
+                    generator.getEnergyStorage().getEnergyStored() == 0,
+                    "Geothermal generator produced energy without a lava bucket"
+            );
+            helper.assertTrue(
+                    !helper.getLevel().getBlockState(helper.absolutePos(generatorPos))
+                            .getValue(GeothermalGeneratorBlock.LIT),
+                    "Geothermal generator showed its generating state without lava"
+            );
+            helper.succeed();
+        });
     }
 }

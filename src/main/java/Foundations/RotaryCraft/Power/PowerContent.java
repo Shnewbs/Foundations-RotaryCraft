@@ -54,6 +54,10 @@ public final class PowerContent {
             "steam_generator",
             () -> new SteamGeneratorBlock(BlockBehaviour.Properties.of().strength(3.5F).requiresCorrectToolForDrops())
     );
+    public static final DeferredBlock<GeothermalGeneratorBlock> GEOTHERMAL_GENERATOR = BLOCKS.register(
+            "geothermal_generator",
+            () -> new GeothermalGeneratorBlock(BlockBehaviour.Properties.of().strength(3.5F).requiresCorrectToolForDrops())
+    );
     private static final DeferredItem<BlockItem> POWER_CABLE_ITEM = ITEMS.registerSimpleBlockItem("power_cable", POWER_CABLE);
     private static final DeferredItem<BlockItem> POWER_CELL_ITEM = ITEMS.registerSimpleBlockItem("power_cell", POWER_CELL);
     private static final DeferredItem<BlockItem> POWER_SWITCH_ITEM = ITEMS.registerSimpleBlockItem("power_switch", POWER_SWITCH);
@@ -62,6 +66,8 @@ public final class PowerContent {
     private static final DeferredItem<BlockItem> WIND_GENERATOR_ITEM = ITEMS.registerSimpleBlockItem("wind_generator", WIND_GENERATOR);
     private static final DeferredItem<BlockItem> HYDRO_GENERATOR_ITEM = ITEMS.registerSimpleBlockItem("hydro_generator", HYDRO_GENERATOR);
     private static final DeferredItem<BlockItem> STEAM_GENERATOR_ITEM = ITEMS.registerSimpleBlockItem("steam_generator", STEAM_GENERATOR);
+    private static final DeferredItem<BlockItem> GEOTHERMAL_GENERATOR_ITEM =
+            ITEMS.registerSimpleBlockItem("geothermal_generator", GEOTHERMAL_GENERATOR);
 
     static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PowerNodeBlockEntity>> POWER_NODE =
             BLOCK_ENTITY_TYPES.register(
@@ -101,6 +107,14 @@ public final class PowerContent {
             BLOCK_ENTITY_TYPES.register(
                     "steam_generator",
                     () -> BlockEntityType.Builder.of(SteamGeneratorBlockEntity::new, STEAM_GENERATOR.get()).build(null)
+            );
+    static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeothermalGeneratorBlockEntity>> GEOTHERMAL_GENERATOR_ENTITY =
+            BLOCK_ENTITY_TYPES.register(
+                    "geothermal_generator",
+                    () -> BlockEntityType.Builder.of(
+                            GeothermalGeneratorBlockEntity::new,
+                            GEOTHERMAL_GENERATOR.get()
+                    ).build(null)
             );
 
     private PowerContent() {
@@ -151,6 +165,11 @@ public final class PowerContent {
                 (generator, side) -> generator.getEnergyStorage()
         );
         event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK,
+                GEOTHERMAL_GENERATOR_ENTITY.get(),
+                (generator, side) -> generator.getEnergyStorage()
+        );
+        event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 POWER_GENERATOR_ENTITY.get(),
                 (generator, side) -> generator.getFuelHandler()
@@ -158,6 +177,11 @@ public final class PowerContent {
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 STEAM_GENERATOR_ENTITY.get(),
+                (generator, side) -> generator.getItemHandler()
+        );
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                GEOTHERMAL_GENERATOR_ENTITY.get(),
                 (generator, side) -> generator.getItemHandler()
         );
     }
@@ -172,6 +196,7 @@ public final class PowerContent {
             event.accept(WIND_GENERATOR_ITEM.get());
             event.accept(HYDRO_GENERATOR_ITEM.get());
             event.accept(STEAM_GENERATOR_ITEM.get());
+            event.accept(GEOTHERMAL_GENERATOR_ITEM.get());
         }
     }
 }

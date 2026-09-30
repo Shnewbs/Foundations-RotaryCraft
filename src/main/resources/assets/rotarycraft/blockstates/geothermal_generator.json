@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "rotarycraft:block/geothermal_generator"
+    },
+    "lit=true": {
+      "model": "rotarycraft:block/geothermal_generator_lit"
+    }
+  }
+}
