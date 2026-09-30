@@ -26,11 +26,13 @@ public final class VisualSmokeCheck {
     private static final class Gallery extends Screen {
         private final List<ItemStack> items=new ArrayList<>();
         private long nanos;private int samples;
-        Gallery(){super(Component.literal("RotaryCraft visual gallery"));for(var item:BuiltInRegistries.ITEM)if(BuiltInRegistries.ITEM.getKey(item).getNamespace().equals("rotarycraft"))items.add(new ItemStack(item));}
+        private final DecoTankRenderer tankRenderer=new DecoTankRenderer(null);
+        private final Foundations.RotaryCraft.Machines.DecoTankBlockEntity tank=new Foundations.RotaryCraft.Machines.DecoTankBlockEntity(net.minecraft.core.BlockPos.ZERO,Foundations.RotaryCraft.Machines.MachineContent.DECO_TANK.get().defaultBlockState());
+        Gallery(){super(Component.literal("RotaryCraft visual gallery"));tank.getTank().fill(new net.neoforged.neoforge.fluids.FluidStack(net.minecraft.world.level.material.Fluids.WATER,8000),net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE);for(var item:BuiltInRegistries.ITEM)if(BuiltInRegistries.ITEM.getKey(item).getNamespace().equals("rotarycraft"))items.add(new ItemStack(item));}
         @Override public void render(GuiGraphics gui,int mouseX,int mouseY,float partial) {
             long start=System.nanoTime();
             gui.fill(0,0,width,height,0xff24303c);
-            gui.drawString(font,"RotaryCraft 1.6 — baked inventory models",8,8,0xffffff);
+            gui.drawString(font,"RotaryCraft — baked inventory models",8,8,0xffffff);
             for(int i=0;i<items.size();i++) {
                 int x=12+(i%8)*(width/8), y=30+(i/8)*62;
                 gui.pose().pushPose();gui.pose().translate(x,y,0);gui.pose().scale(2,2,2);
@@ -48,6 +50,7 @@ public final class VisualSmokeCheck {
                     var buffers=Minecraft.getInstance().renderBuffers().bufferSource();
                     Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state,gui.pose(),buffers,15728880,net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY);
                     previewRenderer.renderPreview(state,galleryTicks*6,gui.pose(),buffers,15728880,net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY);
+                    if(state.is(Foundations.RotaryCraft.Machines.MachineContent.DECO_TANK.get()))tankRenderer.render(tank,partial,gui.pose(),buffers,15728880,net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY);
                     buffers.endBatch();gui.pose().popPose();
                 }
                 gui.drawString(font,BuiltInRegistries.ITEM.getKey(items.get(i).getItem()).getPath(),x,y+34,0xffffff,false);
@@ -62,7 +65,7 @@ public final class VisualSmokeCheck {
         buffer.writeBlockPos(net.minecraft.core.BlockPos.ZERO);buffer.writeVarInt(sorter?10:2);buffer.writeBoolean(sorter);
         var menu=Foundations.RotaryCraft.Gui.MachineMenu.client(0,inventory,buffer);buffer.release();
         int[] values=new int[Foundations.RotaryCraft.Gui.MachineMenu.STATUS_COUNT];
-        values[0]=40000;values[1]=50000;values[2]=30;values[3]=100;values[4]=sorter?0:256;values[5]=sorter?0:32;values[12]=-1;values[13]=-1;values[14]=-1;
+        values[0]=40000;values[1]=50000;values[2]=sorter?0:30;values[3]=sorter?0:100;values[4]=sorter?0:256;values[5]=sorter?0:32;values[12]=sorter?-1:net.minecraft.core.Direction.NORTH.get3DDataValue();values[13]=-1;values[14]=-1;values[15]=-1;
         for(int i=0;i<values.length;i++){menu.setData(i*2,values[i]&65535);menu.setData(i*2+1,(values[i]>>>16)&65535);}
         menu.slots.get(0).set(new ItemStack(net.minecraft.world.item.Items.COBBLESTONE,12));
         menu.slots.get(1).set(new ItemStack(sorter?net.minecraft.world.item.Items.DIAMOND:net.minecraft.world.item.Items.GRAVEL));

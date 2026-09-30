@@ -88,6 +88,8 @@ public final class MachineMenu extends AbstractContainerMenu {
         if(entity instanceof Foundations.RotaryCraft.Farming.SprinklerBlockEntity sprinkler){if(field==6)return sprinkler.getStoredWater();if(field==7)return 1000;}
         if(entity instanceof DecoTankBlockEntity tank){if(field==6)return tank.getFluidAmount();if(field==7)return tank.getMaxFluidAmount();}
         if(entity instanceof PlayerDetectorBlockEntity detector){if(field==8)return detector.getSelectedRange();if(field==9)return detector.isAnalog()?1:0;if(field==10)return detector.getRedstoneOutput();}
+        if(entity instanceof DefoliatorBlockEntity defoliator){if(field==15)return defoliator.getPoisonCharge();if(field==7)return defoliator.getPoisonCapacity();}
+        if(field==15)return -1;
         var state=entity.getBlockState();
         if(field==11)return state.hasProperty(BlockStateProperties.LIT)&&state.getValue(BlockStateProperties.LIT)?1:0;
         if(field==12)return state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)?state.getValue(BlockStateProperties.HORIZONTAL_FACING).get3DDataValue():state.hasProperty(BlockStateProperties.FACING)?state.getValue(BlockStateProperties.FACING).get3DDataValue():-1;

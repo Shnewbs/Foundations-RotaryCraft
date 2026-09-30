@@ -37,6 +37,7 @@ public final class MachineScreen extends AbstractContainerScreen<MachineMenu> {
         if(menu.value(1)>0)gui.drawString(font,compact(menu.value(0))+" / "+compact(menu.value(1))+" FE",8,25,0x26343c,false);
         else gui.drawString(font,menu.value(14)>=0?(menu.value(14)==1?"Switch enabled":"Disabled by redstone"):"Machine status",8,25,0x26343c,false);
         if(menu.value(4)>0||menu.value(5)>0)gui.drawString(font,compact(menu.value(4))+" rad/s · "+compact(menu.value(5))+" Nm",8,48,0x26343c,false);
+        else if(menu.value(15)>=0)gui.drawString(font,"Poison charge: "+menu.value(15)+" / "+menu.value(7),8,48,0x26343c,false);
         else if(menu.value(6)>0||menu.value(7)>0)gui.drawString(font,"Fluid: "+menu.value(6)+" mB",8,48,0x26343c,false);
         else if(menu.value(8)>0)gui.drawString(font,"Range "+menu.value(8)+" · output "+menu.value(10),8,48,0x26343c,false);
         else gui.drawString(font,menu.value(11)==1?"Active":"Idle",8,48,0x26343c,false);

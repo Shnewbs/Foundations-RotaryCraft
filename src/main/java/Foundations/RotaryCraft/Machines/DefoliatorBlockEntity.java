@@ -168,6 +168,8 @@ public class DefoliatorBlockEntity extends BlockEntity {
         return contents != null && contents.potion().filter(potion -> potion.is(Potions.POISON)).isPresent();
     }
 
+    public int getPoisonCharge(){return poisonCharge;}
+    public int getPoisonCapacity(){return POISON_CAPACITY;}
     public EnergyStorage getEnergyStorage() {
         return energy;
     }
