@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "rotarycraft:block/power_generator"
+    },
+    "lit=true": {
+      "model": "rotarycraft:block/power_generator_lit"
+    }
+  }
+}

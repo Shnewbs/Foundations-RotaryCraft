@@ -1,4 +1,4 @@
-package Reika.RotaryCraft.Power;
+package Foundations.RotaryCraft.Power;
 
 import net.minecraft.core.BlockPos;
 import com.mojang.serialization.MapCodec;

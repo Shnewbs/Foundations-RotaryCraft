@@ -1,7 +1,6 @@
-package Reika.RotaryCraft.Power;
+package Foundations.RotaryCraft.Power;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.item.BlockItem;
@@ -15,7 +14,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import Reika.RotaryCraft.RotaryCraftNeoForge;
+import Foundations.RotaryCraft.RotaryCraftNeoForge;
 
 public final class PowerContent {
     private static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(RotaryCraftNeoForge.MOD_ID);
@@ -31,8 +30,13 @@ public final class PowerContent {
             "power_cell",
             () -> new PowerNodeBlock(BlockBehaviour.Properties.of().strength(2.5F))
     );
+    public static final DeferredBlock<PowerGeneratorBlock> POWER_GENERATOR = BLOCKS.register(
+            "power_generator",
+            () -> new PowerGeneratorBlock(BlockBehaviour.Properties.of().strength(3.5F).requiresCorrectToolForDrops())
+    );
     private static final DeferredItem<BlockItem> POWER_CABLE_ITEM = ITEMS.registerSimpleBlockItem("power_cable", POWER_CABLE);
     private static final DeferredItem<BlockItem> POWER_CELL_ITEM = ITEMS.registerSimpleBlockItem("power_cell", POWER_CELL);
+    private static final DeferredItem<BlockItem> POWER_GENERATOR_ITEM = ITEMS.registerSimpleBlockItem("power_generator", POWER_GENERATOR);
 
     static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PowerNodeBlockEntity>> POWER_NODE =
             BLOCK_ENTITY_TYPES.register(
@@ -43,6 +47,11 @@ public final class PowerContent {
                             POWER_CELL.get()
                     ).build(null)
             );
+    static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PowerGeneratorBlockEntity>> POWER_GENERATOR_ENTITY =
+                    BLOCK_ENTITY_TYPES.register(
+                            "power_generator",
+                            () -> BlockEntityType.Builder.of(PowerGeneratorBlockEntity::new, POWER_GENERATOR.get()).build(null)
+                    );
 
     private PowerContent() {
     }
@@ -61,12 +70,23 @@ public final class PowerContent {
                 POWER_NODE.get(),
                 (node, side) -> node.getEnergyStorage()
         );
+        event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK,
+                POWER_GENERATOR_ENTITY.get(),
+                (generator, side) -> generator.getEnergyStorage()
+        );
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                POWER_GENERATOR_ENTITY.get(),
+                (generator, side) -> generator.getFuelHandler()
+        );
     }
 
     private static void addToCreativeTab(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {
             event.accept(POWER_CABLE_ITEM.get());
             event.accept(POWER_CELL_ITEM.get());
+            event.accept(POWER_GENERATOR_ITEM.get());
         }
     }
 }
