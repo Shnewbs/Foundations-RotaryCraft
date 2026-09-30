@@ -16,6 +16,8 @@
 - Added hydro-generator registration, creative-tab item, shaped recipe, vanilla-texture block/item models, lit state, English localization, and GameTests for water-powered cable output and dry non-generation.
 - Added a steam generator that consumes vanilla water buckets and furnace fuels, produces 40 FE per productive tick, stores up to 50,000 FE, and distributes up to 160 FE per tick through the native energy network. Its bounded item inventory, burn/steam timers, energy buffer, and output rotation persist; empty buckets remain retrievable in the water slot, and fuel pauses when water is unavailable.
 - Added steam-generator capability registration, crafting recipe, blockstates/models, English localization, and GameTests for fueled water-to-cable operation, no-input inactivity, and buffering against a full adjacent cell.
+- Added a craftable redstone-controlled power switch with a zero-buffer, side-aware energy pass-through; powered switches expose no energy capability, update cable connections, and retain no energy to lose on removal.
+- Added redstone-switch GameTests for enabled generator-to-cable transfer, powered blocking, and signal-driven restoration of transfer.
 - Added connection-aware cable and cell models plus comparator output proportional to stored energy.
 - Moved the new NeoForge Java package namespace to `Foundations.RotaryCraft`; original source and copyright attribution is preserved.
 - Kept the legacy source tree and assets in place as migration references; their gameplay systems are not yet part of the new build.
