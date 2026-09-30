@@ -20,7 +20,8 @@ import Foundations.RotaryCraft.Mechanical.MechanicalBlockEntity;
 /** Cached source meshes; poses move components without rebuilding geometry or uploading textures. */
 public final class AnimatedMachineRenderer implements BlockEntityRenderer<BlockEntity> {
     private record Group(float[][] operations, float[][] vertices) {}
-    private record Mesh(float orientation, List<Group> groups) {}
+    private record Mesh(float orientation, List<Group> groups, RenderType renderType) {}
+    private final Quaternionf rotation = new Quaternionf();
     private static volatile Map<String,Mesh> meshes = Map.of();
     private static final WeakHashMap<BlockEntity,Spin> spins = new WeakHashMap<>();
     private static final class Spin { double time; double angle; }
@@ -53,7 +54,7 @@ public final class AnimatedMachineRenderer implements BlockEntityRenderer<BlockE
                     }
                     groups.add(new Group(ops.toArray(float[][]::new),vertices.toArray(float[][]::new)));
                 }
-                loaded.put(name,new Mesh(json.get("orientation").getAsFloat(),List.copyOf(groups)));
+                loaded.put(name,new Mesh(json.get("orientation").getAsFloat(),List.copyOf(groups),RenderType.entityCutoutNoCull(ResourceLocation.fromNamespaceAndPath("rotarycraft","textures/legacy/"+name+".png"))));
             } catch(Exception exception){throw new IllegalStateException("Cannot load "+id,exception);}
         }
         meshes=Map.copyOf(loaded);spins.clear();
@@ -70,13 +71,13 @@ public final class AnimatedMachineRenderer implements BlockEntityRenderer<BlockE
         pose.pushPose();pose.translate(0.5,0.5,0.5);
         if(entity.getBlockState().hasProperty(BlockStateProperties.FACING)) {
             var facing=entity.getBlockState().getValue(BlockStateProperties.FACING);
-            switch(facing){case EAST->pose.mulPose(new Quaternionf().rotationY((float)-Math.PI/2));case SOUTH->pose.mulPose(new Quaternionf().rotationY((float)Math.PI));case WEST->pose.mulPose(new Quaternionf().rotationY((float)Math.PI/2));case UP->pose.mulPose(new Quaternionf().rotationX((float)Math.PI/2));case DOWN->pose.mulPose(new Quaternionf().rotationX((float)-Math.PI/2));default->{}}
+            switch(facing){case EAST->pose.mulPose(rotation.rotationY((float)-Math.PI/2));case SOUTH->pose.mulPose(rotation.rotationY((float)Math.PI));case WEST->pose.mulPose(rotation.rotationY((float)Math.PI/2));case UP->pose.mulPose(rotation.rotationX((float)Math.PI/2));case DOWN->pose.mulPose(rotation.rotationX((float)-Math.PI/2));default->{}}
         } else if(entity.getBlockState().hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
-            float yaw=entity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();pose.mulPose(new Quaternionf().rotationY((float)Math.toRadians(180-yaw)));
+            float yaw=entity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();pose.mulPose(rotation.rotationY((float)Math.toRadians(180-yaw)));
         }
-        pose.mulPose(new Quaternionf().rotationY((float)Math.toRadians(mesh.orientation)));pose.translate(0,1,0);pose.scale(1,-1,-1);
-        var consumer=buffers.getBuffer(RenderType.entityCutoutNoCull(ResourceLocation.fromNamespaceAndPath("rotarycraft","textures/legacy/"+name+".png")));
-        for(Group group:mesh.groups){pose.pushPose();for(float[] op:group.operations){if(op[0]==0)pose.translate(op[1],op[2],op[3]);else pose.mulPose(new Quaternionf().rotationAxis((float)Math.toRadians(op[1]*angle+op[2]),op[3],op[4],op[5]));}
+        pose.mulPose(rotation.rotationY((float)Math.toRadians(mesh.orientation)));pose.translate(0,1,0);pose.scale(1,-1,-1);
+        var consumer=buffers.getBuffer(mesh.renderType);
+        for(Group group:mesh.groups){pose.pushPose();for(float[] op:group.operations){if(op[0]==0)pose.translate(op[1],op[2],op[3]);else pose.mulPose(rotation.rotationAxis((float)Math.toRadians(op[1]*angle+op[2]),op[3],op[4],op[5]));}
             var matrix=pose.last();for(float[] v:group.vertices)consumer.addVertex(matrix,v[0],v[1],v[2]).setColor(255,255,255,255).setUv(v[3],v[4]).setOverlay(overlay).setLight(light).setNormal(matrix,v[5],v[6],v[7]);pose.popPose();}
         pose.popPose();
     }

@@ -24,6 +24,12 @@ neoForge {
             client()
         }
 
+        visualSmokeClient {
+            client()
+            gameDirectory = file('run-visual')
+            systemProperty 'rotarycraft.visualSmoke', 'true'
+        }
+
         server {
             server()
             programArgument '--nogui'
