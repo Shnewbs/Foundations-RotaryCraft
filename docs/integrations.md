@@ -33,6 +33,13 @@ FE interoperability is the existing baseline. EU, joules, Create kinetic/stress 
 
 Place a DC Engine with its copper/redstone output face aimed along the shaft line. The facing is opposite the nearest direction the player is looking. Supply redstone to the engine. Straight shafts and gearboxes accept mechanical input only behind their output face. The initial source produces 256 rad/s at 4 Nm (1024 W); it is not an FE generator. Shaft paths up to 256 nodes are supported and never force-load chunks.
 
-Gearboxes default to speed reduction/torque increase. Empty-hand right click toggles speed increase/torque reduction. Their configuration is stored in blockstate. Integer truncation follows the legacy ideal arithmetic, so increasing speed with insufficient torque can produce zero usable power. Material, lubricant, damage, inertia, upgrades and original recipes/models are pending; these six recipes and vanilla-material models are temporary scaffolding.
+Gearboxes default to speed reduction/torque increase. Empty-hand right click toggles speed increase/torque reduction. Their configuration is stored in blockstate. Integer truncation follows the legacy ideal arithmetic, so increasing speed with insufficient torque can produce zero usable power. Material, lubricant, damage, upgrades and original recipes/models are pending; these six recipes and vanilla-material models are temporary scaffolding.
 
 All six blocks have native crafting recipes that JEI discovers automatically. KubeJS can remove/replace them by their `rotarycraft:dc_engine`, `rotarycraft:shaft` and `rotarycraft:gearbox_2/4/8/16` IDs. Jade receives live speed, torque, wattage and mode from the server. Client visual validation remains pending. Existing FE machines do not consume shaft signals yet; electrical and cross-mod bridges remain roadmap work.
+
+
+### DC engine inertia (1.21.1-1.4.0)
+
+The DC engine reaches 256 rad/s after eight powered server ticks, increasing by 32 rad/s each tick. Removing redstone starts coast-down: subtract `speed / 256 + 1` each tick, keeping 4 Nm until speed reaches zero. From full speed it stops after 255 ticks. Reapplying redstone accelerates from the current speed. Jade shows redstone/running, coasting or stopped status.
+
+Only the engine saves rotational state. Restored speed/torque are clamped to 0–256 rad/s and 0–4 Nm; a zero-speed engine has zero torque. Old saves with no rotational data start stopped. Saved engines do not simulate time while their chunks are unloaded. Transmission still recomputes its signal on demand. Sounds, legacy models, integrated gears and redstone upgrades remain pending.

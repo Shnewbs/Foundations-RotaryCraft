@@ -54,6 +54,10 @@ public final class RotaryJadePlugin implements IWailaPlugin {
             if (accessor.getBlockEntity() instanceof Foundations.RotaryCraft.Mechanical.MechanicalBlockEntity machine) {
                 var power = machine.power();
                 CompoundTag status = new CompoundTag();
+                if (machine.getBlockState().is(Foundations.RotaryCraft.Mechanical.MechanicalContent.DC_ENGINE.get())) {
+                    status.putBoolean("engine", true);
+                    status.putBoolean("powered", accessor.getLevel().hasNeighborSignal(machine.getBlockPos()));
+                }
                 status.putInt("speed", power.omega());
                 status.putInt("torque", power.torque());
                 status.putLong("watts", power.watts());
@@ -66,6 +70,8 @@ public final class RotaryJadePlugin implements IWailaPlugin {
             if (!accessor.getServerData().contains("rotarycraft:mechanical")) return;
             CompoundTag status = accessor.getServerData().getCompound("rotarycraft:mechanical");
             tooltip.add(Component.translatable("jade.rotarycraft.shaft", status.getInt("speed"), status.getInt("torque"), status.getLong("watts")));
+            if (status.getBoolean("engine")) tooltip.add(Component.translatable(status.getBoolean("powered")
+                    ? "jade.rotarycraft.dc_powered" : status.getInt("speed") > 0 ? "jade.rotarycraft.dc_coasting" : "jade.rotarycraft.dc_stopped"));
             if (status.getInt("ratio") > 1) tooltip.add(Component.translatable(status.getBoolean("reduction") ? "jade.rotarycraft.reduction" : "jade.rotarycraft.acceleration", status.getInt("ratio")));
         }
     }

@@ -41,5 +41,8 @@
   "config.jade.plugin_rotarycraft.mechanical_status": "Mechanical power",
   "jade.rotarycraft.shaft": "Shaft: %s rad/s, %s Nm, %s W",
   "jade.rotarycraft.reduction": "%s:1 speed reduction / torque increase",
-  "jade.rotarycraft.acceleration": "%s:1 speed increase mode"
+  "jade.rotarycraft.acceleration": "%s:1 speed increase mode",
+  "jade.rotarycraft.dc_powered": "Redstone on / spinning up or running",
+  "jade.rotarycraft.dc_coasting": "Redstone off / coasting",
+  "jade.rotarycraft.dc_stopped": "Redstone off / stopped"
 }

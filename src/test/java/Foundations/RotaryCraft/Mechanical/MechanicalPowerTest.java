@@ -5,6 +5,24 @@ import Foundations.RotaryCraft.Electrical.ElectricalPower;
 /** Dependency-free regression checks, run by Gradle check. */
 public final class MechanicalPowerTest {
     public static void main(String[] args) {
+        DcEngineState engine = DcEngineState.STOPPED;
+        equal(32, DcEngineState.ACCELERATION, "legacy DC acceleration");
+        for (int tick = 1; tick <= 8; tick++) {
+            engine = engine.tick(true);
+            equal(new ShaftPower(tick * 32, 4), engine.power(), "DC startup tick " + tick);
+        }
+        equal(engine, engine.tick(true), "DC speed cap");
+        engine = engine.tick(false);
+        equal(new ShaftPower(254, 4), engine.power(), "first legacy coast tick");
+        for (int tick = 0; tick < 254; tick++) engine = engine.tick(false);
+        equal(DcEngineState.STOPPED, engine, "DC coast ends after 255 ticks");
+        equal(DcEngineState.STOPPED, engine.tick(false), "stopped engine stays stopped");
+        equal(new DcEngineState(32, 4), engine.tick(true), "restart from stopped");
+        equal(new DcEngineState(132, 4), new DcEngineState(100, 4).tick(true), "restart while coasting");
+        equal(DcEngineState.STOPPED, DcEngineState.restore(-1, 4), "negative saved speed");
+        equal(new DcEngineState(256, 4), DcEngineState.restore(Integer.MAX_VALUE, Integer.MAX_VALUE), "saved limits");
+        invalid(() -> new DcEngineState(0, 4));
+        invalid(() -> new DcEngineState(257, 4));
         ShaftPower input = new ShaftPower(1024, 64);
         equal(65536L, input.watts(), "shaft power");
         for (int ratio : new int[] {2, 4, 8, 16}) {

@@ -16,6 +16,12 @@ public final class MechanicalGameTests {
     private static void source(GameTestHelper h) {
         h.setBlock(SOURCE, MechanicalContent.DC_ENGINE.get().defaultBlockState().setValue(MechanicalBlock.FACING, Direction.EAST));
         h.setBlock(SOURCE.below(), Blocks.REDSTONE_BLOCK);
+        tickSource(h, 8);
+    }
+    private static void tickSource(GameTestHelper h, int ticks) {
+        var position = h.absolutePos(SOURCE);
+        var machine = (MechanicalBlockEntity) h.getLevel().getBlockEntity(position);
+        for (int tick = 0; tick < ticks; tick++) MechanicalBlockEntity.serverTick(h.getLevel(), position, machine.getBlockState(), machine);
     }
     private static ShaftPower power(GameTestHelper h, BlockPos pos, Direction side) {
         return ShaftNetwork.resolve(h.getLevel(), h.absolutePos(pos), side);
@@ -50,11 +56,17 @@ public final class MechanicalGameTests {
         h.succeed();
     }
     @GameTest(template = "power_network_test", templateNamespace = "rotarycraft")
-    public static void disabledSourceStopsImmediately(GameTestHelper h) {
+    public static void disabledSourceCoastsToStop(GameTestHelper h) {
         source(h);
         h.assertTrue(power(h, SOURCE, Direction.EAST).watts() == 1024, "Source did not start");
+        h.setBlock(SOURCE.east(), MechanicalContent.GEARBOX_4.get().defaultBlockState().setValue(MechanicalBlock.FACING, Direction.EAST));
         h.setBlock(SOURCE.below(), Blocks.AIR);
-        h.assertTrue(power(h, SOURCE, Direction.EAST).watts() == 0, "Disabled source retained power");
+        tickSource(h, 1);
+        h.assertTrue(power(h, SOURCE, Direction.EAST).equals(new ShaftPower(254, 4)), "Missing legacy coast behavior");
+        h.assertTrue(power(h, SOURCE.east(), Direction.EAST).equals(new ShaftPower(63, 16)), "Gearbox did not transmit coasting speed");
+        tickSource(h, 254);
+        h.assertTrue(power(h, SOURCE, Direction.EAST).equals(ShaftPower.STOPPED), "Coast did not stop");
+        h.assertTrue(power(h, SOURCE.east(), Direction.EAST).watts() == 0, "Gearbox retained stopped engine power");
         h.succeed();
     }
     @GameTest(template = "power_network_test", templateNamespace = "rotarycraft")
@@ -125,5 +137,46 @@ public final class MechanicalGameTests {
         });
         h.assertTrue(power.watts() == 0 && calls[0] == 1, "Walker queried an unloaded node");
         h.succeed();
+    }
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft")
+    public static void engineSaveRestoresCoastingState(GameTestHelper h) {
+        source(h);
+        h.setBlock(SOURCE.below(), Blocks.AIR);
+        tickSource(h, 10);
+        var pos = h.absolutePos(SOURCE);
+        var machine = (MechanicalBlockEntity) h.getLevel().getBlockEntity(pos);
+        var expected = machine.power();
+        var saved = machine.saveWithoutMetadata(h.getLevel().registryAccess());
+        var restored = new MechanicalBlockEntity(pos, machine.getBlockState());
+        restored.setLevel(h.getLevel());
+        restored.loadWithComponents(saved, h.getLevel().registryAccess());
+        h.assertTrue(restored.apply(ShaftPower.STOPPED).equals(expected), "Saved engine state changed");
+        MechanicalBlockEntity.serverTick(h.getLevel(), pos, restored.getBlockState(), restored);
+        h.assertTrue(restored.apply(ShaftPower.STOPPED).omega() == expected.omega() - 1, "Restored engine failed to coast");
+        h.succeed();
+    }
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft")
+    public static void engineSaveClampsInvalidState(GameTestHelper h) {
+        source(h);
+        var machine = (MechanicalBlockEntity) h.getLevel().getBlockEntity(h.absolutePos(SOURCE));
+        var saved = new net.minecraft.nbt.CompoundTag();
+        saved.putInt("dc_speed", Integer.MAX_VALUE);
+        saved.putInt("dc_torque", Integer.MAX_VALUE);
+        machine.loadWithComponents(saved, h.getLevel().registryAccess());
+        h.assertTrue(machine.power().equals(new ShaftPower(256, 4)), "Invalid saved state exceeded output limits");
+        saved.putInt("dc_speed", -10);
+        machine.loadWithComponents(saved, h.getLevel().registryAccess());
+        h.assertTrue(machine.power().equals(ShaftPower.STOPPED), "Invalid saved state did not stop");
+        h.succeed();
+    }
+    @GameTest(template = "power_network_test", templateNamespace = "rotarycraft")
+    public static void engineTicksInWorld(GameTestHelper h) {
+        h.setBlock(SOURCE, MechanicalContent.DC_ENGINE.get().defaultBlockState().setValue(MechanicalBlock.FACING, Direction.EAST));
+        h.setBlock(SOURCE.below(), Blocks.REDSTONE_BLOCK);
+        h.assertTrue(power(h, SOURCE, Direction.EAST).equals(ShaftPower.STOPPED), "Engine started before first tick");
+        h.runAfterDelay(10, () -> {
+            h.assertTrue(power(h, SOURCE, Direction.EAST).equals(new ShaftPower(256, 4)), "Server ticker did not spin up DC engine");
+            h.succeed();
+        });
     }
 }

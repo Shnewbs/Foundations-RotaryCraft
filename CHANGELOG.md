@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 1.21.1-1.4.0 - DC Engine Inertia and Persistence
+
+- Replaced instant DC output with legacy server-tick spin-up: 32 rad/s per tick, capped at 256 rad/s and 4 Nm.
+- Removing redstone now coasts the engine down using the legacy `speed / 256 + 1` decrement. Torque remains until the engine stops; shafts and gearboxes transmit the changing signal live.
+- Saved engine speed and torque resume across loads, with clamping of invalid values. Existing engines without saved rotational data start stopped; transmission blocks still store no shaft signal.
+- Jade now distinguishes powered, coasting and stopped DC engines using server data.
+- Added arithmetic regressions plus world-ticker, save/load, corrupted-state and gearbox coast-down GameTests.
+- Engine upgrades, sounds/renderers, gearbox materials/lubrication/failure, mechanical machine migration and cross-mod energy bridges remain pending.
+
 ## 1.21.1-1.3.0 - World Mechanical Transmission
 
 - Added sided `rotarycraft:shaft_power` capability and live, non-buffered world transmission. Queries reject cycles, stop at unloaded chunks, and limit paths to 256 nodes without recursion or chunk loading.

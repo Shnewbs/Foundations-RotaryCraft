@@ -33,6 +33,11 @@ public final class MechanicalBlock extends BaseEntityBlock {
         return defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new MechanicalBlockEntity(pos, state); }
+    @Override public <T extends BlockEntity> net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(
+            Level level, BlockState state, net.minecraft.world.level.block.entity.BlockEntityType<T> type) {
+        if (level.isClientSide || !state.is(MechanicalContent.DC_ENGINE.get())) return null;
+        return createTickerHelper(type, MechanicalContent.ENTITY.get(), MechanicalBlockEntity::serverTick);
+    }
     @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (MechanicalContent.ratio(state.getBlock()) == 1) return InteractionResult.PASS;
         if (!level.isClientSide) level.setBlock(pos, state.cycle(REDUCTION), Block.UPDATE_ALL);
