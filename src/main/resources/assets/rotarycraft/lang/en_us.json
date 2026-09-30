@@ -19,6 +19,7 @@
   "block.rotarycraft.fan": "Fan",
   "block.rotarycraft.mob_harvester": "Mob Harvester",
   "block.rotarycraft.defoliator": "Defoliator",
+  "block.rotarycraft.item_refresher": "Item Refresher",
   "block.rotarycraft.canola_crop": "Canola",
   "item.rotarycraft.canola_seeds": "Canola Seeds"
 }

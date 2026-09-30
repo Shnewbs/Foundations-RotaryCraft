@@ -118,6 +118,15 @@ public class MachineContent {
         BLOCK_ENTITY_TYPES.register("defoliator", () ->
             BlockEntityType.Builder.of(DefoliatorBlockEntity::new, DEFOLIATOR.get()).build(null));
 
+    // Item Refresher
+    public static final DeferredBlock<ItemRefresherBlock> ITEM_REFRESHER = BLOCKS.register("item_refresher",
+        () -> new ItemRefresherBlock(BlockBehaviour.Properties.of().strength(2.5f, 8.0f).requiresCorrectToolForDrops()));
+    public static final DeferredItem<BlockItem> ITEM_REFRESHER_ITEM =
+        ITEMS.registerSimpleBlockItem("item_refresher", ITEM_REFRESHER);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ItemRefresherBlockEntity>> ITEM_REFRESHER_BLOCK_ENTITY =
+        BLOCK_ENTITY_TYPES.register("item_refresher", () ->
+            BlockEntityType.Builder.of(ItemRefresherBlockEntity::new, ITEM_REFRESHER.get()).build(null));
+
     public static void register(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
@@ -177,6 +186,11 @@ public class MachineContent {
             DEFOLIATOR_BLOCK_ENTITY.get(),
             (defoliator, side) -> defoliator.getItemHandler()
         );
+        event.registerBlockEntity(
+            Capabilities.EnergyStorage.BLOCK,
+            ITEM_REFRESHER_BLOCK_ENTITY.get(),
+            (refresher, side) -> refresher.getEnergyStorage()
+        );
     }
 
     private static void addToCreativeTab(BuildCreativeModeTabContentsEvent event) {
@@ -184,6 +198,7 @@ public class MachineContent {
             event.accept(FAN_ITEM.get());
             event.accept(MOB_HARVESTER_ITEM.get());
             event.accept(DEFOLIATOR_ITEM.get());
+            event.accept(ITEM_REFRESHER_ITEM.get());
         }
     }
 }

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 1.21.1-1.0.0 - Item Refresher
+
+- Added the powered Item Refresher, based on the legacy machine that keeps dropped items from despawning.
+  - Uses 16 FE per tick and affects item entities within four blocks; it extends their lifespan while in range and gives stationary items a gentle upward nudge.
+  - Stores up to 50,000 FE, exposes the NeoForge energy capability, and shows its active state while powered.
+  - Added a crafting recipe, recipe-book advancement, block/item models, blockstate, loot, English localization, and original active/inactive pixel-art textures.
+  - Added GameTests for recipe registration, powered lifespan refresh and energy use, range limits, and unpowered behavior.
+
 ## 0.9.0 - Defoliator
 
 - Added the powered Defoliator, inspired by the legacy poison-fed vegetation-clearing machine.
