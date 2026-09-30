@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## 0.3.0 - Decorative Storage
+
+- Added the DecoTank: A decorative fluid storage and display block.
+  - Stores up to 16 buckets (16,000 mB) of any fluid type.
+  - Provides comparator output proportional to fill level (0-15).
+  - Added shaped recipe: 4 iron ingots + 4 glass panes + 1 glass block = DecoTank.
+  - Persists fluid amount and type on block destruction.
+
+- Added DecoTank blockstates, models, item models, English localization, and recipe-book advancement triggers.
+
 ## 0.2.0 - Utility Machines
 
 - Added the Grindstone machine: A rotational-powered grinding block for processing materials.
