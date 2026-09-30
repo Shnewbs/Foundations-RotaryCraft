@@ -67,6 +67,12 @@ jobs:
           printf 'accessibilityOnboarded:true\nguiScale:2\n' > run-visual/options.txt
           xvfb-run -a -s "-screen 0 1280x720x24" bash gradlew --no-daemon runVisualSmokeClient -PcompatMods=true | tee visual-smoke.log
           rg ROTARYCRAFT_VISUAL_SMOKE_OK visual-smoke.log
+          python - <<'PY'
+          import base64,pathlib
+          for p in pathlib.Path('run-visual/screenshots').glob('*.png'):
+              data=base64.b64encode(p.read_bytes()).decode()
+              for i in range(0,len(data),12000): print('VISUAL_PNG_CHUNK:'+data[i:i+12000])
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:

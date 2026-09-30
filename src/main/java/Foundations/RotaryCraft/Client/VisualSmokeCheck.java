@@ -20,6 +20,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 public final class VisualSmokeCheck {
     private static boolean checked;
     private static int galleryTicks;
+    private static final AnimatedMachineRenderer previewRenderer=new AnimatedMachineRenderer(null);
     private static final class Gallery extends Screen {
         private final List<ItemStack> items=new ArrayList<>();
         Gallery(){super(Component.literal("RotaryCraft visual gallery"));for(var item:BuiltInRegistries.ITEM)if(BuiltInRegistries.ITEM.getKey(item).getNamespace().equals("rotarycraft"))items.add(new ItemStack(item));}
@@ -30,6 +31,16 @@ public final class VisualSmokeCheck {
                 int x=12+(i%8)*(width/8), y=30+(i/8)*62;
                 gui.pose().pushPose();gui.pose().translate(x,y,0);gui.pose().scale(2,2,2);
                 gui.renderItem(items.get(i),0,0);gui.pose().popPose();
+                if(items.get(i).getItem() instanceof net.minecraft.world.item.BlockItem blockItem) {
+                    var state=blockItem.getBlock().defaultBlockState();
+                    gui.flush();gui.pose().pushPose();gui.pose().translate(x+42,y+28,100);gui.pose().scale(22,-22,22);
+                    gui.pose().mulPose(new org.joml.Quaternionf().rotationXYZ((float)Math.toRadians(25),(float)Math.toRadians(35),0));
+                    gui.pose().translate(-.5,-.5,-.5);
+                    var buffers=Minecraft.getInstance().renderBuffers().bufferSource();
+                    Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state,gui.pose(),buffers,15728880,net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY);
+                    previewRenderer.renderPreview(state,galleryTicks*6,gui.pose(),buffers,15728880,net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY);
+                    buffers.endBatch();gui.pose().popPose();
+                }
                 gui.drawString(font,BuiltInRegistries.ITEM.getKey(items.get(i).getItem()).getPath(),x,y+34,0xffffff,false);
             }
         }

@@ -68,12 +68,16 @@ public final class AnimatedMachineRenderer implements BlockEntityRenderer<BlockE
         Spin spin=spins.computeIfAbsent(entity,key->new Spin());double now=entity.getLevel().getGameTime()+partialTick;
         if(spin.time!=0&&now>=spin.time)spin.angle=(spin.angle+Math.min(2,now-spin.time)*Math.pow(Math.log(speed+1)/Math.log(2),1.25))%360;
         spin.time=now;float angle=(float)spin.angle;
+        renderPreview(entity.getBlockState(),angle,pose,buffers,light,overlay);
+    }
+    public void renderPreview(net.minecraft.world.level.block.state.BlockState state,float angle,PoseStack pose,MultiBufferSource buffers,int light,int overlay) {
+        String name=BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();Mesh mesh=meshes.get(name);if(mesh==null)return;
         pose.pushPose();pose.translate(0.5,0.5,0.5);
-        if(entity.getBlockState().hasProperty(BlockStateProperties.FACING)) {
-            var facing=entity.getBlockState().getValue(BlockStateProperties.FACING);
+        if(state.hasProperty(BlockStateProperties.FACING)) {
+            var facing=state.getValue(BlockStateProperties.FACING);
             switch(facing){case EAST->pose.mulPose(rotation.rotationY((float)-Math.PI/2));case SOUTH->pose.mulPose(rotation.rotationY((float)Math.PI));case WEST->pose.mulPose(rotation.rotationY((float)Math.PI/2));case UP->pose.mulPose(rotation.rotationX((float)Math.PI/2));case DOWN->pose.mulPose(rotation.rotationX((float)-Math.PI/2));default->{}}
-        } else if(entity.getBlockState().hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
-            float yaw=entity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();pose.mulPose(rotation.rotationY((float)Math.toRadians(180-yaw)));
+        } else if(state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            float yaw=state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();pose.mulPose(rotation.rotationY((float)Math.toRadians(180-yaw)));
         }
         pose.mulPose(rotation.rotationY((float)Math.toRadians(mesh.orientation)));pose.translate(0,1,0);pose.scale(1,-1,-1);
         var consumer=buffers.getBuffer(mesh.renderType);
