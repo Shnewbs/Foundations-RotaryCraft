@@ -2,6 +2,10 @@
 ## Eclipse
 #################
 
+.gradle/
+run/
+run-*/
+
 *.pydevproject
 .project
 .metadata
