@@ -6,5 +6,6 @@
   "block.rotarycraft.solar_generator": "Solar Generator",
   "block.rotarycraft.wind_generator": "Wind Generator",
   "block.rotarycraft.hydro_generator": "Hydro Generator",
-  "block.rotarycraft.steam_generator": "Steam Generator"
+  "block.rotarycraft.steam_generator": "Steam Generator",
+  "block.rotarycraft.geothermal_generator": "Geothermal Generator"
 }

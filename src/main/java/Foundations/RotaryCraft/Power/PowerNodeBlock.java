@@ -106,6 +106,7 @@ public final class PowerNodeBlock extends BaseEntityBlock {
                 || block instanceof WindGeneratorBlock
                 || block instanceof HydroGeneratorBlock
                 || block instanceof SteamGeneratorBlock
+                || block instanceof GeothermalGeneratorBlock
                 || block instanceof PowerSwitchBlock
                 && state.getValue(PowerSwitchBlock.ENABLED);
     }
