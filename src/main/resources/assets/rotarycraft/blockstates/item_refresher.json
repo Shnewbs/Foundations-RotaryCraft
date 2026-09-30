@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "lit=false": { "model": "rotarycraft:block/item_refresher" },
+    "lit=true": { "model": "rotarycraft:block/item_refresher_active" }
+  }
+}
