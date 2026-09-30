@@ -82,6 +82,8 @@ build/
 *.ks
 *.keystore
 *.properties
+!gradle.properties
+!gradle/wrapper/gradle-wrapper.properties
 *.tmp_proj
 *.log
 *.vspscc
