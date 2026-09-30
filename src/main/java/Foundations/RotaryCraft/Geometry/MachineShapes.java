@@ -1,6 +1,10 @@
 package Foundations.RotaryCraft.Geometry;
 public final class MachineShapes {
+    private static final java.util.Map<net.minecraft.world.level.block.state.BlockState,net.minecraft.world.phys.shapes.VoxelShape> CACHE=new java.util.concurrent.ConcurrentHashMap<>();
     public static net.minecraft.world.phys.shapes.VoxelShape shape(net.minecraft.world.level.block.state.BlockState state) {
+        return CACHE.computeIfAbsent(state,MachineShapes::build);
+    }
+    private static net.minecraft.world.phys.shapes.VoxelShape build(net.minecraft.world.level.block.state.BlockState state) {
         var shape = switch(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath()) {
             case "solar_generator" -> net.minecraft.world.phys.shapes.Shapes.or(net.minecraft.world.level.block.Block.box(3,0,3,13,7,13),net.minecraft.world.level.block.Block.box(0,7,0,16,9,16));
             case "power_generator" -> net.minecraft.world.phys.shapes.Shapes.or(net.minecraft.world.level.block.Block.box(0,0,0,16,16,16));
