@@ -13,8 +13,8 @@ def save(name,elements,transparent=False):
     if transparent:value['render_type']='minecraft:cutout'
     (A/'models/block'/f'{name}.json').write_text(json.dumps(value,separators=(',',':'))+'\n')
 # Insulated bus coupler and directed arms; connection states remain gameplay driven.
-save('power_cable',[box([5,5,5],[11,11,11],'dark')]+[box([4,y,4],[12,y+1,12]) for y in (4,11)]+[box([x,5,z],[x+1,11,z+1]) for x,z in ((4,4),(11,4),(4,11),(11,11))])
-save('power_cable_arm',[box([6,6,0],[10,10,8],'dark'),box([5,5,0],[11,11,2]),box([5,5,5],[11,11,7])])
+save('power_cable',[box([7,7,7],[9,9,9],'dark'),box([7,7,7],[9,7.25,9]),box([7,8.75,7],[9,9,9])])
+save('power_cable_arm',[box([7.25,7.25,0],[8.75,8.75,8],'dark'),box([7.25,7.25,0],[8.75,8.75,.5])])
 # Accumulator case, terminal pairs, and separated reinforcing bands.
 e=[box([2,1,2],[14,14,14],'dark'),box([1,0,1],[15,2,15]),box([1,12,1],[15,14,15])]
 for x in (3,10):e.extend([box([x,14,6],[x+3,15,10]),box([x+0.5,15,7],[x+2.5,16,9],'red' if x==3 else 'dark')])
