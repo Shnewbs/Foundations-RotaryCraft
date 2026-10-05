@@ -26,6 +26,8 @@ public final class NativeGameTests {
     register(event, environment, "battery_saved_charge", NativeGameTests::savedCharge);
     register(event, environment, "idle_battery", NativeGameTests::idleBattery);
     register(event, environment, "gear_conservation", NativeGameTests::gearConservation);
+    register(event, environment, "generator_cable_processing", NativeGameTests::processing);
+    register(event, environment, "menu_input_restrictions", NativeGameTests::menuRestrictions);
   }
 
   private static Identifier id(String name) {
@@ -37,7 +39,7 @@ public final class NativeGameTests {
       net.minecraft.core.Holder<TestEnvironmentDefinition<?>> environment,
       String name,
       Consumer<GameTestHelper> body) {
-    var data = new TestData<>(environment, id("power_network_test"), 60, 0, true);
+    var data = new TestData<>(environment, id("power_network_test"), 160, 0, true);
     event.registerTest(
         id(name),
         new GameTestInstance(data) {
@@ -184,6 +186,39 @@ public final class NativeGameTests {
     helper.assertTrue(
         result.watts() == power.watts() && result.torque() == 4096 && result.omega() == 32,
         "Gear conversion changed mechanical power");
+    helper.succeed();
+  }
+
+  private static void processing(GameTestHelper helper) {
+    var generator = place(helper, new BlockPos(1, 1, 1), "power_generator");
+    place(helper, new BlockPos(2, 1, 1), "power_cable");
+    var grinder = place(helper, new BlockPos(3, 1, 1), "grindstone");
+    generator.setItem(
+        0, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COAL));
+    grinder.setItem(
+        0, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COBBLESTONE));
+    helper.runAfterDelay(
+        115,
+        () -> {
+          helper.assertTrue(
+              grinder.getItem(1).is(net.minecraft.world.item.Items.GRAVEL),
+              "Fuel generator and cable failed to complete recipe");
+          helper.assertTrue(
+              grinder.getItem(0).isEmpty() && grinder.getItem(1).getCount() == 1,
+              "Processing duplicated input or output");
+          helper.succeed();
+        });
+  }
+
+  private static void menuRestrictions(GameTestHelper helper) {
+    var grinder = place(helper, new BlockPos(1, 1, 1), "grindstone");
+    var player = helper.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+    var menu = grinder.createMenu(1, player.getInventory());
+    var item = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COBBLESTONE);
+    helper.assertTrue(
+        menu.getSlot(0).mayPlace(item) && !menu.getSlot(1).mayPlace(item),
+        "GUI permits placement into output slot");
+    helper.assertTrue(!menu.getSlot(2).mayPlace(item), "Unused processor slots accept items");
     helper.succeed();
   }
 

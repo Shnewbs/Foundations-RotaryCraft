@@ -28,6 +28,9 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 /** Native transaction capabilities and Value IO, with no legacy API emulation. */
 public final class PowerEntity extends BaseContainerBlockEntity {
   final SimpleEnergyHandler energy;
+  private final String kind;
+  private static final Set<String> INVENTORY_KINDS =
+      Set.of("power_generator", "steam_generator", "geothermal_generator", "grindstone");
   private final NonNullList<ItemStack> items = NonNullList.withSize(5, ItemStack.EMPTY);
   final ItemStacksResourceHandler itemPort;
   private final EnergyHandler port;
@@ -38,6 +41,7 @@ public final class PowerEntity extends BaseContainerBlockEntity {
 
   public PowerEntity(BlockPos pos, BlockState state) {
     super(PowerContent.ENTITY.get(), pos, state);
+    kind = BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();
     energy =
         new SimpleEnergyHandler(capacity(), rate(), rate()) {
           @Override
@@ -87,7 +91,7 @@ public final class PowerEntity extends BaseContainerBlockEntity {
   }
 
   String kind() {
-    return BuiltInRegistries.BLOCK.getKey(getBlockState().getBlock()).getPath();
+    return kind;
   }
 
   boolean generator() {
@@ -124,8 +128,7 @@ public final class PowerEntity extends BaseContainerBlockEntity {
   }
 
   public boolean hasInventory() {
-    return Set.of("power_generator", "steam_generator", "geothermal_generator", "grindstone")
-        .contains(kind());
+    return INVENTORY_KINDS.contains(kind());
   }
 
   public EnergyHandler energyPort(Direction side) {
