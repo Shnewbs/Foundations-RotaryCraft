@@ -34,7 +34,16 @@ public final class PowerEntity extends BaseContainerBlockEntity {
   private final NonNullList<ItemStack> items = NonNullList.withSize(5, ItemStack.EMPTY);
   final ItemStacksResourceHandler itemPort;
   private final EnergyHandler port;
-  private int burnTicks, waterTicks, progress;
+  private int burnTicks, waterTicks, progress, duration;
+
+  public int progress() {
+    return progress;
+  }
+
+  public int duration() {
+    return duration;
+  }
+
   private net.minecraft.resources.Identifier activeRecipe;
   private static final ThreadLocal<Set<PowerEntity>> ACTIVE_SWITCHES =
       ThreadLocal.withInitial(HashSet::new);
@@ -339,6 +348,7 @@ public final class PowerEntity extends BaseContainerBlockEntity {
       return false;
     }
     var recipe = holder.get().value();
+    duration = recipe.duration();
     var id = holder.get().id().identifier();
     if (!id.equals(activeRecipe)) {
       progress = 0;

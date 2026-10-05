@@ -15,12 +15,31 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 
 @Mod(value = "rotarycraft", dist = Dist.CLIENT)
 public final class NativeClient {
+  private static net.minecraft.world.item.crafting.RecipeMap recipes =
+      net.minecraft.world.item.crafting.RecipeMap.EMPTY;
+
+  public static net.minecraft.world.item.crafting.RecipeMap recipes() {
+    return recipes;
+  }
+
   public NativeClient(IEventBus bus) {
     bus.addListener(NativeClient::baked);
+    net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(
+        (net.neoforged.neoforge.client.event.RecipesReceivedEvent event) ->
+            recipes = event.getRecipeMap());
   }
 
   private static void baked(ModelEvent.BakingCompleted event) {
     if (!Boolean.getBoolean("rotarycraft.visualSmoke")) return;
+    try {
+      checkModels(event);
+    } catch (RuntimeException failure) {
+      failure.printStackTrace();
+      System.exit(1);
+    }
+  }
+
+  private static void checkModels(ModelEvent.BakingCompleted event) {
     var result = event.getBakingResult();
     var blocks = new ArrayList<Block>();
     MechanicalContent.ALL.forEach(block -> blocks.add(block.get()));
@@ -37,9 +56,9 @@ public final class NativeClient {
         for (var part : parts) {
           if (part.particleMaterial().sprite().contents().name().getPath().equals("missingno"))
             throw new IllegalStateException("Missing native texture: " + state);
-          count += part.getQuads(null).size();
+          count += checkQuads(part.getQuads(null), state);
           for (var direction : net.minecraft.core.Direction.values())
-            count += part.getQuads(direction).size();
+            count += checkQuads(part.getQuads(direction), state);
         }
         if (count == 0) throw new IllegalStateException("Empty native block geometry: " + state);
         quads += count;
@@ -58,5 +77,14 @@ public final class NativeClient {
             + " quads="
             + quads);
     Minecraft.getInstance().execute(() -> Minecraft.getInstance().stop());
+  }
+
+  private static int checkQuads(
+      java.util.List<net.minecraft.client.resources.model.geometry.BakedQuad> quads,
+      net.minecraft.world.level.block.state.BlockState state) {
+    for (var quad : quads)
+      if (quad.materialInfo().sprite().contents().name().getPath().equals("missingno"))
+        throw new IllegalStateException("Missing native face texture: " + state);
+    return quads.size();
   }
 }

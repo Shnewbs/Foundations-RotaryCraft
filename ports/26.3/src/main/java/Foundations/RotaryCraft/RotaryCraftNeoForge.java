@@ -15,5 +15,8 @@ public final class RotaryCraftNeoForge {
     PowerContent.register(bus);
     RecipeContent.register(bus);
     bus.addListener(Foundations.RotaryCraft.Platform.NativeGameTests::register);
+    net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(
+        (net.neoforged.neoforge.event.OnDatapackSyncEvent event) ->
+            event.sendRecipes(RecipeContent.GRINDING_TYPE.get()));
   }
 }

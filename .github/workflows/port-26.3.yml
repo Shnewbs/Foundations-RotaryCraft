@@ -9,6 +9,11 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        compat: [false, true]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -18,9 +23,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-      - run: bash ports/26.3/gradlew -p ports/26.3 --no-daemon build
-      - run: bash ports/26.3/gradlew -p ports/26.3 --no-daemon runGameTestServer
+      - run: bash ports/26.3/gradlew -p ports/26.3 --no-daemon build -PcompatMods=${{ matrix.compat }}
+      - run: bash ports/26.3/gradlew -p ports/26.3 --no-daemon runGameTestServer -PcompatMods=${{ matrix.compat }}
       - uses: actions/upload-artifact@v4
+        if: ${{ !matrix.compat }}
         with:
           name: native-26.3-candidate
           path: ports/26.3/build/libs/*.jar
@@ -46,7 +52,7 @@ jobs:
           set -o pipefail
           mkdir -p ports/26.3/run-visual
           printf 'accessibilityOnboarded:true\n' > ports/26.3/run-visual/options.txt
-          xvfb-run -a -s "-screen 0 1280x720x24" bash ports/26.3/gradlew -p ports/26.3 --no-daemon runVisualSmokeClient | tee native-visual.log
+          xvfb-run -a -s "-screen 0 1280x720x24" bash ports/26.3/gradlew -p ports/26.3 --no-daemon runVisualSmokeClient -PcompatMods=true | tee native-visual.log
           grep ROTARYCRAFT_NATIVE_VISUAL_OK native-visual.log
       - uses: actions/upload-artifact@v4
         if: always()

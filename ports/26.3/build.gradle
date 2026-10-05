@@ -8,7 +8,7 @@ neoForge {
     runs {
         client { client() }
         server { server(); programArgument '--nogui' }
-        gameTestServer { type='gameTestServer'; systemProperty 'neoforge.enabledGameTestNamespaces','rotarycraft' }
+        gameTestServer { type='gameTestServer'; programArguments.addAll('--tests','rotarycraft:*') }
         visualSmokeClient { client(); gameDirectory=file('run-visual'); systemProperty 'rotarycraft.visualSmoke','true'; programArguments.addAll('--width','1280','--height','720') }
     }
     mods { rotarycraft { sourceSet sourceSets.main } }
@@ -30,3 +30,14 @@ sourceSets.main.resources.srcDir layout.buildDirectory.dir('generated/resources'
 tasks.named('processResources') { dependsOn 'prepareVersionResources'; filesMatching('META-INF/neoforge.mods.toml'){expand([mod_version:mod_version,neo_version:neo_version])} }
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8' }
 tasks.named('jar') { from '../../License.txt' }
+
+repositories { maven { url = 'https://api.modrinth.com/maven' } }
+def compatMods = providers.gradleProperty('compatMods').map { it.toBoolean() }.getOrElse(false)
+dependencies {
+    compileOnly 'maven.modrinth:jei:9UJYacNZ'
+    compileOnly 'maven.modrinth:jade:dVB8U7Td'
+    if (compatMods) {
+        runtimeOnly 'maven.modrinth:jei:9UJYacNZ'
+        runtimeOnly 'maven.modrinth:jade:dVB8U7Td'
+    }
+}
