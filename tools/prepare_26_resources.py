@@ -60,10 +60,8 @@ def main():
     # Every imported legacy material uses its model's single particle sheet.
     for material in (assets / "models/legacy").glob("*.mtl"):
         material.write_text(re.sub(r"(?m)^map_Kd .+$", "map_Kd particle", material.read_text()))
-    # Block and item atlases are separate in 26.x; include legacy sheets in both.
-    write_json(OUT / "assets/minecraft/atlases/items.json", {"sources": [{
-        "type": "minecraft:directory", "source": "legacy", "prefix": "legacy/",
-    }]})
+    # Block-item models share the block atlas. Sprite identifiers must be unique
+    # across atlases; duplicating these sheets in the item atlas breaks baking.
     source = ROOT / "src/main/resources/data"
     for path in source.rglob("*.json"):
         value = modern(json.loads(path.read_text()))
