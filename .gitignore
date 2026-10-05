@@ -235,3 +235,6 @@ run-gametest/
 
 # Wavefront model assets are source resources, not compiled object files.
 !src/main/resources/assets/rotarycraft/models/legacy/*.obj
+
+!ports/26.3/gradle.properties
+!ports/26.3/gradle/wrapper/gradle-wrapper.properties

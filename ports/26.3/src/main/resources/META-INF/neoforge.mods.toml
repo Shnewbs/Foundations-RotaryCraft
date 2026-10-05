@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="All Rights Reserved"
+[[mods]]
+modId="rotarycraft"
+version="${mod_version}"
+displayName="Foundations-RotaryCraft"
+authors="Reika; Foundations port by Shnewbs"
+description='''Native 26.3 port. See the version coverage document before upgrading.'''
+[[dependencies.rotarycraft]]
+modId="neoforge"
+type="required"
+versionRange="[${neo_version},26.4)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.rotarycraft]]
+modId="minecraft"
+type="required"
+versionRange="[26.3,26.4)"
+ordering="NONE"
+side="BOTH"
