@@ -23,6 +23,8 @@ public final class NativeClient {
   }
 
   public NativeClient(IEventBus bus) {
+    if (Boolean.getBoolean("rotarycraft.visualSmoke"))
+      System.out.println("ROTARYCRAFT_NATIVE_CLIENT_INITIALIZED");
     bus.addListener(NativeClient::baked);
     net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(
         (net.neoforged.neoforge.client.event.RecipesReceivedEvent event) ->

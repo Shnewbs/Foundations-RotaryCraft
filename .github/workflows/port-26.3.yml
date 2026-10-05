@@ -52,7 +52,7 @@ jobs:
           set -o pipefail
           mkdir -p ports/26.3/run-visual
           printf 'accessibilityOnboarded:true\n' > ports/26.3/run-visual/options.txt
-          xvfb-run -a -s "-screen 0 1280x720x24" bash ports/26.3/gradlew -p ports/26.3 --no-daemon runVisualSmokeClient -PcompatMods=true | tee native-visual.log
+          timeout 240s xvfb-run -a -s "-screen 0 1280x720x24" bash ports/26.3/gradlew -p ports/26.3 --no-daemon runVisualSmokeClient -PcompatMods=true | tee native-visual.log
           grep ROTARYCRAFT_NATIVE_VISUAL_OK native-visual.log
       - uses: actions/upload-artifact@v4
         if: always()
