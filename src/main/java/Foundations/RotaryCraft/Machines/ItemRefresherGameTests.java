@@ -89,7 +89,9 @@ public final class ItemRefresherGameTests {
         refresher.getEnergyStorage().receiveEnergy(160, false);
 
         ItemEntity nearby = createItem(helper, pos.getX() + 2.5, pos.getY() + 1.5, pos.getZ() + 0.5);
-        ItemEntity distant = createItem(helper, pos.getX() + 6.5, pos.getY() + 1.5, pos.getZ() + 0.5);
+        // Keep the outside-range probe above this fixture, away from neighboring
+        // test machines; horizontal probes can enter another refresher's range.
+        ItemEntity distant = createItem(helper, pos.getX() + 2.5, pos.getY() + 6.5, pos.getZ() + 0.5);
 
         helper.runAfterDelay(5, () -> {
             helper.assertTrue(nearby.getAge() < 0, "Item inside the effect range was not refreshed");
@@ -126,6 +128,8 @@ public final class ItemRefresherGameTests {
                 helper.absolutePos(BlockPos.ZERO).getZ() + z,
                 new ItemStack(Items.DIAMOND)
         );
+        item.setNoGravity(true);
+        item.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);
         level.addFreshEntity(item);
         return item;
     }
