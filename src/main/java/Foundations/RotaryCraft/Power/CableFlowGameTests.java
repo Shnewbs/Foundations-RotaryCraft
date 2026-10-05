@@ -57,6 +57,7 @@ public final class CableFlowGameTests {
     second.getEnergyStorage().receiveEnergy(500, false);
     PowerNodeBlockEntity.serverTick(
         h.getLevel(), first.getBlockPos(), first.getBlockState(), first);
+    CableNetwork.invalidate(h.getLevel());
     PowerNodeBlockEntity.serverTick(
         h.getLevel(), second.getBlockPos(), second.getBlockState(), second);
     int delivered = targets.stream().mapToInt(t -> t.getEnergyStorage().getEnergyStored()).sum();

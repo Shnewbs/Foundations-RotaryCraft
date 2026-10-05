@@ -43,6 +43,7 @@ public final class PowerSwitchBlockEntity extends BlockEntity {
         if (currentState.getValue(PowerSwitchBlock.ENABLED) != shouldEnable) {
             level.setBlock(worldPosition, currentState.setValue(PowerSwitchBlock.ENABLED, shouldEnable), 3);
             level.invalidateCapabilities(worldPosition);
+            CableNetwork.invalidate(level);
             setChanged();
         }
     }

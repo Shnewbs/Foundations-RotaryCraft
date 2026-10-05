@@ -10,6 +10,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 @net.neoforged.fml.common.EventBusSubscriber(modid = "rotarycraft")
 public final class CableNetwork {
   private static final int MAX_NODES = 4096;
+  private static final Direction[] DIRECTIONS = Direction.values();
   private static final Map<Level, Cache> CACHES = new WeakHashMap<>();
 
   private record Port(BlockPos pos, Direction side) {}
@@ -17,12 +18,18 @@ public final class CableNetwork {
   private static final class Cache {
     long tick = Long.MIN_VALUE;
     final Map<BlockPos, Network> nodes = new HashMap<>();
+    final Map<BlockPos, Budget> spent = new HashMap<>();
+  }
+
+  private static final class Budget {
+    int used;
   }
 
   private static final class Network {
     final List<Port> ports = new ArrayList<>();
     final List<PowerNodeBlockEntity> cells = new ArrayList<>();
-    int remaining = 1000;
+    int limit = 1000;
+    Budget budget = new Budget();
     boolean oversized;
   }
 
@@ -31,8 +38,14 @@ public final class CableNetwork {
     if (event.getLevel() instanceof Level level) invalidate(level);
   }
 
+  @net.neoforged.bus.api.SubscribeEvent
+  public static void levelUnloaded(net.neoforged.neoforge.event.level.LevelEvent.Unload event) {
+    if (event.getLevel() instanceof Level level) CACHES.remove(level);
+  }
+
   static void invalidate(Level level) {
-    CACHES.remove(level);
+    var cache = CACHES.get(level);
+    if (cache != null) cache.nodes.clear();
   }
 
   static void distribute(Level level, PowerNodeBlockEntity source) {
@@ -40,11 +53,12 @@ public final class CableNetwork {
     if (cache.tick != level.getGameTime()) {
       cache.tick = level.getGameTime();
       cache.nodes.clear();
+      cache.spent.clear();
     }
     var network = cache.nodes.get(source.getBlockPos());
     if (network == null) network = discover(level, source, cache);
-    if (network.oversized || network.remaining <= 0) return;
-    int budget = Math.min(network.remaining, source.transferRate());
+    if (network.oversized || network.budget.used >= network.limit) return;
+    int budget = Math.min(network.limit - network.budget.used, source.transferRate());
     int size = network.ports.size();
     int start = size == 0 ? 0 : (int) Math.floorMod(level.getGameTime(), size);
     for (int i = 0; i < size && budget > 0; i++) {
@@ -54,7 +68,7 @@ public final class CableNetwork {
       if (target == null || !target.canReceive()) continue;
       int moved = EnergyTransfer.transfer(source.getEnergyStorage(), target, budget);
       budget -= moved;
-      network.remaining -= moved;
+      network.budget.used += moved;
     }
     // Cells hold surplus; stored cell power never circulates through cable buffers.
     for (var cell : network.cells) {
@@ -76,7 +90,7 @@ public final class CableNetwork {
       int moved =
           EnergyTransfer.transfer(source.getEnergyStorage(), cell.getEnergyStorage(), limit);
       budget -= moved;
-      network.remaining -= moved;
+      network.budget.used += moved;
     }
   }
 
@@ -92,10 +106,10 @@ public final class CableNetwork {
       if (!level.hasChunkAt(pos)) continue;
       var entity = level.getBlockEntity(pos);
       if (entity instanceof PowerNodeBlockEntity node) {
-        result.remaining = Math.min(result.remaining, node.transferRate());
+        result.limit = Math.min(result.limit, node.transferRate());
         if (node.isCell()) result.cells.add(node);
       }
-      for (var direction : Direction.values()) {
+      for (var direction : DIRECTIONS) {
         var next = pos.relative(direction);
         if (!level.hasChunkAt(next)) continue;
         var neighbor = level.getBlockEntity(next);
@@ -115,7 +129,19 @@ public final class CableNetwork {
       }
     }
     result.ports.addAll(ports);
-    for (var pos : seen) cache.nodes.put(pos, result);
+    // A topology refresh cannot erase energy already transferred this tick.
+    // Merged components inherit each prior budget once; splits conservatively
+    // inherit the old component's spend until the next tick.
+    var previous = Collections.newSetFromMap(new IdentityHashMap<Budget, Boolean>());
+    for (var pos : seen) {
+      var budget = cache.spent.get(pos);
+      if (budget != null) previous.add(budget);
+    }
+    for (var budget : previous) result.budget.used += budget.used;
+    for (var pos : seen) {
+      cache.nodes.put(pos, result);
+      cache.spent.put(pos, result.budget);
+    }
     return result;
   }
 }

@@ -141,6 +141,7 @@ public final class NativeGameTests {
     first.energy.set(500);
     second.energy.set(500);
     CableNetwork.distribute(helper.getLevel(), first);
+    CableNetwork.invalidate(helper.getLevel());
     CableNetwork.distribute(helper.getLevel(), second);
     int delivered = targets.stream().mapToInt(target -> target.energy.getAmountAsInt()).sum();
     helper.assertTrue(delivered == 500, "Network exceeded shared cable rate");
