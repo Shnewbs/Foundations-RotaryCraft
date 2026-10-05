@@ -11,7 +11,7 @@ from release_notes import release_notes
 def version_from_properties(text):
     match = re.search(r"^mod_version=(.+)$", text, re.MULTILINE)
     version = match.group(1).strip() if match else ""
-    if not re.fullmatch(r"1\.21\.1-\d+\.\d+\.\d+(?:[a-zA-Z0-9.-]*)", version):
+    if not re.fullmatch(r"(?:1\.21\.1|26\.3)-\d+\.\d+\.\d+(?:[a-zA-Z0-9.-]*)", version):
         raise ValueError("Invalid release version: " + version)
     return version
 
@@ -31,13 +31,20 @@ def api(path):
 
 
 def main():
-    version = version_from_properties(Path("gradle.properties").read_text())
+    version = version_from_properties(Path(os.environ.get("RELEASE_PROPERTIES", "gradle.properties")).read_text())
     tag = "v" + version
     if os.environ["GITHUB_REF"].startswith("refs/tags/") and os.environ["GITHUB_REF"] != "refs/tags/" + tag:
         raise ValueError("Tag does not match the build version")
     existing = api("/releases/tags/" + tag)
     # Published versions are immutable; ordinary commits build without republishing.
     publish = existing is None or existing.get("draft", False)
+    # GITHUB_TOKEN cannot create release tags at superseded workflow commits.
+    # A newer master run must publish its own checked artifact instead.
+    if publish and os.environ["GITHUB_REF"] == "refs/heads/master":
+        head = api("/git/ref/heads/master")
+        if head["object"]["sha"] != os.environ["GITHUB_SHA"]:
+            publish = False
+            print("Superseded build; publication deferred to the current master checks")
     if publish:
         ref = api("/git/ref/tags/" + tag)
         if ref:

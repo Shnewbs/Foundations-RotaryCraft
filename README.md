@@ -15,7 +15,7 @@ See [License.txt](License.txt) and the [official licensing page](https://sites.g
 NeoForge 1.21.1 port
 ===================
 
-The current release is 1.21.1-1.7.0. It adds machine inventory/status GUIs, repairs moving-part world lighting and generator placement facing, and provides functional decorative fluid tanks. See the [GUI and placement follow-up](docs/machine-gui-follow-up.md), [visual release record](docs/visual-release-1.6.md) and [roadmap](ROADMAP.md) for coverage and remaining original gameplay. Validate resource assets with `python tools/validate_assets.py`.
+The 1.21.1 development version is 1.21.1-1.8.0. Cable routing, processor energy ports and saved battery charge are repaired, and cables are 25% of their previous thickness. It adds machine inventory/status GUIs, repairs moving-part world lighting and generator placement facing, and provides functional decorative fluid tanks. See the [GUI and placement follow-up](docs/machine-gui-follow-up.md), [visual release record](docs/visual-release-1.6.md) and [roadmap](ROADMAP.md) for coverage and remaining original gameplay. Validate resource assets with `python tools/validate_assets.py`.
 
 The Gradle project targets Minecraft 1.21.1 with NeoForge 21.1.252 and Java 21. The NeoForge entry point, mod metadata, native energy network (fuel, solar, wind, hydro, steam, and geothermal generators, cable, and cell), and canola crop live under `src/main`; run `gradlew.bat build` to build the migration. Canola seeds are crafted from wheat seeds and yellow dye; they plant on farmland, grow like vanilla crops, and produce additional seeds when mature. The fuel generator accepts vanilla furnace fuels by hand or automation, the solar generator produces energy during daylight under open sky, the wind generator produces energy outdoors at higher elevations, the hydro generator uses nearby water, the steam generator burns vanilla furnace fuel while consuming water buckets, and the geothermal generator burns lava buckets. Each power-network crafting recipe unlocks in the recipe book when its key ingredient is obtained.
 
@@ -57,3 +57,5 @@ Three, because of the complexity of much of RC code, I do not fully trust potent
 
 However, you can still suggest code, even in the form of a pull request if you like; I will simply add it manually.
 Because of the license on this repository, the rights to any code submitted - this would apply even to PRs - is released to me under an unrestricted license.
+
+The native 26.3 build lives in `ports/26.3`. See [version coverage and 26.4 preparation](docs/version-targets.md) before choosing a build. The 26.3 core preview has a smaller machine set than 1.21.1.

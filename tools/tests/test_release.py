@@ -18,6 +18,7 @@ class ReleaseTest(unittest.TestCase):
 
     def test_filename_version_validation(self):
         self.assertEqual("1.21.1-1.2.0", version_from_properties("mod_version=1.21.1-1.2.0\n"))
-        for version in ["", "1.2.0", "1.21.1-1.2.0/../x", "1.21.1-1.2.0;exec"]:
+        self.assertEqual("26.3-1.8.0-beta.1", version_from_properties("mod_version=26.3-1.8.0-beta.1\n"))
+        for version in ["26.4-1.8.0", "", "1.2.0", "1.21.1-1.2.0/../x", "1.21.1-1.2.0;exec"]:
             with self.assertRaises(ValueError):
                 version_from_properties("mod_version=" + version)

@@ -1,6 +1,6 @@
 # Combined RotaryCraft / ElectriCraft parity roadmap
 
-Target: Minecraft 1.21.1, NeoForge 21.1.252, one Foundations-RotaryCraft JAR.
+Primary target: Minecraft 1.21.1, NeoForge 21.1.252. Native 26.3 core preview: NeoForge 26.3.0.51-beta. Separate versioned JARs from one repository; see docs/version-targets.md for coverage and 26.4 preparation.
 Development branch: master. Reference implementations: ReikaKalseki/RotaryCraft and ReikaKalseki/ElectriCraft.
 
 This roadmap was established after checking master on 2026-09-30: no gameplay roadmap was tracked there. The existing visual audit remains in docs/visual-animation-audit.md.
@@ -29,6 +29,7 @@ This roadmap was established after checking master on 2026-09-30: no gameplay ro
 - [ ] Complete processing duration/recipes, separate tool-repair Grindstone, remaining machine migration and explicit FE converters. Interim FE operation remains available without a connected shaft.
 - [x] Add ideal ElectriCraft generator/motor signal conversion (8 Nm per amp), with conservation and overflow checks. World blocks remain pending.
 - [ ] Integrate ElectriCraft voltage/current network, wire materials, resistance/losses, batteries, transformers, generators and motors from the reference implementation.
+- [x] Repair existing FE cable routing, shared transfer budget, processor capability registration and full battery persistence, with world regressions.
 - [ ] FE interoperability: sided standard NeoForge EnergyStorage capability on electrical bridges, bounded buffers and rates, simulation without mutation, conservation and restart tests.
 - [ ] EU adapters for the actual installed EU providers (for example Modern Industrialization and a supported NeoForge GregTech implementation): voltage tiers, packet limits and overload behavior.
 - [ ] Joule adapters for the actual installed providers (including Mekanism where its API is available): use configured FE/J conversion rates, not an assumed universal rate.

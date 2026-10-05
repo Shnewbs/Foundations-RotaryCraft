@@ -61,3 +61,49 @@ jobs:
           path: |
             native-visual.log
             ports/26.3/run-visual/logs/
+
+  release:
+    needs: [build, client-visual]
+    if: ${{ github.event_name != 'pull_request' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: rotarycraft-publish-26.3
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Require a commit on master
+        run: git merge-base --is-ancestor HEAD origin/master
+      - name: Select unpublished version
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_PROPERTIES: ports/26.3/gradle.properties
+        run: python tools/prepare_release.py
+      - uses: actions/download-artifact@v4
+        if: steps.version.outputs.publish == 'true'
+        with:
+          name: native-26.3-candidate
+          path: ports/26.3/build/libs
+      - name: Publish checked version
+        if: steps.version.outputs.publish == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          RELEASE_DRAFT: ${{ steps.version.outputs.draft }}
+        run: |
+          JAR="ports/26.3/build/libs/Foundations-RotaryCraft-${RELEASE_VERSION}.jar"
+          test -s "$JAR"
+          (cd ports/26.3/build/libs && sha256sum "Foundations-RotaryCraft-${RELEASE_VERSION}.jar" > SHA256SUMS.txt)
+          if [ "$RELEASE_DRAFT" != 'true' ]; then
+            gh release create "$RELEASE_TAG" --target "$GITHUB_SHA" --title "Foundations-RotaryCraft-${RELEASE_VERSION}" --notes-file release-notes.md --prerelease --draft
+          fi
+          gh release upload "$RELEASE_TAG" "$JAR" ports/26.3/build/libs/SHA256SUMS.txt --clobber
+          gh release edit "$RELEASE_TAG" --draft=false

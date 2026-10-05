@@ -1,5 +1,18 @@
 # Changelog
 
+## 26.3-1.8.0-beta.1
+
+- Add a native Minecraft 26.3 / NeoForge 26.3.0.51-beta build using Java 25 and Gradle 9.2.1.
+- Provide the initial 16-block core: six interim FE generators, cable, cell, switch, grinder, DC engine, shaft and four ideal gearboxes. Mechanical arithmetic and engine state are compiled from the same source files as 1.21.1.
+- Implement transactional energy transfer with probe rollback, exact commit, loaded-only cable discovery and a shared network budget. Preserve full saved battery charge with bounded native Value IO.
+- Add native item/energy automation ports, constrained machine inventory slots and reloadable grinding recipes using item templates.
+- Add optional JEI grinding category/catalyst and Jade server-authoritative energy, progress and mechanical status. Send custom recipe content through NeoForge's native datapack synchronization.
+- Generate current-format resources and item definitions from shared source assets. Models have complete parked geometry; native animations remain pending.
+- Gate publication on server regressions, optional JEI/Jade checks and a real Minecraft client model/texture bake.
+- This is a limited core preview, not full 1.21.1 feature parity. Utility/farming blocks, fluid tanks, native animations and the broader legacy gameplay migration remain pending. Use a new test world; omitted IDs make existing 1.21.1 worlds unsuitable for this preview.
+- KubeJS has no published NeoForge 26.3 build on Modrinth as of 2026-10-05. Live KubeJS integration on this target remains blocked; 1.21.1 retains its installed KubeJS smoke test.
+- EU/J/Create adapters and 26.4 compatibility are not claimed. See docs/version-targets.md and ROADMAP.md for the remaining beta work.
+
 ## 1.21.1-1.8.0
 
 - Reduce cable cores and branches to 25% of their previous thickness, with matching selection and collision shapes.
