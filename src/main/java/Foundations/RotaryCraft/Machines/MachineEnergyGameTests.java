@@ -44,7 +44,8 @@ public final class MachineEnergyGameTests {
       restored.loadWithComponents(saved, helper.getLevel().registryAccess());
       var restoredTag = restored.saveWithoutMetadata(helper.getLevel().registryAccess());
       helper.assertTrue(
-          restoredTag.getInt("energy") == 10000, "Restart lost machine charge: " + block);
+          restoredTag.getInt("energy") == Math.min(10000, buffer.getMaxEnergyStored()),
+          "Restart lost machine charge: " + block);
       saved.putInt("energy", Integer.MAX_VALUE);
       restored.loadWithComponents(saved, helper.getLevel().registryAccess());
       helper.assertTrue(
