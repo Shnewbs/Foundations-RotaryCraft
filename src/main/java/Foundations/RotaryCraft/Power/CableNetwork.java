@@ -125,7 +125,12 @@ public final class CableNetwork {
             }
             queue.addLast(next);
           }
-        } else ports.add(new Port(next, direction.getOpposite()));
+        } else if (level.getCapability(
+                Capabilities.EnergyStorage.BLOCK, next, direction.getOpposite())
+            != null) {
+          // Keep actual sided ports, not thousands of adjacent air positions.
+          ports.add(new Port(next, direction.getOpposite()));
+        }
       }
     }
     result.ports.addAll(ports);
