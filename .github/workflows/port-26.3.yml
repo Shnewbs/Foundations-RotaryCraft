@@ -19,6 +19,7 @@ jobs:
         with:
           python-version: '3.x'
       - run: bash ports/26.3/gradlew -p ports/26.3 --no-daemon build
+      - run: bash ports/26.3/gradlew -p ports/26.3 --no-daemon runGameTestServer
       - uses: actions/upload-artifact@v4
         with:
           name: native-26.3-candidate

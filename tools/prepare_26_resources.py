@@ -32,5 +32,7 @@ for p in (ROOT/'src/main/resources/data').rglob('*'):
  ids=set(re.findall(r'rotarycraft:([a-z0-9_]+)',json.dumps(value)))
  if ids-IDS-{'grinding'}:continue
  out=OUT/'data'/p.relative_to(ROOT/'src/main/resources/data');out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(value))
-(OUT/'pack.mcmeta').write_text(json.dumps({'pack':{'description':'Foundations RotaryCraft 26.3','min_format':[97,1],'max_format':[97,1]}}))
+(OUT/'pack.mcmeta').write_text(json.dumps({'pack':{'description':'Foundations RotaryCraft 26.3','min_format':[97,1],'max_format':[121,0]}}))
 print('26.3 resources prepared for',len(IDS),'registered blocks')
+
+shutil.copytree(ROOT/'src/main/resources/data/rotarycraft/structure',OUT/'data/rotarycraft/structure')

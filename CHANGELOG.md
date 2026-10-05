@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.21.1-1.8.0
+
+- Reduce cable cores and branches to 25% of their previous thickness, with matching selection and collision shapes.
+- Route power across loaded cable networks directly to consumers instead of bouncing it between intermediate cable buffers.
+- Share the 500 FE cable transfer budget across each connected component per server tick; rotate consumer priority to avoid a fixed preferred endpoint.
+- Restore the complete saved battery charge, clamp corrupt values, and stop idle batteries circulating power into cables.
+- Register grindstone energy and inventory automation capabilities so real cables can supply the processor.
+- Refresh late-created neighboring energy ports and invalidate topology on block and chunk changes. Discovery is bounded to 4096 loaded nodes and shared within a server tick.
+- Validation: 75 GameTests pass with JEI, Jade and KubeJS installed and absent; the Minecraft client model and machine GUI checks pass.
+- This remains a development prerelease. Full legacy gameplay parity and native EU/J/Create adapters are still pending.
+
 ## Unreleased
 
 ## 1.21.1-1.7.0 - Machine GUIs, Lighting and Placement
