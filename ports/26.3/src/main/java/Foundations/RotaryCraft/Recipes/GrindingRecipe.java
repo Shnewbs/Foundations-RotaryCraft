@@ -7,6 +7,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -15,23 +16,21 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 
 public record GrindingRecipe(
-    Ingredient ingredient, ItemStack result, int duration, int energyPerTick)
+    Ingredient ingredient, ItemStackTemplate output, int duration, int energyPerTick)
     implements Recipe<SingleRecipeInput> {
   public GrindingRecipe {
     if (ingredient.isEmpty()
-        || result.isEmpty()
+        || output.count() < 1
         || duration < 1
         || duration > 72000
         || energyPerTick < 1
         || energyPerTick > 100000) {
       throw new IllegalArgumentException("Invalid grinding recipe");
     }
-    result = result.copy();
   }
 
-  @Override
   public ItemStack result() {
-    return result.copy();
+    return output.create();
   }
 
   @Override
@@ -41,7 +40,7 @@ public record GrindingRecipe(
 
   @Override
   public ItemStack assemble(SingleRecipeInput input) {
-    return result.copy();
+    return output.create();
   }
 
   @Override
@@ -88,7 +87,7 @@ public record GrindingRecipe(
                         Ingredient.CODEC
                             .fieldOf("ingredient")
                             .forGetter(GrindingRecipe::ingredient),
-                        ItemStack.CODEC.fieldOf("result").forGetter(GrindingRecipe::result),
+                        ItemStackTemplate.CODEC.fieldOf("result").forGetter(GrindingRecipe::output),
                         Codec.intRange(1, 72000)
                             .optionalFieldOf("duration", 100)
                             .forGetter(GrindingRecipe::duration),
@@ -100,8 +99,8 @@ public record GrindingRecipe(
         StreamCodec.composite(
             Ingredient.CONTENTS_STREAM_CODEC,
             GrindingRecipe::ingredient,
-            ItemStack.STREAM_CODEC,
-            GrindingRecipe::result,
+            ItemStackTemplate.STREAM_CODEC,
+            GrindingRecipe::output,
             ByteBufCodecs.VAR_INT,
             GrindingRecipe::duration,
             ByteBufCodecs.VAR_INT,
