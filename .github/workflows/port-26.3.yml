@@ -44,11 +44,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-      - run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri libegl-mesa0 mesa-vulkan-drivers
+      - run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri libegl-mesa0 libegl1 mesa-vulkan-drivers
       - name: Bake native models and textures
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
           SDL_VIDEO_FORCE_EGL: '1'
+          SDL_EGL_LIBRARY: 'libEGL.so.1'
         run: |
           set -o pipefail
           mkdir -p ports/26.3/run-visual

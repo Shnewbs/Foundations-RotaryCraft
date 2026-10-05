@@ -12,19 +12,19 @@ import snownee.jade.api.config.IPluginConfig;
 public final class RotaryJadePlugin implements IWailaPlugin {
   @Override
   public void register(IWailaCommonRegistration registration) {
-    registration.registerBlockDataProvider(Status.INSTANCE, PowerEntity.class);
-    registration.registerBlockDataProvider(Status.INSTANCE, MechanicalBlockEntity.class);
+    registration.registerBlockDataProvider(ServerStatus.INSTANCE, PowerEntity.class);
+    registration.registerBlockDataProvider(ServerStatus.INSTANCE, MechanicalBlockEntity.class);
   }
 
   @Override
   public void registerClient(IWailaClientRegistration registration) {
-    registration.registerBlockComponent(Status.INSTANCE, PowerBlock.class);
-    registration.registerBlockComponent(Status.INSTANCE, CableBlock.class);
-    registration.registerBlockComponent(Status.INSTANCE, SwitchBlock.class);
-    registration.registerBlockComponent(Status.INSTANCE, MechanicalBlock.class);
+    registration.registerBlockComponent(ClientStatus.INSTANCE, PowerBlock.class);
+    registration.registerBlockComponent(ClientStatus.INSTANCE, CableBlock.class);
+    registration.registerBlockComponent(ClientStatus.INSTANCE, SwitchBlock.class);
+    registration.registerBlockComponent(ClientStatus.INSTANCE, MechanicalBlock.class);
   }
 
-  public enum Status implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
+  public enum ServerStatus implements IServerDataProvider<BlockAccessor> {
     INSTANCE;
 
     @Override
@@ -60,6 +60,15 @@ public final class RotaryJadePlugin implements IWailaPlugin {
         status.putLong("watts", signal.watts());
       }
       data.put("rotarycraft:native_status", status);
+    }
+  }
+
+  public enum ClientStatus implements IBlockComponentProvider {
+    INSTANCE;
+
+    @Override
+    public Identifier getUid() {
+      return Identifier.fromNamespaceAndPath("rotarycraft", "native_status");
     }
 
     @Override

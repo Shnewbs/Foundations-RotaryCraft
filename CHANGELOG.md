@@ -19,9 +19,11 @@
 - Route power across loaded cable networks directly to consumers instead of bouncing it between intermediate cable buffers.
 - Share the 500 FE cable transfer budget across each connected component per server tick; rotate consumer priority to avoid a fixed preferred endpoint.
 - Restore the complete saved battery charge, clamp corrupt values, and stop idle batteries circulating power into cables.
-- Register grindstone energy and inventory automation capabilities so real cables can supply the processor.
+- Register grindstone energy/inventory ports and blower/winder energy ports so real cables can supply them.
+- Correct internal energy consumption in input-only machine buffers and restore full saved charge across ten machine types without applying transfer-rate limits. Reject corrupt charge beyond capacity.
+- Keep per-tick network spend across topology rebuilds, and avoid retaining or repeatedly probing adjacent air as a consumer port.
 - Refresh late-created neighboring energy ports and invalidate topology on block and chunk changes. Discovery is bounded to 4096 loaded nodes and shared within a server tick.
-- Validation: 75 GameTests pass with JEI, Jade and KubeJS installed and absent; the Minecraft client model and machine GUI checks pass.
+- Validation: 78 GameTests pass with JEI, Jade and KubeJS installed and absent; the Minecraft client model and machine GUI checks pass.
 - This remains a development prerelease. Full legacy gameplay parity and native EU/J/Create adapters are still pending.
 
 ## Unreleased

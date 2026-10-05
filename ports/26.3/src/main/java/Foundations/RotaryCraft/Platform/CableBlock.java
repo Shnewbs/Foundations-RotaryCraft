@@ -36,6 +36,21 @@ public final class CableBlock extends BaseEntityBlock {
   }
 
   @Override
+  public BlockState getStateForPlacement(
+      net.minecraft.world.item.context.BlockPlaceContext context) {
+    var state = defaultBlockState();
+    for (var direction : Direction.values())
+      state =
+          state.setValue(
+              PORTS[direction.get3DDataValue()],
+              port(
+                  context.getLevel(),
+                  context.getClickedPos().relative(direction),
+                  direction.getOpposite()));
+    return state;
+  }
+
+  @Override
   public RenderShape getRenderShape(BlockState state) {
     return RenderShape.MODEL;
   }

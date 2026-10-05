@@ -136,6 +136,8 @@ public class MachineContent {
     }
 
     private static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK,BLOWER_BLOCK_ENTITY.get(),(machine,side)->machine.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK,WINDER_BLOCK_ENTITY.get(),(machine,side)->machine.getEnergyStorage());
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK,GRINDSTONE_BLOCK_ENTITY.get(),(machine,side)->machine.getEnergyStorage());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK,GRINDSTONE_BLOCK_ENTITY.get(),(machine,side)->machine.getItemHandler());
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK,DECO_TANK_BLOCK_ENTITY.get(),(tank,side)->tank.getTank());

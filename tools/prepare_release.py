@@ -57,7 +57,7 @@ def main():
     with open(os.environ["GITHUB_OUTPUT"], "a") as output:
         output.write(f"version={version}\ntag={tag}\npublish={str(publish).lower()}\n")
         output.write("draft=" + str(bool(existing and existing.get("draft"))).lower() + "\n")
-    print("Publish " + tag if publish else "Already published: " + tag)
+    print("Publish " + tag if publish else "No publication needed from this build: " + tag)
 
 
 if __name__ == "__main__":

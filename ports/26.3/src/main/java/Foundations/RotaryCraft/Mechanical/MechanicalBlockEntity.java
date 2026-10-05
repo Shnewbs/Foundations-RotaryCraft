@@ -62,14 +62,8 @@ public final class MechanicalBlockEntity extends BlockEntity implements ShaftNod
         machine.setChanged();
       }
     }
-    // Stagger display snapshots, and send only changes; gameplay never reads this snapshot.
-    if (Math.floorMod(level.getGameTime() + pos.asLong(), 5) == 0) {
-      int speed = ShaftNetwork.resolveVisual(level, pos, machine.outputSide()).omega();
-      if (speed != machine.visualSpeed) {
-        machine.visualSpeed = speed;
-        level.sendBlockUpdated(pos, state, state, 2);
-      }
-    }
+    // Parked native models have no animation consumer yet. Avoid graph reads
+    // and display-only packets until the submit/extract renderer is implemented.
   }
 
   @Override
